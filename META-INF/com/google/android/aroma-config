@@ -1,0 +1,52 @@
+##
+#
+# AROMA Installer
+#       (c) 2011 by Ahmad Amarullah
+#           amarullz - xda-developers
+#           http://www.amarullz.com/
+#                Version 3.00
+#
+##
+
+ini_set("force_colorspace","rgba");
+
+ini_set("rom_name",             "Helix Engine");
+ini_set("rom_version",          "v6");
+ini_set("rom_author",           "ZeroInfinity");
+ini_set("rom_device",           "universal");
+ini_set("rom_date",             "26th January, 2018");
+
+theme("venom");
+
+fontresload( "0", "ttf/Roboto-Regular.ttf", "12" );
+fontresload( "1", "ttf/Roboto-Regular.ttf", "12" );
+
+splash(4000, "helix");
+
+viewbox(
+   "Welcome",
+   "\n\n\n\n\n"+
+	 "  KERNEL\t: <b><#selectbg_g>"+ini_get("rom_name")+"</#></b>\n"+
+	 "  VERSION\t: <b><#selectbg_g>"+ini_get("rom_version")+"</#></b>\n"+
+     "  DEVICE \t: <b><#selectbg_g>"+ini_get("rom_device")+"</#></b>\n"+
+     "  AUTHOR \t: <b><#selectbg_g>"+ini_get("rom_author")+"</#></b>\n"+
+     "  RELEASED\t: <b><#selectbg_g>"+ini_get("rom_date")+"</#></b>\n\n\n"+
+
+   "Press Next to Continue...",
+   "@welcome"
+);
+
+selectbox("","Chipset Selection","@personalize","chipset.prop",
+			"S835","Select this if you are on a Snapdragon 835 device.",1,
+			"S820/821","Select this if you are on a Snapdragon 820/821 device.",0,
+			"S810","Select this if you are on a Snapdragon 810 device.",0,
+			"S808","Select this if you are on a Snapdragon 810 device.",0
+);
+
+install(
+  "Installing",
+  ini_get("rom_name") + " " + ini_get("rom_version") + 
+  "...\nPlease wait until it's finished...",
+  "@install"
+);
+
