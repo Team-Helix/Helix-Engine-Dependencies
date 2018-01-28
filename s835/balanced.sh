@@ -7,7 +7,6 @@
 #SoC: Snapdragon 835
 #Last Updated: 16/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
-
 codename=Soilwork
 stype=balanced
 version=V3.0
@@ -57,6 +56,7 @@ if [ -d "/dev/stune" ]; then
 	fi
 fi
 echo 48 > /proc/sys/kernel/sched_nr_migrate
+echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
@@ -113,7 +113,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
 				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -124,6 +123,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/pwrutilx/*
 		fi
 		echo "	+Tuning finished for pwrutilx" >> $DLL
+	
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL
@@ -138,7 +138,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			fi
 			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
 				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -149,7 +148,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
-
+	
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
 			echo 90 > /proc/sys/kernel/sched_upmigrate
@@ -158,7 +157,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 90 > /proc/sys/kernel/sched_group_downmigrate
 			echo 10 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 10 > /proc/sys/kernel/sched_init_task_load
-			echo 0 > /proc/sys/kernel/sched_init_task_util
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi

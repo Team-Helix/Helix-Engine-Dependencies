@@ -1,14 +1,11 @@
 #!/system/bin/sh
 #Original author: Alcolawl
-#!/system/bin/sh
-#Original script By: RogerF81 + adanteon
 #Settings By: RogerF81
 #Device: OnePlus 5
 #Codename: SoilWork UNIFIED
 #SoC: Snapdragon 835
 #Last Updated: 16/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
-
 codename=Soilwork
 stype=battery
 version=V3.0
@@ -60,6 +57,7 @@ if [ -d "/dev/stune" ]; then
 	fi
 fi
 echo 32 > /proc/sys/kernel/sched_nr_migrate
+echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
@@ -116,7 +114,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 7 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
 				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -142,7 +139,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			fi
 			echo 5 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
 				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -162,7 +158,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
 			echo 5 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 5 > /proc/sys/kernel/sched_init_task_load
-			echo 0 > /proc/sys/kernel/sched_init_task_util
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
@@ -497,7 +492,7 @@ if [ -e $GPU_FREQ ]; then
 	fi
 	if [ -e "/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost" ]; then
 		chmod 644 /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost
-		echo 1 > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost
+		echo 0 > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost
 	fi
 	echo "	+GPU tuned" >> $DLL
 fi
@@ -543,7 +538,7 @@ fi
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
     echo "bw_hwmon" > $cpubw/governor
     echo 50 > $cpubw/polling_interval
-    echo 1144 > $cpubw/min_freq
+    echo 1525 > $cpubw/min_freq
 	echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
     echo 4 > $cpubw/bw_hwmon/sample_ms
     echo 34 > $cpubw/bw_hwmon/io_percent
@@ -573,28 +568,28 @@ fi
 echo "	+Virtual memory tweaks" >> $DLL
 echo 800 > /proc/sys/vm/dirty_expire_centisecs
 echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
-echo 1 > /proc/sys/vm/oom_kill_allocating_task
+echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 2 > /proc/sys/vm/page-cluster
 echo 20 > /proc/sys/vm/swappiness
 echo 100 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
 echo 5 > /proc/sys/vm/dirty_background_ratio
-echo 2 > /proc/sys/vm/overcommit_memory
-echo 0 > /proc/sys/vm/overcommit_ratio
+echo 0 > /proc/sys/vm/overcommit_memory
+echo 25 > /proc/sys/vm/overcommit_ratio
 echo 11093 > /proc/sys/vm/min_free_kbytes
 echo 32 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 
-#Turn off some cores for battery listed apps
-echo "*Turning off cores for battery listed apps" >> $DLL
+#Turn off some cores while screen off
+echo "*Turning off cores while screen off" >> $DLL
 if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo 1881600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+	echo 1804800 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
@@ -621,9 +616,9 @@ else
 	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo 1881600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+	echo 1804800 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-5" > /sys/devices/system/cpu/online
@@ -662,7 +657,6 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
 fi
-
 #Starting perfd
 if [ -e "/data/system/perfd" ]; then
 	echo "*Starting perfd" >> $DLL

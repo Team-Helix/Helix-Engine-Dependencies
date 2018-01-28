@@ -7,7 +7,6 @@
 #SoC: Snapdragon 835
 #Last Updated: 23/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
-
 codename=Soilwork
 stype=battery_extreme
 version=V3.0
@@ -59,6 +58,7 @@ if [ -d "/dev/stune" ]; then
 	fi
 fi
 echo 16 > /proc/sys/kernel/sched_nr_migrate
+echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
@@ -116,7 +116,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			# if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				# echo 0 > /proc/sys/kernel/sched_use_walt_task_util
 				# echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -127,7 +126,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/pwrutilx/*
 		fi
 		echo "	+Tuning finished for pwrutilx" >> $DLL
-	
+		
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL
@@ -143,7 +142,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 0 > /proc/sys/kernel/sched_initial_task_util
 			# if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				# echo 0 > /proc/sys/kernel/sched_use_walt_task_util
 				# echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
@@ -154,7 +152,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
-	
+		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
 			echo 99 > /proc/sys/kernel/sched_upmigrate
@@ -163,7 +161,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
 			echo 0 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 0 > /proc/sys/kernel/sched_init_task_load
-			echo 0 > /proc/sys/kernel/sched_init_task_util
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
@@ -606,7 +603,7 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo 1248000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	echo 1651200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq

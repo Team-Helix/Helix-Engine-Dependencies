@@ -7,7 +7,6 @@
 #SoC: Snapdragon 835
 #Last Updated: 16/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
-
 codename=Soilwork
 stype=Performance
 version=V3.0
@@ -18,7 +17,6 @@ DLL=/storage/emulated/0/soilwork_performance_log.txt
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
 echo "*Searching CPU frequencies" >> $DLL
-
 #Disable BCL
 if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
 	echo "*Disabling BCL" >> $DLL
@@ -59,6 +57,7 @@ if [ -d "/dev/stune" ]; then
 	fi
 fi
 echo 64 > /proc/sys/kernel/sched_nr_migrate
+echo 10 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
@@ -125,7 +124,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			echo 10 > /proc/sys/kernel/sched_initial_task_util
 			if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 				echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 			fi
@@ -142,6 +140,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
+		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
 			echo 75 > /proc/sys/kernel/sched_upmigrate
@@ -263,6 +262,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 444 $BGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
+	
 	elif grep 'blu_active' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	Applying & tuning blu_active" >> $DLL
@@ -285,6 +285,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 444 $BGP/blu_active/*
 			echo "	+Tuning finished for blu_active" >> $DLL
 		fi
+	
 	elif grep 'interactive' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	Applying & tuning interactive" >> $DLL
