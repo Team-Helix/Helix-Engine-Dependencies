@@ -12,7 +12,6 @@
 codename=Soilwork
 stype=battery
 version=V3.0
-
 cdate=$(date)
 DLL=/storage/emulated/0/soilwork_battery_log.txt
 

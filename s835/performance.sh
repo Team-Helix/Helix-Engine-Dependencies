@@ -11,7 +11,6 @@
 codename=Soilwork
 stype=Performance
 version=V3.0
-
 cdate=$(date)
 DLL=/storage/emulated/0/soilwork_performance_log.txt
 

@@ -11,15 +11,12 @@
 codename=Soilwork
 stype=balanced
 version=V3.0
-
 cdate=$(date)
 DLL=/storage/emulated/0/soilwork_initiallog.txt
-
 #Initializing log
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
 echo "*Searching CPU frequencies" >> $DLL
-
 #Disable BCL
 if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
 	echo "*Disabling BCL" >> $DLL
@@ -127,7 +124,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 $LGP/pwrutilx/*
 		fi
 		echo "	+Tuning finished for pwrutilx" >> $DLL
-
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL

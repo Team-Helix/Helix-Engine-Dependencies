@@ -11,7 +11,6 @@
 codename=Soilwork
 stype=battery_extreme
 version=V3.0
-
 cdate=$(date)
 DLL=/storage/emulated/0/soilwork_suspend_log.txt
 
