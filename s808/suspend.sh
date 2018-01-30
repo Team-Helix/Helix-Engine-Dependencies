@@ -194,7 +194,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 0 > $LGP/interactive/fast_ramp_down
 				echo 0 > $LGP/interactive/align_windows
 				echo 1 > $LGP/interactive/use_migration_notif
-				echo 1 > $LGP/interactive/use_sched_load
+				echo 0 > $LGP/interactive/use_sched_load
 				echo 0 > $LGP/interactive/boostpulse_duration
 				echo 0 > $LGP/interactive/io_is_busy
 				echo 0 > $LGP/interactive/enable_prediction
@@ -264,10 +264,10 @@ if [ -d /sys/devices/system/cpu/cpu4/cpufreq ]; then
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
-			echo 0 > $BGP/interactive/fast_ramp_down
+			echo 1 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
-			echo 1 > $BGP/interactive/use_sched_load
+			echo 0 > $BGP/interactive/use_sched_load
 			echo 0 > $BGP/interactive/boostpulse_duration
 			echo 0 > $BGP/interactive/io_is_busy
 			echo 0 > $BGP/interactive/enable_prediction
