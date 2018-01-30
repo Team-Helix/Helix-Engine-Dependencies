@@ -2,10 +2,10 @@
 #Original author: Alcolawl
 #Original script By: RogerF81 + adanteon
 #Settings By: RogerF81
-#Device: HTC 10
+#Device: Nexus 5X/LG G4
 #Codename: SoilWork UNIFIED
-#SoC: Snapdragon 820/821
-#Last Updated: 19/12/2017
+#SoC: Snapdragon 808
+#Last Updated: 30/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
 codename=Soilwork
 stype=balanced
@@ -73,19 +73,21 @@ big_min_value=0
 little_min_value=0
 
 little_max_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq);
-big_max_value=$(cat /sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq);
+big_max_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq);
 little_min_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq);
-big_min_value=$(cat /sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_min_freq);
+big_min_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq);
 
 #Turn on all cores
 echo "*Turning on cores" >> $DLL
 chmod 644 /sys/devices/system/cpu/online
-echo 0-3 > /sys/devices/system/cpu/online
-chmod 444 /sys/devices/system/cpu/online
+echo 0-5 > /sys/devices/system/cpu/online
 echo 1 > /sys/devices/system/cpu/cpu0/online
 echo 1 > /sys/devices/system/cpu/cpu1/online
 echo 1 > /sys/devices/system/cpu/cpu2/online
 echo 1 > /sys/devices/system/cpu/cpu3/online
+echo 1 > /sys/devices/system/cpu/cpu4/online
+echo 1 > /sys/devices/system/cpu/cpu5/online
+chmod 444 /sys/devices/system/cpu/online
 
 
 #Apply settings to LITTLE cluster
@@ -102,30 +104,8 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 		pnp_available=true;
 	fi
 		
-	if grep 'pwrutilx' $AGL; then
-		if [ -e $AGL ]; then
-			echo "	+Applying & tuning pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
-			chmod 644 $LGP/pwrutilx/*
-			echo pwrutilx > $LGP/scaling_governor
-			sleep 1
-			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
-			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 1 > $LGP/pwrutilx/iowait_boost_enable
-			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
-				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
-				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
-				echo 10 > /proc/sys/kernel/sched_walt_init_task_load_pct
-				echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
-			fi
-			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
-			chmod 444 $LGP/pwrutilx/*
-		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
 	
-	elif grep 'schedutil' $AGL; then
+	if grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
@@ -135,7 +115,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			echo 1000 > $LGP/schedutil/up_rate_limit_us
 			echo 8000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
-				echo 0 > $LGP/schedutil/iowait_boost_enable
+				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
 			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
@@ -152,10 +132,8 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 	
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
-			echo 90 > /proc/sys/kernel/sched_upmigrate
-			echo 95 > /proc/sys/kernel/sched_group_upmigrate
-			echo 75 > /proc/sys/kernel/sched_downmigrate
-			echo 90 > /proc/sys/kernel/sched_group_downmigrate
+			echo 68 > /proc/sys/kernel/sched_upmigrate
+			echo 33 > /proc/sys/kernel/sched_downmigrate
 			echo 10 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 10 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
@@ -183,7 +161,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
 			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq" ]; then
-				echo 480000 > $LGP/interactive/screen_off_maxfreq
+				echo 600000 > $LGP/interactive/screen_off_maxfreq
 			fi
 			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
@@ -196,18 +174,18 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				chmod 644 $LGP/interactive/*
 				if [ "pnp_available" == "false" ]; then
 					echo "interactive will be set on LITTLE cluster"
-					echo 70 422400:49 480000:56 556800:68 652800:76 729600:81 844800:84 960000:89 1036800:87 1111300:84 1190400:7 1228800:86 1324800:92 1478400:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+					echo 76 600000:40 672000:58 787200:82 960000:89 1248000:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				else
 					echo "PnP detected! Tweaks will be set accordingly"
-					echo 75 1228800:86 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+					echo 75 1248000:86 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				fi
-				echo 90000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
-				echo 1228800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+				echo 356940 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
+				echo 600000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
 				echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-				echo 0 652800:40000 1111300:120000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+				echo 20000 460000:0 600000:60000 672000:100000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-				echo 10000 > $LGP/interactive/min_sample_time	
+				echo 0 > $LGP/interactive/min_sample_time	
 				echo 0 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
@@ -235,29 +213,14 @@ echo "	*LITTLE settings finished" >> $DLL
 echo "*Applying big settings" >> $DLL
 echo "	+Searching available governors" >> $DLL
 
-if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
-	if [ -e /sys/devices/system/cpu/cpu2/cpufreq ]; then
-		BGP=/sys/devices/system/cpu/cpu2/cpufreq
+if [ -d /sys/devices/system/cpu/cpu4/cpufreq ]; then
+	if [ -e /sys/devices/system/cpu/cpu4/cpufreq ]; then
+		BGP=/sys/devices/system/cpu/cpu4/cpufreq
 	fi
 
 	AGB=/sys/devices/system/cpu/cpu2/cpufreq/scaling_available_governors;
 
-	if grep 'pwrutilx' $AGB; then
-		if [ -e $AGB ]; then
-			echo "	+Applying pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
-			chmod 644 $BGP/pwrutilx/*
-			echo pwrutilx > $BGP/scaling_governor
-			sleep 1
-			echo 1000 > $BGP/pwrutilx/up_rate_limit_us
-			echo 10000 > $BGP/pwrutilx/down_rate_limit_us
-			echo 1 > $BGP/pwrutilx/iowait_boost_enable
-			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
-			chmod 444 $BGP/pwrutilx/*
-		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
-
-	elif grep 'schedutil' $AGB; then
+	if grep 'schedutil' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	+Applying schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
@@ -267,7 +230,7 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo 1000 > $BGP/schedutil/up_rate_limit_us
 			echo 8000 > $BGP/schedutil/down_rate_limit_us
 			if [ -e "$BGP/schedutil/iowait_boost_enable" ]; then
-				echo 0 > $BGP/schedutil/iowait_boost_enable
+				echo 1 > $BGP/schedutil/iowait_boost_enable
 			fi
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
 			chmod 444 $BGP/schedutil/*
@@ -279,22 +242,22 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo "	Applying & tuning interactive" >> $DLL
 			echo interactive > $BGP/scaling_governor
 			sleep 1
-			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
+			chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
 			chmod 644 $BGP/interactive/*
 			if [ "pnp_available" == "false" ]; then
-				echo 67 556800:58 652800:78 729600:80 806400:84 883200:77 940800:82 1036800:86 1113600:84 1190400:87 1248000:88 1324800:90 1785600:96 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+				echo 76 633000:48 768000:57 1248000:74 1440000:86 1824000:99 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 			else
 				echo "PnP detected! Tweaks will be set accordingly"
-				echo 70 1248000:88 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+				echo 70 1248000:88 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 			fi
-			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
-			echo 90000 > $BGP/interactive/timer_slack
-			echo 1248000 > $BGP/interactive/hispeed_freq
+			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+			echo 178470 > $BGP/interactive/timer_slack
+			echo 1824000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 20000 > $BGP/interactive/timer_rate
-			echo 0 652800:80000 1248000:120000 > $BGP/interactive/above_hispeed_delay
-			echo 350 > $BGP/interactive/go_hispeed_load
-			echo 25000 > $BGP/interactive/min_sample_time	
+			echo 10000 1440000:120000 > $BGP/interactive/above_hispeed_delay
+			echo 400 > $BGP/interactive/go_hispeed_load
+			echo 0 > $BGP/interactive/min_sample_time	
 			echo 0 > $BGP/interactive/min_sample_time		
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
@@ -306,7 +269,7 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo 0 > $BGP/interactive/boostpulse_duration
 			echo 0 > $BGP/interactive/io_is_busy
 			echo 0 > $BGP/interactive/enable_prediction
-			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
+			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
 			chmod 444 $BGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
 		fi
@@ -360,7 +323,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:652800 1:0 2:0 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:0 1:0 2:0 3:0 4:0 5:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 460 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
@@ -391,8 +354,9 @@ fi
 if grep 'cfq' $string3; then
 	cfq=true;
 fi
-if [ "$deadline" == "true" ]; then
-	if [ -e $string3 ]; then
+if [ -e $string3 ]; then
+
+	if [ "$deadline" == "true" ]; then
 		echo "setting deadline"
 		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo "deadline" > /sys/block/mmcblk0/queue/scheduler
@@ -429,9 +393,8 @@ if [ "$deadline" == "true" ]; then
 		echo 1 > /sys/block/mmcblk0rpmb/queue/nomerges
 		echo 0 > /sys/block/mmcblk0rpmb/queue/rotational
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity
-	fi
-elif [ "$deadline" == "false" ] && [ "cfq" == "true" ]; then
-	if [ -e $string3 ]; then
+		
+	elif [ "$deadline" == "false" ] && [ "cfq" == "true" ]; then
 		echo "setting cfq"
 		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo "cfq" > /sys/block/mmcblk0/queue/scheduler
@@ -489,9 +452,8 @@ elif [ "$deadline" == "false" ] && [ "cfq" == "true" ]; then
 		echo 1 > /sys/block/mmcblk0rpmb/queue/nomerges
 		echo 0 > /sys/block/mmcblk0rpmb/queue/rotational
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity
-	fi
-else
-	if [ -e $string3 ]; then
+		
+	else
 		echo "I/0 governor won't be changed"
 		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo 0 > /sys/block/mmcblk0/queue/add_random
@@ -511,7 +473,7 @@ else
 		echo 1 > /sys/block/mmcblk0rpmb/queue/nomerges
 		echo 0 > /sys/block/mmcblk0rpmb/queue/rotational
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity	
-    fi
+	fi
 fi
 echo 128 > /sys/block/mmcblk0/queue/nr_requests
 echo "	*Finished tuning I/O scheduler" >> $DLL
@@ -603,40 +565,7 @@ if [ -e /sys/block/zram0 ]; then
 	mkswap /dev/block/zram0 > /dev/null 2>&1
 	swapon /dev/block/zram0 > /dev/null 2>&1
 fi
-## GPU
-echo "msm-adreno-tz" > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor
-if [ -d /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/gpu_available_frequencies ]; then
-	GPU_FREQ=/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/gpu_available_frequencies
-	GPU_OC=false;
-	if [ "$GPU_FREQ" -gt 624000000 ]; then
-    		GPU_OC=true;
-	fi
-	if [ "$GPU_OC" == "true" ]; then
-		if [ -e $GPU_FREQ ]; then
-			echo "GPU is overclocked"
-			chmod 644 /sys/class/kgsl/kgsl-3d0/max_gpuclk
-			echo 652800000 > /sys/class/kgsl/kgsl-3d0/max_gpuclk
-			echo 652800000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/max_freq
-			chmod 644 /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/target_freq
-			echo 214000000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/target_freq
-			echo 133000000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/min_freq
-			chmod 644 /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost
-			echo 2 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost
-   		fi
-	else
-		if [ -e $GPU_FREQ ]; then
-			echo "GPU is on stock max freq"
-			chmod 644 /sys/class/kgsl/kgsl-3d0/max_gpuclk
-			echo 624000000 > /sys/class/kgsl/kgsl-3d0/max_gpuclk
-			echo 624000000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/max_freq
-			chmod 644 /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/target_freq
-			echo 133000000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/target_freq
-			echo 133000000 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/min_freq
-			chmod 644 /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost
-			echo 2 > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/adrenoboost
-		fi
-	fi
-fi
+
 ##Pnp, if available
 if [ -e /sys/power/pnpmgr ]; then
 	echo 0 > /sys/power/pnpmgr/touch_boost
@@ -645,9 +574,7 @@ if [ -e /sys/power/pnpmgr ]; then
 	echo 1248000 > /sys/power/pnpmgr/cluster/big/cpu0/thermal_freq
 	echo 307200 > /sys/power/pnpmgr/cluster/big/cpu0/scaling_min_freq
 fi	
-## Vibration
-chmod 644 /sys/class/timed_output/vibrator/voltage_level
-echo 710 > /sys/class/timed_output/vibrator/voltage_level
+
 ## FS
 echo 45 > /proc/sys/fs/lease-break-time
 echo 32768 > /proc/sys/fs/inotify/max_queued_events
@@ -744,14 +671,14 @@ done
 echo "*Turning on all cores" >> $DLL
 chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-chmod 664 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-chmod 664 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo $big_max_value > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-echo $big_min_value > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+echo $big_max_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 chmod 644 /sys/devices/system/cpu/online
-echo "0-3" > /sys/devices/system/cpu/online
+echo "0-5" > /sys/devices/system/cpu/online
 chmod 444 /sys/devices/system/cpu/online
 chmod 644 /sys/devices/system/cpu/offline
 echo "" > /sys/devices/system/cpu/offline
@@ -760,6 +687,8 @@ echo 1 > /sys/devices/system/cpu/cpu0/online
 echo 1 > /sys/devices/system/cpu/cpu1/online
 echo 1 > /sys/devices/system/cpu/cpu2/online
 echo 1 > /sys/devices/system/cpu/cpu3/online
+echo 1 > /sys/devices/system/cpu/cpu4/online
+echo 1 > /sys/devices/system/cpu/cpu5/online
 
 #Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
 echo "	+Re-enable core_control and disable msm_thermal" >> $DLL

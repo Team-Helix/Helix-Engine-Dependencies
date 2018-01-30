@@ -379,7 +379,7 @@ if [ -e /sys/power/pnpmgr/touch_boost ]; then
 	echo 0 > /sys/power/pnpmgr/touch_boost
 fi
 
-sleep 1
+sleep 10
 
 #I/0 & block tweaks
 string3=/sys/block/mmcblk0/queue/scheduler;

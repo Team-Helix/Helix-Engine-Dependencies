@@ -8,10 +8,11 @@
 #Last Updated: 19/12/2017
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
 codename=Soilwork
-stype=balanced
+stype=Performance
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_initiallog.txt
+DLL=/storage/emulated/0/soilwork_performance_log.txt
+
 #Initializing log
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
@@ -33,17 +34,17 @@ fi
 echo "	+Disabling core_control temporarily" >> $DLL
 echo 0 > /sys/module/msm_thermal/core_control/enabled
 
-##Configuring stune & cpuset
+##Configuring stune
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 3 > /dev/stune/top-app/schedtune.boost
+	echo 10 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
 	#echo 0 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
-	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
+	echo 1 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
@@ -55,8 +56,8 @@ if [ -d "/dev/stune" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
 fi
-echo 48 > /proc/sys/kernel/sched_nr_migrate
-echo 0 > /proc/sys/kernel/sched_initial_task_util
+echo 64 > /proc/sys/kernel/sched_nr_migrate
+echo 10 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
@@ -87,7 +88,6 @@ echo 1 > /sys/devices/system/cpu/cpu1/online
 echo 1 > /sys/devices/system/cpu/cpu2/online
 echo 1 > /sys/devices/system/cpu/cpu3/online
 
-
 #Apply settings to LITTLE cluster
 echo "*Applying LITTLE settings" >> $DLL
 echo "	+Searching available governors" >> $DLL
@@ -102,74 +102,57 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 		pnp_available=true;
 	fi
 		
-	if grep 'pwrutilx' $AGL; then
-		if [ -e $AGL ]; then
-			echo "	+Applying & tuning pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
-			chmod 644 $LGP/pwrutilx/*
-			echo pwrutilx > $LGP/scaling_governor
-			sleep 1
-			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
-			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 1 > $LGP/pwrutilx/iowait_boost_enable
-			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
-				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
-				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
-				echo 10 > /proc/sys/kernel/sched_walt_init_task_load_pct
-				echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
-			fi
-			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
-			chmod 444 $LGP/pwrutilx/*
-		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
-	
-	elif grep 'schedutil' $AGL; then
+	if grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
-			echo 1000 > $LGP/schedutil/up_rate_limit_us
-			echo 8000 > $LGP/schedutil/down_rate_limit_us
+			echo 500 > $LGP/schedutil/up_rate_limit_us
+			echo 20000 > $LGP/schedutil/down_rate_limit_us
+			echo 25 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
-				echo 0 > $LGP/schedutil/iowait_boost_enable
+				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
+			if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
+				echo 0 > /proc/sys/kernel/sched_autogroup_enabled
+			fi
+			if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
+				echo 1 > /proc/sys/kernel/sched_is_big_little
+			fi
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
 				echo 1 > /proc/sys/kernel/sched_use_walt_cpu_util
-				echo 10 > /proc/sys/kernel/sched_walt_init_task_load_pct
+				echo 15 > /proc/sys/kernel/sched_walt_init_task_load_pct
 				echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
 			fi
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
 			chmod 444 $LGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
-	
+		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
-			echo 90 > /proc/sys/kernel/sched_upmigrate
-			echo 95 > /proc/sys/kernel/sched_group_upmigrate
-			echo 75 > /proc/sys/kernel/sched_downmigrate
-			echo 90 > /proc/sys/kernel/sched_group_downmigrate
+			echo 75 > /proc/sys/kernel/sched_upmigrate
+			echo 90 > /proc/sys/kernel/sched_group_upmigrate
+			echo 60 > /proc/sys/kernel/sched_downmigrate
+			echo 80 > /proc/sys/kernel/sched_group_downmigrate
 			echo 10 > /proc/sys/kernel/sched_small_wakee_task_load
-			echo 10 > /proc/sys/kernel/sched_init_task_load
+			echo 15 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 30 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 25 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 2 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
 				echo 9 > /proc/sys/kernel/sched_upmigrate_min_nice
 			fi
 			echo 5 > /proc/sys/kernel/sched_spill_nr_run
-			echo 95 > /proc/sys/kernel/sched_spill_load
+			echo 90 > /proc/sys/kernel/sched_spill_load
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
 			echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
 			if [ -e /proc/sys/kernel/sched_wakeup_load_threshold ]; then
@@ -183,7 +166,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
 			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq" ]; then
-				echo 480000 > $LGP/interactive/screen_off_maxfreq
+				echo 556800 > $LGP/interactive/screen_off_maxfreq
 			fi
 			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
@@ -196,18 +179,18 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				chmod 644 $LGP/interactive/*
 				if [ "pnp_available" == "false" ]; then
 					echo "interactive will be set on LITTLE cluster"
-					echo 70 422400:49 480000:56 556800:68 652800:76 729600:81 844800:84 960000:89 1036800:87 1111300:84 1190400:7 1228800:86 1324800:92 1478400:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+					echo 67 422400:49 480000:56 556800:68 652800:76 729600:81 844800:84 960000:89 1036800:87 1111300:84 1190400:7 1228800:86 1324800:92 1478400:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				else
 					echo "PnP detected! Tweaks will be set accordingly"
-					echo 75 1228800:86 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+					echo 67 1228800:86 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				fi
 				echo 90000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
-				echo 1228800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-				echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-				echo 0 652800:40000 1111300:120000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+				echo 15000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+				echo 1228800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+				echo 0 652800:20000 1111300:80000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-				echo 10000 > $LGP/interactive/min_sample_time	
+				echo 25000 > $LGP/interactive/min_sample_time	
 				echo 0 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
@@ -242,38 +225,22 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 
 	AGB=/sys/devices/system/cpu/cpu2/cpufreq/scaling_available_governors;
 
-	if grep 'pwrutilx' $AGB; then
-		if [ -e $AGB ]; then
-			echo "	+Applying pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
-			chmod 644 $BGP/pwrutilx/*
-			echo pwrutilx > $BGP/scaling_governor
-			sleep 1
-			echo 1000 > $BGP/pwrutilx/up_rate_limit_us
-			echo 10000 > $BGP/pwrutilx/down_rate_limit_us
-			echo 1 > $BGP/pwrutilx/iowait_boost_enable
-			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
-			chmod 444 $BGP/pwrutilx/*
-		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
-
-	elif grep 'schedutil' $AGB; then
+	if grep 'schedutil' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	+Applying schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
 			sleep 1
-			echo 1000 > $BGP/schedutil/up_rate_limit_us
-			echo 8000 > $BGP/schedutil/down_rate_limit_us
+			echo 500 > $BGP/schedutil/up_rate_limit_us
+			echo 20000 > $BGP/schedutil/down_rate_limit_us
 			if [ -e "$BGP/schedutil/iowait_boost_enable" ]; then
-				echo 0 > $BGP/schedutil/iowait_boost_enable
+				echo 1 > $BGP/schedutil/iowait_boost_enable
 			fi
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
 			chmod 444 $BGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
-		
 	elif grep 'interactive' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	Applying & tuning interactive" >> $DLL
@@ -282,20 +249,19 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
 			chmod 644 $BGP/interactive/*
 			if [ "pnp_available" == "false" ]; then
-				echo 67 556800:58 652800:78 729600:80 806400:84 883200:77 940800:82 1036800:86 1113600:84 1190400:87 1248000:88 1324800:90 1785600:96 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+				echo 58 556800:58 652800:78 729600:80 806400:84 883200:77 940800:82 1036800:86 1113600:84 1190400:87 1248000:88 1324800:90 1785600:96 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
 			else
 				echo "PnP detected! Tweaks will be set accordingly"
-				echo 70 1248000:88 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
+				echo 58 1248000:88 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
 			fi
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
-			echo 1248000 > $BGP/interactive/hispeed_freq
+			echo 2150400 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
-			echo 20000 > $BGP/interactive/timer_rate
-			echo 0 652800:80000 1248000:120000 > $BGP/interactive/above_hispeed_delay
+			echo 15000 > $BGP/interactive/timer_rate
+			echo 0 652800:40000 1248000:80000 > $BGP/interactive/above_hispeed_delay
 			echo 350 > $BGP/interactive/go_hispeed_load
-			echo 25000 > $BGP/interactive/min_sample_time	
-			echo 0 > $BGP/interactive/min_sample_time		
+			echo 25000 > $BGP/interactive/min_sample_time		
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
@@ -360,9 +326,9 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:652800 1:0 2:0 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:1228000 1:0 2:0 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 460 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo 1000 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
@@ -527,7 +493,7 @@ else
 fi
 echo 2 > /proc/sys/net/ipv4/tcp_ecn
 echo 1 > /proc/sys/net/ipv4/tcp_dsack
-echo 0 > /proc/sys/net/ipv4/tcp_low_latency
+echo 1 > /proc/sys/net/ipv4/tcp_low_latency
 echo 1 > /proc/sys/net/ipv4/tcp_timestamps
 echo 1 > /proc/sys/net/ipv4/tcp_sack
 echo 1 > /proc/sys/net/ipv4/tcp_window_scaling
@@ -537,10 +503,10 @@ echo "	*Finished tuning TCP" >> $DLL
 #Wakelocks
 echo "*Blocking wakelocks" >> $DLL
 if [ -e "/sys/module/bcmdhd/parameters/wlrx_divide" ]; then
-	echo 4 > /sys/module/bcmdhd/parameters/wlrx_divide
+	echo 1 > /sys/module/bcmdhd/parameters/wlrx_divide
 fi
 if [ -e "/sys/module/bcmdhd/parameters/wlctrl_divide" ]; then
-	echo 4 > /sys/module/bcmdhd/parameters/wlctrl_divide
+	echo 1 > /sys/module/bcmdhd/parameters/wlctrl_divide
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_bluetooth_timer" ]; then
 	echo Y > /sys/module/wakeup/parameters/enable_bluetooth_timer
@@ -561,25 +527,25 @@ if [ -e "/sys/module/wakeup/parameters/enable_timerfd_ws" ]; then
 	echo Y > /sys/module/wakeup/parameters/enable_timerfd_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_wow_wl_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_netmgr_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_netmgr_wl_ws
+	echo Y > /sys/module/wakeup/parameters/enable_netmgr_wl_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_wow_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_ipa_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_ipa_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_ipa_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wlan_pno_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_pno_wl_ws
+	echo Y > /sys/module/wakeup/parameters/enable_wlan_pno_wl_ws
 fi
 if [ -e "/sys/module/wakeup/parameters/enable_wcnss_filter_lock_ws" ]; then
 	echo N > /sys/module/wakeup/parameters/enable_wcnss_filter_lock_ws
@@ -596,7 +562,7 @@ if [ -e /sys/block/zram0 ]; then
 	echo 2 > /sys/block/zram0/queue/nomerges 
 	echo 0 > /sys/block/zram0/queue/rotational 
 	echo 1 > /sys/block/zram0/queue/rq_affinity
-	echo 64 > /sys/block/zram0/queue/nr_requests
+	echo 96 > /sys/block/zram0/queue/nr_requests
 	echo 4 > /sys/block/zram0/max_comp_streams
 	chmod 644 /sys/block/zram0/disksize
 	echo 1073741824 > /sys/block/zram0/disksize
@@ -649,7 +615,7 @@ fi
 chmod 644 /sys/class/timed_output/vibrator/voltage_level
 echo 710 > /sys/class/timed_output/vibrator/voltage_level
 ## FS
-echo 45 > /proc/sys/fs/lease-break-time
+echo 60 > /proc/sys/fs/lease-break-time
 echo 32768 > /proc/sys/fs/inotify/max_queued_events
 echo 256 > /proc/sys/fs/inotify/max_user_instances
 echo 16384 > /proc/sys/fs/inotify/max_user_watches
@@ -679,7 +645,7 @@ echo N > /sys/module/lpm_levels/parameters/sleep_disabled
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
     echo "bw_hwmon" > $cpubw/governor
     echo 50 > $cpubw/polling_interval
-    echo 1525 > $cpubw/min_freq
+    echo 13763 > $cpubw/min_freq
     echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
     echo 4 > $cpubw/bw_hwmon/sample_ms
     echo 34 > $cpubw/bw_hwmon/io_percent
@@ -708,16 +674,16 @@ fi
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
 echo 200 > /proc/sys/vm/dirty_expire_centisecs
-echo 500 > /proc/sys/vm/dirty_writeback_centisecs
+echo 300 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 3 > /proc/sys/vm/page-cluster
-echo 10 > /proc/sys/vm/swappiness
-echo 60 > /proc/sys/vm/vfs_cache_pressure
-echo 20 > /proc/sys/vm/dirty_ratio
-echo 10 > /proc/sys/vm/dirty_background_ratio
-echo 1 > /proc/sys/vm/overcommit_memory
+echo 0 > /proc/sys/vm/swappiness
+echo 50 > /proc/sys/vm/vfs_cache_pressure
+echo 40 > /proc/sys/vm/dirty_ratio
+echo 20 > /proc/sys/vm/dirty_background_ratio
 echo 0 > /proc/sys/vm/overcommit_ratio
-echo 64 > /proc/sys/kernel/random/read_wakeup_threshold
+echo 1 > /proc/sys/vm/overcommit_memory
+echo 128 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 
 #loop tweaks
