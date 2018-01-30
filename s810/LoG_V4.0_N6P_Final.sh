@@ -47,7 +47,7 @@ chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 #Tweak LITTLE cluster
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
-echo 76 600000:40 672000:58 768000:82 960000:89 1248000:94  1478000:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+echo 76 600000:40 672000:58 768000:82 960000:89 1248000:94 1478000:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 echo 356940 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
 echo 600000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
