@@ -513,6 +513,9 @@ fi
 # # #File system
 # echo "	+File system tweaks" >> $DLL
 # echo 60 > /proc/sys/fs/lease-break-time
+echo 32768 > /proc/sys/fs/inotify/max_queued_events
+echo 256 > /proc/sys/fs/inotify/max_user_instances
+echo 16384 > /proc/sys/fs/inotify/max_user_watches
 
 if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then 
 	chmod 664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
