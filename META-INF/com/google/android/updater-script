@@ -45,5 +45,5 @@ set_progress(1.0);
 ui_print("");
 ui_print("");
 ui_print("@===========================================");
-ui_print("            Flashed successfully!");
+ui_print("             Flashed successfully!          ");
 ui_print("@===========================================");
