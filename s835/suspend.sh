@@ -626,12 +626,18 @@ else
 	chmod 644 /sys/devices/system/cpu/offline
 	echo "2-3,6-7" > /sys/devices/system/cpu/offline
 	chmod 444 /sys/devices/system/cpu/offline
+	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	echo "0 1" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
+	echo "0 1" > /sys/devices/system/cpu/cpu0/cpufreq/affected_cpus
+	chmod 464 /sys/devices/system/cpu/cpu0/cpufreq/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+	chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/affected_cpus
 	echo "4 5" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+	chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/affected_cpus
+	chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/affected_cpus
 	echo 1 > /sys/devices/system/cpu/cpu0/online
 	echo 1 > /sys/devices/system/cpu/cpu1/online
 	echo 0 > /sys/devices/system/cpu/cpu2/online
