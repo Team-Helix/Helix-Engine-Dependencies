@@ -606,7 +606,7 @@ echo 20 > /proc/sys/vm/swappiness
 echo 100 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
 echo 5 > /proc/sys/vm/dirty_background_ratio
-echo 0 > /proc/sys/vm/overcommit_memory
+echo 1 > /proc/sys/vm/overcommit_memory
 echo 25 > /proc/sys/vm/overcommit_ratio
 echo 32 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
