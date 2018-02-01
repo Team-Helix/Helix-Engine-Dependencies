@@ -293,14 +293,6 @@ echo "	*big settings finished" >> $DLL
 
 sleep 1
 
-#Enable work queue to be power efficient
-if [ -e /sys/module/workqueue/parameters/power_efficient ]; then
-	echo "*Enabling power saving work queue" >> $DLL
-	chmod 644 /sys/module/workqueue/parameters/power_efficient
-	echo Y > /sys/module/workqueue/parameters/power_efficient
-	chmod 444 /sys/module/workqueue/parameters/power_efficient
-fi
-
 # #Tweak VoxPopuli -- Only on EAS kernels
 # if [ -d /dev/voxpopuli/ ]; then
 	# echo "*Tweaking Vox Populi PowerHal" >> $DLL
@@ -556,13 +548,6 @@ for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
     echo 20 > $memlat/polling_interval
 done
 echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
-
-# Disable Gentle Fair Sleepers ##EXPERIMENTAL
-if [ -e "/sys/kernel/debug/sched_features" ]; then
-	echo "NO_GENTLE_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-	echo NO_NEW_FAIR_SLEEPERS > /sys/kernel/debug/sched_features
-	echo NO_NORMALIZED_SLEEPER> /sys/kernel/debug/sched_features
-fi
 
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL

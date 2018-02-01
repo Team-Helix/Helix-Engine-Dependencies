@@ -12,6 +12,7 @@ stype=balanced
 version=V3.0
 cdate=$(date)
 DLL=/storage/emulated/0/soilwork_initiallog.txt
+
 #Initializing log
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
@@ -312,14 +313,6 @@ echo "	*big settings finished" >> $DLL
 
 sleep 1
 
-#Enable work queue to be power efficient
-if [ -e /sys/module/workqueue/parameters/power_efficient ]; then
-	echo "*Enabling power saving work queue" >> $DLL
-	chmod 644 /sys/module/workqueue/parameters/power_efficient
-	echo Y > /sys/module/workqueue/parameters/power_efficient
-	chmod 444 /sys/module/workqueue/parameters/power_efficient
-fi
-
 # # Turn on core_ctl module and tune parameters if kernel has core_ctl module
 # if [ -e "/sys/devices/system/cpu/cpu4/core_ctl" ]; then
 	# echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster
@@ -564,13 +557,6 @@ for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
     echo 10 > $memlat/polling_interval
 done
 echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
-
-# Disable Gentle Fair Sleepers ##EXPERIMENTAL
-if [ -e "/sys/kernel/debug/sched_features" ]; then
-	echo "NO_GENTLE_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-	echo NO_NEW_FAIR_SLEEPERS > /sys/kernel/debug/sched_features
-	echo NO_NORMALIZED_SLEEPER> /sys/kernel/debug/sched_features
-fi
 
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
