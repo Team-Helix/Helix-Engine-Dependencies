@@ -591,7 +591,7 @@ echo 150 > /proc/sys/vm/vfs_cache_pressure
 echo 15 > /proc/sys/vm/dirty_ratio
 echo 5 > /proc/sys/vm/dirty_background_ratio
 echo 11093 > /proc/sys/vm/min_free_kbytes
-echo 0 > /proc/sys/vm/overcommit_memory
+echo 1 > /proc/sys/vm/overcommit_memory
 echo 25 > /proc/sys/vm/overcommit_ratio
 echo 16 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 32 > /proc/sys/kernel/random/write_wakeup_threshold
