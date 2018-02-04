@@ -110,6 +110,13 @@ fi
 	# chmod 444 /sys/kernel/cpu_input_boost/*
 # fi
 
+#Disable TouchBoost	-- HMP only
+if [ -e "/sys/module/msm_performance/parameters/touchboost" ]; then
+	echo "*Disabling TouchBoost" >> $DLL
+	chmod 644 /sys/module/msm_performance/parameters/touchboost
+	echo 0 > /sys/module/msm_performance/parameters/touchboost
+fi
+
 #TCP tweaks
 echo "*Tuning TCP" >> $DLL
 if grep 'westwood' /proc/sys/net/ipv4/tcp_available_congestion_control; then
@@ -185,9 +192,7 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
-if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
-	echo "14746,18432,22118,41005,120237,160512" > /sys/module/lowmemorykiller/parameters/minfree
-fi
+
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level

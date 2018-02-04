@@ -36,7 +36,7 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
-	#echo 0 > /proc/sys/kernel/sched_cfs_boost
+	echo 5 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 1 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
@@ -213,14 +213,14 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					echo 10000 > $LGP/interactive/min_sample_time
 					chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
 					chmod 444 $LGP/interactive/hispeed_freq
-					echo 6000 > $LGP/interactive/max_freq_hysteresis
+					echo 5000 > $LGP/interactive/max_freq_hysteresis
 					echo 1 > $LGP/interactive/ignore_hispeed_on_notif
-					echo 1 > $LGP/interactive/boost
+					echo 0 > $LGP/interactive/boost
 					echo 0 > $LGP/interactive/fast_ramp_down
 					echo 0 > $LGP/interactive/align_windows
 					echo 1 > $LGP/interactive/use_migration_notif
 					echo 1 > $LGP/interactive/use_sched_load
-					echo 5000 > $LGP/interactive/boostpulse_duration
+					echo 8000 > $LGP/interactive/boostpulse_duration
 					chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
 					chmod 444 $LGP/interactive/*
 					echo "	+Tuning finished for interactive" >> $DLL
@@ -304,14 +304,14 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 10000 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
-			echo 6000 > $BGP/interactive/max_freq_hysteresis
+			echo 5000 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
-			echo 1 > $BGP/interactive/boost
+			echo 0 > $BGP/interactive/boost
 			echo 0 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
 			echo 1 > $BGP/interactive/use_sched_load
-			echo 5000 > $BGP/interactive/boostpulse_duration
+			echo 8000 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
 			chmod 444 $BGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
@@ -405,15 +405,7 @@ echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
 echo "*Tuning TCP" >> $DLL
-if grep 'westwood' /proc/sys/net/ipv4/tcp_available_congestion_control; then
-	echo "	+Applying westwood" >> $DLL
-	echo westwood > /proc/sys/net/ipv4/tcp_congestion_control
-else 
-	echo "	+Applying cubic" >> $DLL
-	echo cubic > /proc/sys/net/ipv4/tcp_congestion_control
-fi
 echo 0 > /proc/sys/net/ipv4/tcp_low_latency
-
 echo "	*Finished tuning TCP" >> $DLL
 
 # #Wakelocks
@@ -520,15 +512,6 @@ fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
-
-# Low Power Modes ## EXPERIMENTAL
-echo N > /sys/module/lpm_levels/parameters/sleep_disabled
-# On debuggable builds, enable console_suspend if uart is enabled to save power
-# Otherwise, disable console_suspend to get better logging for kernel crashes
-if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHS0 ]]
-then
-    echo Y > /sys/module/printk/parameters/console_suspend
-fi
 
 # Enable bus-dcvs
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do

@@ -37,12 +37,12 @@ if [ -d "/dev/stune" ]; then
 	echo -100 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
-	#echo 0 > /proc/sys/kernel/sched_cfs_boost
+	echo -100 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 0 > /dev/stune/top-app/schedtune.prefer_idle
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
-		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
+		echo 1 > /proc/sys/kernel/sched_autogroup_enabled
 	fi
 	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
 		echo 1 > /proc/sys/kernel/sched_is_big_little
@@ -110,12 +110,12 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			# if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
-				# echo 0 > /proc/sys/kernel/sched_use_walt_task_util
-				# echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
-				# echo 0 > /proc/sys/kernel/sched_walt_init_task_load_pct
-				# echo 0 > /proc/sys/kernel/sched_walt_cpu_high_irqload
-			# fi
+			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
+				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
+				echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
+				echo 0 > /proc/sys/kernel/sched_walt_init_task_load_pct
+				echo 0 > /proc/sys/kernel/sched_walt_cpu_high_irqload
+			fi
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
 			chmod 444 $LGP/pwrutilx/*
 		fi
@@ -136,12 +136,12 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
-			# if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
-				# echo 0 > /proc/sys/kernel/sched_use_walt_task_util
-				# echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
-				# echo 0 > /proc/sys/kernel/sched_walt_init_task_load_pct
-				# echo 0 > /proc/sys/kernel/sched_walt_cpu_high_irqload
-			# fi
+			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
+				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
+				echo 0 > /proc/sys/kernel/sched_use_walt_cpu_util
+				echo 0 > /proc/sys/kernel/sched_walt_init_task_load_pct
+				echo 0 > /proc/sys/kernel/sched_walt_cpu_high_irqload
+			fi
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
 			chmod 444 $LGP/schedutil/*
 		fi
@@ -201,8 +201,10 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
 			chmod 444 $LGP/interactive/hispeed_freq
+			echo 0 > $LGP/interactive/max_freq_hysteresis
 			echo 1 > $LGP/interactive/fast_ramp_down
 			echo 0 > $LGP/interactive/use_sched_load
+			echo 0 > $LGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
 			chmod 444 $LGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
@@ -276,8 +278,10 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 0 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
+			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/use_sched_load
+			echo 0 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
 			chmod 444 $BGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
@@ -525,15 +529,6 @@ fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
-
-# Low Power Modes ## EXPERIMENTAL
-echo N > /sys/module/lpm_levels/parameters/sleep_disabled
-# On debuggable builds, enable console_suspend if uart is enabled to save power
-# Otherwise, disable console_suspend to get better logging for kernel crashes
-if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHS0 ]]
-then
-    echo Y > /sys/module/printk/parameters/console_suspend
-fi
 
 # Enable bus-dcvs
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do

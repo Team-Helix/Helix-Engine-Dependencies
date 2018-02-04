@@ -36,7 +36,7 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
-	#echo 0 > /proc/sys/kernel/sched_cfs_boost
+	echo 0 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
@@ -361,13 +361,6 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	fi
 fi
 
-#Disable TouchBoost	-- HMP only
-if [ -e "/sys/module/msm_performance/parameters/touchboost" ]; then
-	echo "*Disabling TouchBoost" >> $DLL
-	chmod 644 /sys/module/msm_performance/parameters/touchboost
-	echo 0 > /sys/module/msm_performance/parameters/touchboost
-fi
-
 sleep 1
 
 #I/0 Tweaks
@@ -395,20 +388,7 @@ echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
 echo "*Tuning TCP" >> $DLL
-if grep 'westwood' /proc/sys/net/ipv4/tcp_available_congestion_control; then
-	echo "	+Applying westwood" >> $DLL
-	echo westwood > /proc/sys/net/ipv4/tcp_congestion_control
-else
-	echo "	+Applying cubic" >> $DLL
-	echo cubic > /proc/sys/net/ipv4/tcp_congestion_control
-fi
-echo 2 > /proc/sys/net/ipv4/tcp_ecn
-echo 1 > /proc/sys/net/ipv4/tcp_dsack
 echo 1 > /proc/sys/net/ipv4/tcp_low_latency
-echo 1 > /proc/sys/net/ipv4/tcp_timestamps
-echo 1 > /proc/sys/net/ipv4/tcp_sack
-echo 1 > /proc/sys/net/ipv4/tcp_window_scaling
-
 echo "	*Finished tuning TCP" >> $DLL
 
 # #Wakelocks
@@ -520,15 +500,6 @@ chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
 
-# Low Power Modes ## EXPERIMENTAL
-echo N > /sys/module/lpm_levels/parameters/sleep_disabled
-# On debuggable builds, enable console_suspend if uart is enabled to save power
-# Otherwise, disable console_suspend to get better logging for kernel crashes
-if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHS0 ]]
-then
-    echo Y > /sys/module/printk/parameters/console_suspend
-fi
-
 # Enable bus-dcvs
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
     echo "bw_hwmon" > $cpubw/governor
@@ -567,26 +538,6 @@ echo 0 > /proc/sys/vm/overcommit_ratio
 echo 41943 > /proc/sys/vm/min_free_kbytes
 echo 64 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
-
-#loop tweaks
-echo "	+loop tweaks" >> $DLL
-for i in /sys/block/loop*; do
-   echo 0 > $i/queue/add_random
-   echo 0 > $i/queue/iostats
-   echo 1 > $i/queue/nomerges
-   echo 0 > $i/queue/rotational
-   echo 1 > $i/queue/rq_affinity
-done
-
-#ram tweaks
-echo "	+ram tweaks" >> $DLL
-for j in /sys/block/ram*; do
-   echo 0 > $j/queue/add_random
-   echo 0 > $j/queue/iostats
-   echo 1 > $j/queue/nomerges
-   echo 0 > $j/queue/rotational
-   echo 1 > $j/queue/rq_affinity
-done
 
 #Turn on cores
 echo "*Turning on all cores" >> $DLL
