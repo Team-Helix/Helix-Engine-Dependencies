@@ -349,17 +349,12 @@ sleep 1
 
 #I/0 & block tweaks
 string3=/sys/block/mmcblk0/queue/scheduler;
-deadline=false;
 cfq=false;
-if grep 'deadline' $string3; then
-	deadline=true;
-fi
 if grep 'cfq' $string3; then
 	cfq=true;
 fi
 if [ -e $string3 ]; then
-
-	if [ "cfq" == "true" ]; then
+	if [ "$cfq" == "true" ]; then
 		echo "setting cfq"
 		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo "cfq" > /sys/block/mmcblk0/queue/scheduler
