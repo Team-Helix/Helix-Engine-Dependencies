@@ -30,7 +30,7 @@ fi
 if [ -e "/data/vendor/perfd" ]; then
 	echo "*Stopping perfd" >> $DLL
 	stop perfd
-	rm /data/vendor/perfd/default_values
+	#rm /data/vendor/perfd/default_values
 fi
 
 #Turn off core_control
