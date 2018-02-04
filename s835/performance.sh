@@ -560,9 +560,9 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	echo 518400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	echo $big_max_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	echo 806400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
@@ -589,9 +589,9 @@ else
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	echo 518400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	echo $big_max_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	echo 806400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
