@@ -395,7 +395,7 @@ if [ -e $string3 ]; then
 		echo 0 > /sys/block/mmcblk0rpmb/queue/rotational
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity
 		
-	elif [ "$deadline" == "false" ] && [ "cfq" == "true" ]; then
+	elif [ "$cfq" == "true" ]; then
 		echo "setting cfq"
 		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo "cfq" > /sys/block/mmcblk0/queue/scheduler
