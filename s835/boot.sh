@@ -233,6 +233,28 @@ for j in /sys/block/ram*; do
    echo 1 > $j/queue/rq_affinity
 done
 
+#Starting perfd
+if [ -e "/data/vendor/perfd" ]; then
+	echo "*Starting perfd" >> $DLL
+	start perfd
+fi
+
+#Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
+echo "	+Re-enable core_control and disable msm_thermal" >> $DLL
+if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
+# re-enable thermal hotplug
+	# re-enable thermal and BCL hotplug
+	if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
+		echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
+		echo $bcl_hotplug_mask > /sys/devices/soc/soc:qcom,bcl/hotplug_mask
+		echo $bcl_soc_hotplug_mask > /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask
+		echo -n enable > /sys/devices/soc/soc:qcom,bcl/mode
+	fi
+	echo N > /sys/module/msm_thermal/parameters/enabled
+	echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
+	echo 1 > /sys/module/msm_thermal/core_control/enabled
+fi
+
 #Turn on cores
 echo "*Turning on all cores" >> $DLL
 if grep 'schedutil' $AGL; then
@@ -293,28 +315,6 @@ else
 	echo 1 > /sys/devices/system/cpu/cpu5/online
 	echo 1 > /sys/devices/system/cpu/cpu6/online
 	echo 1 > /sys/devices/system/cpu/cpu7/online
-fi
-
-#Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
-echo "	+Re-enable core_control and disable msm_thermal" >> $DLL
-if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
-# re-enable thermal hotplug
-	# re-enable thermal and BCL hotplug
-	if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
-		echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
-		echo $bcl_hotplug_mask > /sys/devices/soc/soc:qcom,bcl/hotplug_mask
-		echo $bcl_soc_hotplug_mask > /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask
-		echo -n enable > /sys/devices/soc/soc:qcom,bcl/mode
-	fi
-	echo N > /sys/module/msm_thermal/parameters/enabled
-	echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
-	echo 1 > /sys/module/msm_thermal/core_control/enabled
-fi
-
-#Starting perfd
-if [ -e "/data/vendor/perfd" ]; then
-	echo "*Starting perfd" >> $DLL
-	start perfd
 fi
 
 echo "	*Minor tweaks applied" >> $DLL
