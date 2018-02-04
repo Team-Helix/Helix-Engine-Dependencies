@@ -16,18 +16,6 @@ DLL=/storage/emulated/0/soilwork_initiallog.txt
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
 echo "*Searching CPU frequencies" >> $DLL
-#Disable BCL
-if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
-	echo "*Disabling BCL" >> $DLL
-	chmod 644 /sys/devices/soc/soc:qcom,bcl/mode
-	echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
-fi
-
-#Stopping perfd
-if [ -e "/data/system/perfd" ]; then
-	echo "*Stopping perfd" >> $DLL
-	stop perfd
-fi
 
 #Turn off core_control
 echo "	+Disabling core_control temporarily" >> $DLL
@@ -41,7 +29,7 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
-	#echo 0 > /proc/sys/kernel/sched_cfs_boost
+	echo 0 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
@@ -281,14 +269,6 @@ fi
 
 echo "	*big settings finished" >> $DLL
 
-#Enable work queue to be power efficient
-if [ -e /sys/module/workqueue/parameters/power_efficient ]; then
-	echo "*Enabling power saving work queue" >> $DLL
-	chmod 644 /sys/module/workqueue/parameters/power_efficient
-	echo Y > /sys/module/workqueue/parameters/power_efficient
-	chmod 444 /sys/module/workqueue/parameters/power_efficient
-fi
-
 # #Tweak VoxPopuli -- Only on EAS kernels
 # if [ -d /dev/voxpopuli/ ]; then
 	# echo "*Tweaking Vox Populi PowerHal" >> $DLL
@@ -329,17 +309,6 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
-fi
-
-#Disable TouchBoost	-- HMP only
-if [ -e "/sys/module/msm_performance/parameters/touchboost" ]; then
-	echo "*Disabling TouchBoost" >> $DLL
-	chmod 644 /sys/module/msm_performance/parameters/touchboost
-	echo 0 > /sys/module/msm_performance/parameters/touchboost
-fi
-if [ -e /sys/power/pnpmgr/touch_boost ]; then
-	chmod 644 /sys/power/pnpmgr/touch_boost
-	echo 0 > /sys/power/pnpmgr/touch_boost
 fi
 
 sleep 1
@@ -480,90 +449,13 @@ echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
 echo "*Tuning TCP" >> $DLL
-if grep 'westwood' /proc/sys/net/ipv4/tcp_available_congestion_control; then
-	echo "	+Applying westwood" >> $DLL
-	echo westwood > /proc/sys/net/ipv4/tcp_congestion_control
-else 
-	echo "	+Applying cubic" >> $DLL
-	echo cubic > /proc/sys/net/ipv4/tcp_congestion_control
-fi
-echo 2 > /proc/sys/net/ipv4/tcp_ecn
-echo 1 > /proc/sys/net/ipv4/tcp_dsack
 echo 1 > /proc/sys/net/ipv4/tcp_low_latency
-echo 1 > /proc/sys/net/ipv4/tcp_timestamps
-echo 1 > /proc/sys/net/ipv4/tcp_sack
-echo 1 > /proc/sys/net/ipv4/tcp_window_scaling
 
 echo "	*Finished tuning TCP" >> $DLL
 
-#Wakelocks
-echo "*Blocking wakelocks" >> $DLL
-if [ -e "/sys/module/bcmdhd/parameters/wlrx_divide" ]; then
-	echo 4 > /sys/module/bcmdhd/parameters/wlrx_divide
-fi
-if [ -e "/sys/module/bcmdhd/parameters/wlctrl_divide" ]; then
-	echo 4 > /sys/module/bcmdhd/parameters/wlctrl_divide
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_bluetooth_timer" ]; then
-	echo Y > /sys/module/wakeup/parameters/enable_bluetooth_timer
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_ipa_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_ipa_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_netlink_ws" ]; then
-	echo Y > /sys/module/wakeup/parameters/enable_netlink_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_netmgr_wl_ws" ]; then
-	echo Y > /sys/module/wakeup/parameters/enable_netmgr_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_qcom_rx_wakelock_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_timerfd_ws" ]; then
-	echo Y > /sys/module/wakeup/parameters/enable_timerfd_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_wlan_extscan_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_wow_wl_ws" ]; then 
-	echo N > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_netmgr_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_netmgr_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_wow_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_wow_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_ipa_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_ipa_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wlan_pno_wl_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wlan_pno_wl_ws
-fi
-if [ -e "/sys/module/wakeup/parameters/enable_wcnss_filter_lock_ws" ]; then
-	echo N > /sys/module/wakeup/parameters/enable_wcnss_filter_lock_ws
-fi
-
 ## zRam
 if [ -e /sys/block/zram0 ]; then
-	swapoff /dev/block/zram0 > /dev/null 2>&1
-	echo 1 > /sys/block/zram0/reset
-	echo lz4 > /sys/block/zram0/comp_algorithm
-	echo 0 > /sys/block/zram0/disksize
-	echo 0 > /sys/block/zram0/queue/add_random 
-	echo 0 > /sys/block/zram0/queue/iostats 
-	echo 2 > /sys/block/zram0/queue/nomerges 
-	echo 0 > /sys/block/zram0/queue/rotational 
-	echo 1 > /sys/block/zram0/queue/rq_affinity
 	echo 64 > /sys/block/zram0/queue/nr_requests
-	echo 4 > /sys/block/zram0/max_comp_streams
-	chmod 644 /sys/block/zram0/disksize
-	echo 1073741824 > /sys/block/zram0/disksize
-	mkswap /dev/block/zram0 > /dev/null 2>&1
-	swapon /dev/block/zram0 > /dev/null 2>&1
 fi
 
 ##Pnp, if available
@@ -581,26 +473,13 @@ echo 32768 > /proc/sys/fs/inotify/max_queued_events
 echo 256 > /proc/sys/fs/inotify/max_user_instances
 echo 16384 > /proc/sys/fs/inotify/max_user_watches
 
-
+##LMK
 if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then 
 	chmod 664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
-
-# Low Power Modes ## EXPERIMENTAL
-# Enable all LPMs by default
-# This will enable C4, D4, D3, E4 and M3 LPMs
-echo N > /sys/module/lpm_levels/parameters/sleep_disabled
-# On debuggable builds, enable console_suspend if uart is enabled to save power
-# Otherwise, disable console_suspend to get better logging for kernel crashes
-if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHSL0 ]]
-then
-    echo Y > /sys/module/printk/parameters/console_suspend Y
-fi
-echo N > /sys/module/lpm_levels/parameters/sleep_disabled
-	
 
 # Enable bus-dcvs
 for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
@@ -625,13 +504,6 @@ for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
 done
 echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
-# Disable Gentle Fair Sleepers ##EXPERIMENTAL
-if [ -e "/sys/kernel/debug/sched_features" ]; then
-	echo "NO_GENTLE_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-	echo NO_NEW_FAIR_SLEEPERS > /sys/kernel/debug/sched_features
-	echo NO_NORMALIZED_SLEEPER> /sys/kernel/debug/sched_features
-fi
-
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
 echo 100 > /proc/sys/vm/dirty_expire_centisecs
@@ -646,26 +518,6 @@ echo 1 > /proc/sys/vm/overcommit_memory
 echo 0 > /proc/sys/vm/overcommit_ratio
 echo 64 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
-
-#loop tweaks
-echo "	+loop tweaks" >> $DLL
-for i in /sys/block/loop*; do
-   echo 0 > $i/queue/add_random
-   echo 0 > $i/queue/iostats
-   echo 1 > $i/queue/nomerges
-   echo 0 > $i/queue/rotational
-   echo 1 > $i/queue/rq_affinity
-done
-
-#ram tweaks
-echo "	+ram tweaks" >> $DLL
-for j in /sys/block/ram*; do
-   echo 0 > $j/queue/add_random
-   echo 0 > $j/queue/iostats
-   echo 1 > $j/queue/nomerges
-   echo 0 > $j/queue/rotational
-   echo 1 > $j/queue/rq_affinity
-done
 
 #Turn on cores
 echo "*Turning on all cores" >> $DLL
@@ -706,20 +558,9 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
 fi
 
-#Starting perfd
-if [ -e "/data/system/perfd" ]; then
-	echo "*Starting perfd" >> $DLL
-	start perfd
-fi
-
 echo "	*Minor tweaks applied" >> $DLL
 
 echo "#####   COMPLETED    #####" >> $DLL
 
 cdate=$(date)
 echo "$cdate" >> $DLL
-
-fstrim -v /data
-fstrim -v /cache
-fstrim -v /system
-fstrim -v /preload
