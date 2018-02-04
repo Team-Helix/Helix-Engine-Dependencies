@@ -477,7 +477,7 @@ if [ "$maple" == "true" ]; then
 		echo 0 > /sys/block/mmcblk0rpmb/queue/rotational
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity
 	fi
-elif [ "$maple" == "false" ] && [ "noop" == "true" ]; then
+elif [ "$noop" == "true" ]; then
 	if [ -e $string3 ]; then
 		echo "setting noop"
 		echo 1024 > /sys/block/mmcblk0/bdi/read_ahead_kb
