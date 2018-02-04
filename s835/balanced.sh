@@ -24,12 +24,6 @@ if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
 	echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
 fi
 
-#Stopping perfd
-if [ -e "/data/system/perfd" ]; then
-	echo "*Stopping perfd" >> $DLL
-	stop perfd
-fi
-
 #Turn off core_control
 echo "	+Disabling core_control temporarily" >> $DLL
 echo 0 > /sys/module/msm_thermal/core_control/enabled
@@ -670,12 +664,6 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo N > /sys/module/msm_thermal/parameters/enabled
 	echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
-fi
-
-#Starting perfd
-if [ -e "/data/system/perfd" ]; then
-	echo "*Starting perfd" >> $DLL
-	start perfd
 fi
 
 echo "	*Minor tweaks applied" >> $DLL
