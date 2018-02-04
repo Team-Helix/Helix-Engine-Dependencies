@@ -33,7 +33,7 @@ elif [ -e "/data/vendor/perfd" ]; then
 	stop perfd
 	#rm /data/vendor/default_values
 else
-	echo "Do nothing to perfd" >> $DLL
+	echo "Do not change perfd status" >> $DLL
 fi
 
 #Turn off core_control
