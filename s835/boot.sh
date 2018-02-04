@@ -27,9 +27,10 @@ if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
 fi
 
 #Stopping perfd
-if [ -e "/data/system/perfd" ]; then
+if [ -e "/data/vendor/perfd" ]; then
 	echo "*Stopping perfd" >> $DLL
 	stop perfd
+	rm /data/vendor/perfd/default_values
 fi
 
 #Turn off core_control
@@ -306,7 +307,7 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 fi
 
 #Starting perfd
-if [ -e "/data/system/perfd" ]; then
+if [ -e "/data/vendor/perfd" ]; then
 	echo "*Starting perfd" >> $DLL
 	start perfd
 fi
