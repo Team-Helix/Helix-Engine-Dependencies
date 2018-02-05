@@ -66,10 +66,10 @@ little_max_value=0
 big_min_value=0
 little_min_value=0
 
-little_max_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq);
-big_max_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq);
-little_min_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq);
-big_min_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq);
+little_max_value=$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq);
+big_max_value=$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_max_freq);
+little_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq);
+big_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_min_freq);
 
 #Turn on all cores
 echo "*Turning on cores" >> $DLL
@@ -99,7 +99,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	if grep 'pwrutilx' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
+			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
 			sleep 1
@@ -114,7 +114,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 10 > /proc/sys/kernel/sched_walt_init_task_load_pct
 				echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
 			fi
-			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 444 $LGP/pwrutilx/*
 		fi
 		echo "	+Tuning finished for pwrutilx" >> $DLL
@@ -122,7 +122,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
 			echo "	+Applying & tuning schedutil" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
+			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
@@ -139,7 +139,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 10 > /proc/sys/kernel/sched_walt_init_task_load_pct
 				echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
 			fi
-			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 444 $LGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
@@ -176,20 +176,20 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq" ]; then
+			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
 				echo 518400 > $LGP/interactive/screen_off_maxfreq
 			fi
-			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/powersave_bias" ]; then
+			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
 			if [ -e $AGL ]; then
 				echo "	+Applying & tuning interactive" >> $DLL
 				echo interactive > $LGP/scaling_governor
 				sleep 1
-				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
+				chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 				chmod 644 $LGP/interactive/*
 				echo 77 595200:80 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
-				chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+				chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 				echo 90000 > $LGP/interactive/timer_slack
 				chmod 644 $LGP/interactive/timer_rate
 				echo 20000 > $LGP/interactive/timer_rate
@@ -197,7 +197,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 0 672000:20000 883200:50000 1401600:75000 > $LGP/interactive/above_hispeed_delay
 				echo 400 > $LGP/interactive/go_hispeed_load
 				echo 1000 > $LGP/interactive/min_sample_time
-				chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+				chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 				chmod 444 $LGP/interactive/hispeed_freq
 				echo 0 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
@@ -209,7 +209,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 0 > $LGP/interactive/boostpulse_duration
 				echo 0 > $LGP/interactive/io_is_busy
 				echo 0 > $LGP/interactive/enable_prediction
-				chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
+				chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 				chmod 444 $LGP/interactive/*
 				echo "	+Tuning finished for interactive" >> $DLL
 			fi
@@ -236,14 +236,14 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 	if grep 'pwrutilx' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	+Applying pwrutilx" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/pwrutilx/*
+			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 644 $BGP/pwrutilx/*
 			echo pwrutilx > $BGP/scaling_governor
 			sleep 1
 			echo 1000 > $BGP/pwrutilx/up_rate_limit_us
 			echo 10000 > $BGP/pwrutilx/down_rate_limit_us
 			echo 1 > $BGP/pwrutilx/iowait_boost_enable
-			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/pwrutilx/*
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 444 $BGP/pwrutilx/*
 		fi
 		echo "	+Tuning finished for pwrutilx" >> $DLL
@@ -251,7 +251,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 	elif grep 'schedutil' $AGB; then
 		if [ -e $AGB ]; then
 			echo "	+Applying schedutil" >> $DLL
-			chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/schedutil/*
+			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
 			sleep 1
@@ -260,7 +260,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			if [ -e "$BGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $BGP/schedutil/iowait_boost_enable
 			fi
-			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/schedutil/*
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 444 $BGP/schedutil/*
 		fi
 		echo "	+Tuning finished for schedutil" >> $DLL
@@ -270,10 +270,10 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo "	Applying & tuning interactive" >> $DLL
 			echo interactive > $BGP/scaling_governor
 			sleep 1
-			chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
+			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
 			echo 78 902400:83 1132800:86 1881600:91 2265600:95 > $BGP/interactive/target_loads
-			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
 			echo 1574400 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
@@ -281,7 +281,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 5000 902400:25000 1132800:75000 2208000:80000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 5000 > $BGP/interactive/min_sample_time
-			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
@@ -293,7 +293,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 0 > $BGP/interactive/boostpulse_duration
 			echo 0 > $BGP/interactive/io_is_busy
 			echo 0 > $BGP/interactive/enable_prediction
-			chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/interactive/*
+			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
 		fi
@@ -542,14 +542,14 @@ echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 #Turn on cores
 echo "*Turning on all cores" >> $DLL
 if grep 'schedutil' $AGL; then
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo 2361600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	echo 2361600 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
@@ -571,14 +571,14 @@ if grep 'schedutil' $AGL; then
 	echo 1 > /sys/devices/system/cpu/cpu6/online
 	echo 1 > /sys/devices/system/cpu/cpu7/online
 else
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo 2361600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	echo 2361600 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online

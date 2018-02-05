@@ -5,13 +5,13 @@
 #Device: OnePlus 5
 #Codename: SoilWork UNIFIED
 #SoC: Snapdragon 835
-#Last Updated: 16/01/2018
+#Last Updated: 05/02/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
 codename=Soilwork
 stype=boot
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_boot.txt
+DLL=/storage/emulated/0/soilwork_bootlog.txt
 #Initializing log
 echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
@@ -44,10 +44,10 @@ little_max_value=0
 big_min_value=0
 little_min_value=0
 
-little_max_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq);
-big_max_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq);
-little_min_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq);
-big_min_value=$(cat /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq);
+little_max_value=$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq);
+big_max_value=$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_max_freq);
+little_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq);
+big_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_min_freq);
 
 #Turn on all cores
 echo "*Turning on cores" >> $DLL
@@ -82,32 +82,6 @@ fi
 	# echo "80 80 80 80" > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
 	# echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	# echo 4 > /sys/devices/system/cpu/cpu4/core_ctl/max_cpus
-# fi
-
-# #Tweak VoxPopuli -- Only on EAS kernels
-# if [ -d /dev/voxpopuli/ ]; then
-	# echo "*Tweaking Vox Populi PowerHal" >> $DLL
-	# VOX_P=/dev/voxpopuli/
-	# echo 1 > $VOX_P/enable_interaction_boost	#Main switch
-	# echo 0 > $VOX_P/fling_min_boost_duration
-	# echo 2500 > $VOX_P/fling_max_boost_duration
-	# echo 10 > $VOX_P/fling_boost_topapp
-	# echo 940 > $VOX_P/fling_min_freq_big
-	# echo 960 > $VOX_P/fling_min_freq_little
-	# echo 200 > $VOX_P/touch_boost_duration
-	# echo 5 > $VOX_P/touch_boost_topapp
-	# echo 806 > $VOX_P/touch_min_freq_big
-	# echo 960 > $VOX_P/touch_min_freq_little
-# fi
-
-# #Tweak input boost -- Only Sultanized ROMs
-# if [ -e "/sys/kernel/cpu_input_boost" ]; then
-	# echo "*Tweaking input boost" >> $dll
-	# chmod 644 /sys/kernel/cpu_input_boost/*
-	# echo 1 > /sys/kernel/cpu_input_boost/enable
-	# echo 66 > /sys/kernel/cpu_input_boost/ib_duration_ms
-	# echo 537600 537600 > /sys/kernel/cpu_input_boost/ib_freqs
-	# chmod 444 /sys/kernel/cpu_input_boost/*
 # fi
 
 #Disable TouchBoost	-- HMP only
@@ -258,14 +232,14 @@ fi
 #Turn on cores
 echo "*Turning on all cores" >> $DLL
 if grep 'schedutil' $AGL; then
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo 2361600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	echo 2361600 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
@@ -287,14 +261,14 @@ if grep 'schedutil' $AGL; then
 	echo 1 > /sys/devices/system/cpu/cpu6/online
 	echo 1 > /sys/devices/system/cpu/cpu7/online
 else
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	echo $big_max_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	echo $big_max_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
