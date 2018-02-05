@@ -33,8 +33,7 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
 	echo 1 > /dev/stune/schedtune.sched_boost_enabled
-	echo 0 > /dev/stune/schedtune.boost
-	echo 0 > /dev/stune/top-app/schedtune.boost
+	echo -10 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/audio-app/schedtune.boost
 	echo -100 > /dev/stune/background/schedtune.boost
 	echo -100 > /dev/stune/foreground/schedtune.boost

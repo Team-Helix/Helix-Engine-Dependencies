@@ -31,7 +31,7 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 ##Configuring stune & cpuset
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 1 > /dev/stune/top-app/schedtune.boost
+	echo 1 > /dev/stune/schedtune.sched_boost_enabled
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
@@ -105,6 +105,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 2000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 6000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 7 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
@@ -131,6 +132,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
 			echo 5 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -145,6 +147,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
+			echo 0 > /dev/stune/top-app/schedtune.boost
 			echo 95 > /proc/sys/kernel/sched_upmigrate
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
 			echo 85 > /proc/sys/kernel/sched_downmigrate

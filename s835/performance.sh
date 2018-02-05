@@ -31,7 +31,7 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 ##Configuring stune
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 10 > /dev/stune/top-app/schedtune.boost
+	echo 1 > /dev/stune/schedtune.sched_boost_enabled
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
@@ -113,6 +113,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 500 > $LGP/schedutil/up_rate_limit_us
 			echo 20000 > $LGP/schedutil/down_rate_limit_us
 			echo 25 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 10 > /dev/stune/top-app/schedtune.boost
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
@@ -136,6 +137,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
+			echo 5 > /dev/stune/top-app/schedtune.boost
 			echo 75 > /proc/sys/kernel/sched_upmigrate
 			echo 90 > /proc/sys/kernel/sched_group_upmigrate
 			echo 60 > /proc/sys/kernel/sched_downmigrate
