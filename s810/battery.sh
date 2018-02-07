@@ -486,15 +486,15 @@ chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 chmod 664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-echo $little_max_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+echo 1248000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $little_min_value > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo $big_max_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+echo 1440000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 echo $big_min_value > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 chmod 644 /sys/devices/system/cpu/online
-echo "0-5" > /sys/devices/system/cpu/online
+echo "0-7" > /sys/devices/system/cpu/online
 chmod 444 /sys/devices/system/cpu/online
 chmod 644 /sys/devices/system/cpu/offline
-echo "6-7" > /sys/devices/system/cpu/offline
+echo "" > /sys/devices/system/cpu/offline
 chmod 444 /sys/devices/system/cpu/offline
 echo 1 > /sys/devices/system/cpu/cpu0/online
 echo 1 > /sys/devices/system/cpu/cpu1/online
@@ -502,8 +502,8 @@ echo 1 > /sys/devices/system/cpu/cpu2/online
 echo 1 > /sys/devices/system/cpu/cpu3/online
 echo 1 > /sys/devices/system/cpu/cpu4/online
 echo 1 > /sys/devices/system/cpu/cpu5/online
-echo 0 > /sys/devices/system/cpu/cpu6/online
-echo 0 > /sys/devices/system/cpu/cpu7/online
+echo 1 > /sys/devices/system/cpu/cpu6/online
+echo 1 > /sys/devices/system/cpu/cpu7/online
 
 #Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
 echo "	+Re-enable core_control and disable msm_thermal" >> $DLL

@@ -4,7 +4,7 @@
 #Device: OnePlus 5
 #Codename: SoilWork UNIFIED
 #SoC: Snapdragon 835
-#Last Updated: 16/01/2018
+#Last Updated: 07/02/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
 codename=Soilwork
 stype=battery
@@ -589,16 +589,16 @@ else
 	echo 1804800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
-	echo "0-5" > /sys/devices/system/cpu/online
+	echo "0-7" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
 	chmod 644 /sys/devices/system/cpu/offline
-	echo "6-7" > /sys/devices/system/cpu/offline
+	echo "" > /sys/devices/system/cpu/offline
 	chmod 444 /sys/devices/system/cpu/offline
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo "4 5" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+	echo "4 5 6 7" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo 1 > /sys/devices/system/cpu/cpu0/online
 	echo 1 > /sys/devices/system/cpu/cpu1/online
@@ -606,8 +606,8 @@ else
 	echo 1 > /sys/devices/system/cpu/cpu3/online
 	echo 1 > /sys/devices/system/cpu/cpu4/online
 	echo 1 > /sys/devices/system/cpu/cpu5/online
-	echo 0 > /sys/devices/system/cpu/cpu6/online
-	echo 0 > /sys/devices/system/cpu/cpu7/online
+	echo 1 > /sys/devices/system/cpu/cpu6/online
+	echo 1 > /sys/devices/system/cpu/cpu7/online
 fi
 
 #Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
