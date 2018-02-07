@@ -13,31 +13,67 @@ set_perm(0, 0, 0666, "/data/helix_engine/prev.conf");
 set_perm(0, 0, 0666, "/data/helix_engine/notification.conf");
 
 if
-	file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "1"
+	file_getprop("/tmp/aroma/set.prop", "selected.0") == "1"
 then
-	ui_print("Adding scripts for Snapdragon 835 chipset device");
-	package_extract_dir("s835", "/data/helix_engine/scripts");
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "1"
+	then
+		ui_print("Adding scripts for Snapdragon 835 chipset device");
+		package_extract_dir("soiltweaks/s835", "/data/helix_engine/scripts");
+	endif;
+
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "2"
+	then
+		ui_print("Adding scripts for Snapdragon 820/821 chipset device");
+		package_extract_dir("soiltweaks/s820", "/data/helix_engine/scripts");
+	endif;
+
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "3"
+	then
+		ui_print("Adding scripts for Snapdragon 810 chipset device");
+		package_extract_dir("soiltweaks/s810", "/data/helix_engine/scripts");
+	endif;
+
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "4"
+	then
+		ui_print("Adding scripts for Snapdragon 808 chipset device");
+		package_extract_dir("soiltweaks/s808", "/data/helix_engine/scripts");
+	endif;
 endif;
 
 if
-	file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "2"
+	file_getprop("/tmp/aroma/set.prop", "selected.0") == "2"
 then
-	ui_print("Adding scripts for Snapdragon 820/821 chipset device");
-	package_extract_dir("s820", "/data/helix_engine/scripts");
-endif;
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "1"
+	then
+		ui_print("Adding scripts for Snapdragon 835 chipset device");
+		package_extract_dir("akt/s835", "/data/helix_engine/scripts");
+	endif;
 
-if
-	file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "3"
-then
-	ui_print("Adding scripts for Snapdragon 810 chipset device");
-	package_extract_dir("s810", "/data/helix_engine/scripts");
-endif;
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "2"
+	then
+		ui_print("Adding scripts for Snapdragon 820/821 chipset device");
+		package_extract_dir("akt/s820", "/data/helix_engine/scripts");
+	endif;
 
-if
-	file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "4"
-then
-	ui_print("Adding scripts for Snapdragon 808 chipset device");
-	package_extract_dir("s808", "/data/helix_engine/scripts");
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "3"
+	then
+		ui_print("Adding scripts for Snapdragon 810 chipset device");
+		package_extract_dir("akt/s810", "/data/helix_engine/scripts");
+	endif;
+
+	if
+		file_getprop("/tmp/aroma/chipset.prop", "selected.0") == "4"
+	then
+		ui_print("Adding scripts for Snapdragon 808 chipset device");
+		package_extract_dir("akt/s808", "/data/helix_engine/scripts");
+	endif;
 endif;
 
 set_perm_recursive(0, 0, 0755, 0755, "/data/helix_engine/scripts");

@@ -36,6 +36,11 @@ viewbox(
    "@welcome"
 );
 
+selectbox("","Profile Set Selection","@personalize","set.prop",
+			"Soiltweaks","Profiles made by RogerF81.",1,
+			"AKT","Profiles from Advanced Kernel Tweaks.",0
+);
+
 selectbox("","Chipset Selection","@personalize","chipset.prop",
 			"S835","Select this if you are on a Snapdragon 835 device.",1,
 			"S820/821","Select this if you are on a Snapdragon 820/821 device.",0,
