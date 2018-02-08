@@ -188,7 +188,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 652800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 				echo 0 422400:40000 844800:60000 1111300:80000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-				echo 0 > $LGP/interactive/min_sample_time	
+				echo 10000 > $LGP/interactive/min_sample_time	
 				echo 0 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
@@ -274,7 +274,7 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
 			echo 0 556800:40000 1248000:80000 > $BGP/interactive/above_hispeed_delay
-			echo 350 > $BGP/interactive/go_hispeed_load
+			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 10000 > $BGP/interactive/min_sample_time		
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif

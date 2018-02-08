@@ -189,14 +189,14 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 0 652800:20000 1111300:60000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
 				echo 20000 > $LGP/interactive/min_sample_time	
-				echo 5000 > $LGP/interactive/max_freq_hysteresis
+				echo 50000 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
 				echo 0 > $LGP/interactive/fast_ramp_down
 				echo 0 > $LGP/interactive/align_windows
 				echo 1 > $LGP/interactive/use_migration_notif
 				echo 1 > $LGP/interactive/use_sched_load
-				echo 8000 > $LGP/interactive/boostpulse_duration
+				echo 80000 > $LGP/interactive/boostpulse_duration
 				echo 0 > $LGP/interactive/io_is_busy
 				echo 0 > $LGP/interactive/enable_prediction
 				chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
@@ -276,14 +276,14 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo 0 652800:20000 1248000:60000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 20000 > $BGP/interactive/min_sample_time			
-			echo 5000 > $BGP/interactive/max_freq_hysteresis
+			echo 50000 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
 			echo 0 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
 			echo 1 > $BGP/interactive/use_sched_load
-			echo 8000 > $BGP/interactive/boostpulse_duration
+			echo 80000 > $BGP/interactive/boostpulse_duration
 			echo 0 > $BGP/interactive/io_is_busy
 			echo 0 > $BGP/interactive/enable_prediction
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
