@@ -33,10 +33,10 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
 	echo 1 > /dev/stune/schedtune.sched_boost_enabled
-	echo -10 > /dev/stune/top-app/schedtune.boost
+	echo 0 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/audio-app/schedtune.boost
-	echo -100 > /dev/stune/background/schedtune.boost
-	echo -100 > /dev/stune/foreground/schedtune.boost
+	echo 0 > /dev/stune/background/schedtune.boost
+	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
@@ -52,7 +52,7 @@ if [ -d "/dev/stune" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
 fi
-echo 16 > /proc/sys/kernel/sched_nr_migrate
+echo 24 > /proc/sys/kernel/sched_nr_migrate
 echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
@@ -109,7 +109,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 2000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 0 > $LGP/pwrutilx/iowait_boost_enable
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -135,7 +134,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
 			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 16 > /proc/sys/kernel/sched_nr_migrate
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -154,13 +152,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
 			echo 90 > /proc/sys/kernel/sched_downmigrate
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
-			echo 0 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 0 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 55 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 35 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 3 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
@@ -180,9 +178,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
-				echo 364800 > $LGP/interactive/screen_off_maxfreq
-			fi
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
@@ -197,7 +192,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/interactive/timer_rate
 			echo 60000 > $LGP/interactive/timer_rate
 			echo 441600 > $LGP/interactive/hispeed_freq
-			echo 50000 883200:100000 1401600:150000 > $LGP/interactive/above_hispeed_delay
+			echo 45000 883200:80000 1401600:100000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 0 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
@@ -274,7 +269,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 806400 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 80000 > $BGP/interactive/timer_rate
-			echo 60000 1132800:125000 > $BGP/interactive/above_hispeed_delay
+			echo 45000 1132800:100000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 0 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
@@ -361,10 +356,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo 16 > $Q_PATH/iosched/fifo_batch
 		echo 4 > $Q_PATH/iosched/writes_starved
 		echo 10 > $Q_PATH/iosched/sleep_latency_multiple
-		#echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
-		#echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
-		#echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
-		#echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
+		echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
+		echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
+		echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
+		echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > $Q_PATH/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > $Q_PATH/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > $Q_PATH/iosched/sync_read_expire  ##if CONFIG_HZ=1000
@@ -373,10 +368,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		#echo 450 > $Q_PATH/iosched/async_write_expire  ##previously used values
 		#echo 350 > $Q_PATH/iosched/sync_read_expire  ##previously used values
 		#echo 550 > $Q_PATH/iosched/sync_write_expire  ##previously used values
-		echo 1500 > $Q_PATH/iosched/async_read_expire
-		echo 1500 > $Q_PATH/iosched/async_write_expire
-		echo 150 > $Q_PATH/iosched/sync_read_expire
-		echo 150 > $Q_PATH/iosched/sync_write_expire
+		# echo 1500 > $Q_PATH/iosched/async_read_expire  ##previously used values, 2nd test
+		# echo 1500 > $Q_PATH/iosched/async_write_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_read_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_write_expire  ##previously used values, 2nd test
 	elif grep 'cfq' $Q_PATH/scheduler; then
 		echo "cfq" > $Q_PATH/scheduler
 		sleep 1
@@ -398,7 +393,7 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo "	-Error Code #03"
 	fi
 	echo 512 > $Q_PATH/read_ahead_kb
-	echo 80 > $Q_PATH/nr_requests
+	echo 96 > $Q_PATH/nr_requests
 	echo 0 > $Q_PATH/add_random
 	echo 0 > $Q_PATH/iostats
 	echo 1 > $Q_PATH/nomerges

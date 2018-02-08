@@ -207,6 +207,37 @@ for j in /sys/block/ram*; do
    echo 1 > $j/queue/rq_affinity
 done
 
+#Turn on cores
+echo "*Turning on all cores" >> $DLL
+chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+echo $big_max_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+chmod 644 /sys/devices/system/cpu/online
+echo "0-7" > /sys/devices/system/cpu/online
+chmod 444 /sys/devices/system/cpu/online
+chmod 644 /sys/devices/system/cpu/offline
+echo "" > /sys/devices/system/cpu/offline
+chmod 444 /sys/devices/system/cpu/offline
+chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
+echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
+chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
+chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+echo "4 5 6 7" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+echo 1 > /sys/devices/system/cpu/cpu0/online
+echo 1 > /sys/devices/system/cpu/cpu1/online
+echo 1 > /sys/devices/system/cpu/cpu2/online
+echo 1 > /sys/devices/system/cpu/cpu3/online
+echo 1 > /sys/devices/system/cpu/cpu4/online
+echo 1 > /sys/devices/system/cpu/cpu5/online
+echo 1 > /sys/devices/system/cpu/cpu6/online
+echo 1 > /sys/devices/system/cpu/cpu7/online
+
 #Starting perfd
 if [ -e "/data/vendor/perfd" ]; then
 	echo "*Starting perfd" >> $DLL
@@ -227,68 +258,6 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo N > /sys/module/msm_thermal/parameters/enabled
 	echo 0 > /sys/module/msm_thermal/vdd_restriction/enabled
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
-fi
-
-#Turn on cores
-echo "*Turning on all cores" >> $DLL
-if grep 'schedutil' $AGL; then
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 2361600 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	chmod 644 /sys/devices/system/cpu/online
-	echo "0-7" > /sys/devices/system/cpu/online
-	chmod 444 /sys/devices/system/cpu/online
-	chmod 644 /sys/devices/system/cpu/offline
-	echo "" > /sys/devices/system/cpu/offline
-	chmod 444 /sys/devices/system/cpu/offline
-	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo "4 5 6 7" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo 1 > /sys/devices/system/cpu/cpu0/online
-	echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
-	echo 1 > /sys/devices/system/cpu/cpu4/online
-	echo 1 > /sys/devices/system/cpu/cpu5/online
-	echo 1 > /sys/devices/system/cpu/cpu6/online
-	echo 1 > /sys/devices/system/cpu/cpu7/online
-else
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo $little_max_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo $big_max_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	chmod 644 /sys/devices/system/cpu/online
-	echo "0-7" > /sys/devices/system/cpu/online
-	chmod 444 /sys/devices/system/cpu/online
-	chmod 644 /sys/devices/system/cpu/offline
-	echo "" > /sys/devices/system/cpu/offline
-	chmod 444 /sys/devices/system/cpu/offline
-	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo "4 5 6 7" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo 1 > /sys/devices/system/cpu/cpu0/online
-	echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
-	echo 1 > /sys/devices/system/cpu/cpu4/online
-	echo 1 > /sys/devices/system/cpu/cpu5/online
-	echo 1 > /sys/devices/system/cpu/cpu6/online
-	echo 1 > /sys/devices/system/cpu/cpu7/online
 fi
 
 echo "	*Minor tweaks applied" >> $DLL

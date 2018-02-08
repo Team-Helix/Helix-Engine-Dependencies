@@ -42,9 +42,6 @@ if [ -d "/dev/stune" ]; then
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 	fi
-	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
-		echo 1 > /proc/sys/kernel/sched_is_big_little
-	fi
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
@@ -168,9 +165,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
-				echo 595200 > $LGP/interactive/screen_off_maxfreq
-			fi
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
@@ -189,7 +183,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					echo 1401600 > $LGP/blu_active/hispeed_freq
 					echo 0 > $LGP/blu_active/above_hispeed_delay
 					echo 400 > $LGP/blu_active/go_hispeed_load
-					echo 10000 > $LGP/blu_active/min_sample_time
+					echo 15000 > $LGP/blu_active/min_sample_time
 					echo 1 > $LGP/blu_active/fastlane
 					echo 40 > $LGP/blu_active/fastlane_threshold
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/blu_active/*
@@ -211,17 +205,17 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					echo 1401600 > $LGP/interactive/hispeed_freq
 					echo 0 > $LGP/interactive/above_hispeed_delay
 					echo 400 > $LGP/interactive/go_hispeed_load
-					echo 10000 > $LGP/interactive/min_sample_time
+					echo 15000 > $LGP/interactive/min_sample_time
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 					chmod 444 $LGP/interactive/hispeed_freq
-					echo 5000 > $LGP/interactive/max_freq_hysteresis
+					echo 79000 > $LGP/interactive/max_freq_hysteresis
 					echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 					echo 0 > $LGP/interactive/boost
 					echo 0 > $LGP/interactive/fast_ramp_down
 					echo 0 > $LGP/interactive/align_windows
 					echo 1 > $LGP/interactive/use_migration_notif
 					echo 1 > $LGP/interactive/use_sched_load
-					echo 8000 > $LGP/interactive/boostpulse_duration
+					echo 80000 > $LGP/interactive/boostpulse_duration
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 					chmod 444 $LGP/interactive/*
 					echo "	+Tuning finished for interactive" >> $DLL
@@ -279,7 +273,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 20000 > $BGP/blu_active/timer_rate
 			echo 0 > $BGP/blu_active/above_hispeed_delay
 			echo 350 > $BGP/blu_active/go_hispeed_load
-			echo 10000 > $BGP/blu_active/min_sample_time
+			echo 15000 > $BGP/blu_active/min_sample_time
 			echo 1 > $BGP/blu_active/fastlane
 			echo 40 > $BGP/blu_active/fastlane_threshold
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/blu_active/*
@@ -302,17 +296,17 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 20000 > $BGP/interactive/timer_rate
 			echo 0 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
-			echo 10000 > $BGP/interactive/min_sample_time
+			echo 15000 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
-			echo 5000 > $BGP/interactive/max_freq_hysteresis
+			echo 79000 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
 			echo 0 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
 			echo 1 > $BGP/interactive/use_sched_load
-			echo 8000 > $BGP/interactive/boostpulse_duration
+			echo 80000 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
 			echo "	+Tuning finished for interactive" >> $DLL
@@ -394,7 +388,7 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo "	-Error Code #03"
 	fi
 	echo 1024 > $Q_PATH/read_ahead_kb
-	echo 128 > $Q_PATH/nr_requests
+	echo 160 > $Q_PATH/nr_requests
 	echo 0 > $Q_PATH/add_random
 	echo 0 > $Q_PATH/iostats
 	echo 1 > $Q_PATH/nomerges

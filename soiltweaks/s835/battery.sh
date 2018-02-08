@@ -10,7 +10,7 @@ codename=Soilwork
 stype=battery
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_battery_log.txt
+DLL=/storage/emulated/0/soilwork_batterylog.txt
 
 #Initializing log
 echo "$cdate" > $DLL
@@ -42,9 +42,6 @@ if [ -d "/dev/stune" ]; then
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 	fi
-	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
-		echo 1 > /proc/sys/kernel/sched_is_big_little
-	fi
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
@@ -55,7 +52,7 @@ echo 0 > /proc/sys/kernel/sched_initial_task_util
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
 	echo 0 > /dev/cpuset/background/cpus
-	echo 1 > /dev/cpuset/system-background/cpus
+	echo 0-1 > /dev/cpuset/system-background/cpus
 fi
 
 sleep 1
@@ -152,7 +149,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
 			echo 85 > /proc/sys/kernel/sched_downmigrate
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
-			echo 5 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 5 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
@@ -178,9 +175,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
-				echo 518400 > $LGP/interactive/screen_off_maxfreq
-			fi
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
@@ -193,11 +187,11 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
-			echo 60000 > $LGP/interactive/timer_rate
+			echo 40000 > $LGP/interactive/timer_rate
 			echo 825600 > $LGP/interactive/hispeed_freq
-			echo 15000 883200:50000 1401600:100000 > $LGP/interactive/above_hispeed_delay
+			echo 15000 883200:40000 1401600:80000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
-			echo 0 > $LGP/interactive/min_sample_time
+			echo 5000 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 			chmod 444 $LGP/interactive/hispeed_freq
 			echo 0 > $LGP/interactive/max_freq_hysteresis
@@ -272,9 +266,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 1056000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
-			echo 25000 902400:50000 1132800:75000 2208000:100000 > $BGP/interactive/above_hispeed_delay
+			echo 15000 902400:40000 1132800:75000 2208000:80000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
-			echo 0 > $BGP/interactive/min_sample_time
+			echo 5000 > $BGP/interactive/min_sample_time
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/use_sched_load
@@ -327,9 +321,9 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:825600 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo 100 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
@@ -347,10 +341,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo 16 > $Q_PATH/iosched/fifo_batch
 		echo 4 > $Q_PATH/iosched/writes_starved
 		echo 10 > $Q_PATH/iosched/sleep_latency_multiple
-		#echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
-		#echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
-		#echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
-		#echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
+		echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
+		echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
+		echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
+		echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > $Q_PATH/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > $Q_PATH/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > $Q_PATH/iosched/sync_read_expire  ##if CONFIG_HZ=1000
@@ -359,10 +353,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		#echo 450 > $Q_PATH/iosched/async_write_expire  ##previously used values
 		#echo 350 > $Q_PATH/iosched/sync_read_expire  ##previously used values
 		#echo 550 > $Q_PATH/iosched/sync_write_expire  ##previously used values
-		echo 1500 > $Q_PATH/iosched/async_read_expire
-		echo 1500 > $Q_PATH/iosched/async_write_expire
-		echo 150 > $Q_PATH/iosched/sync_read_expire
-		echo 150 > $Q_PATH/iosched/sync_write_expire
+		# echo 1500 > $Q_PATH/iosched/async_read_expire  ##previously used values, 2nd test
+		# echo 1500 > $Q_PATH/iosched/async_write_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_read_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_write_expire  ##previously used values, 2nd test
 	elif grep 'cfq' $Q_PATH/scheduler; then
 		echo "cfq" > $Q_PATH/scheduler
 		sleep 1
@@ -384,7 +378,7 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo "	-Error Code #03"
 	fi
 	echo 512 > $Q_PATH/read_ahead_kb
-	echo 96 > $Q_PATH/nr_requests
+	echo 112 > $Q_PATH/nr_requests
 	echo 0 > $Q_PATH/add_random
 	echo 0 > $Q_PATH/iostats
 	echo 1 > $Q_PATH/nomerges
@@ -451,7 +445,7 @@ echo "	*Finished tuning TCP" >> $DLL
 # fi
 
 # #GPU
-echo "simple_ondemand" > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/governor
+echo "msm-adreno-tz" > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/governor
 GPU_FREQ=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 av_freq=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/available_frequencies
 if [ -e $GPU_FREQ ]; then

@@ -42,9 +42,6 @@ if [ -d "/dev/stune" ]; then
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 	fi
-	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
-		echo 1 > /proc/sys/kernel/sched_is_big_little
-	fi
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
@@ -54,7 +51,7 @@ echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
-	echo 0 > /dev/cpuset/background/cpus
+	echo 0-1 > /dev/cpuset/background/cpus
 	echo 0-1 > /dev/cpuset/system-background/cpus
 fi
 
@@ -178,9 +175,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
-				echo 518400 > $LGP/interactive/screen_off_maxfreq
-			fi
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
@@ -196,19 +190,19 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				chmod 644 $LGP/interactive/timer_rate
 				echo 20000 > $LGP/interactive/timer_rate
 				echo 1036800 > $LGP/interactive/hispeed_freq
-				echo 0 672000:20000 883200:50000 1401600:75000 > $LGP/interactive/above_hispeed_delay
+				echo 0 672000:20000 883200:40000 1401600:60000 > $LGP/interactive/above_hispeed_delay
 				echo 400 > $LGP/interactive/go_hispeed_load
-				echo 1000 > $LGP/interactive/min_sample_time
+				echo 10000 > $LGP/interactive/min_sample_time
 				chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 				chmod 444 $LGP/interactive/hispeed_freq
-				echo 0 > $LGP/interactive/max_freq_hysteresis
+				echo 20000 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
 				echo 0 > $LGP/interactive/fast_ramp_down
 				echo 0 > $LGP/interactive/align_windows
 				echo 1 > $LGP/interactive/use_migration_notif
 				echo 1 > $LGP/interactive/use_sched_load
-				echo 0 > $LGP/interactive/boostpulse_duration
+				echo 30000 > $LGP/interactive/boostpulse_duration
 				echo 0 > $LGP/interactive/io_is_busy
 				echo 0 > $LGP/interactive/enable_prediction
 				chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
@@ -280,19 +274,19 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 1574400 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 20000 > $BGP/interactive/timer_rate
-			echo 5000 902400:25000 1132800:75000 2208000:80000 > $BGP/interactive/above_hispeed_delay
+			echo 0 902400:20000 1132800:40000 2208000:60000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
-			echo 5000 > $BGP/interactive/min_sample_time
+			echo 10000 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
-			echo 0 > $BGP/interactive/max_freq_hysteresis
+			echo 20000 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
 			echo 0 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
 			echo 1 > $BGP/interactive/use_sched_load
-			echo 0 > $BGP/interactive/boostpulse_duration
+			echo 30000 > $BGP/interactive/boostpulse_duration
 			echo 0 > $BGP/interactive/io_is_busy
 			echo 0 > $BGP/interactive/enable_prediction
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
@@ -355,9 +349,9 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 460 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
@@ -531,7 +525,7 @@ echo 200 > /proc/sys/vm/dirty_expire_centisecs
 echo 500 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 3 > /proc/sys/vm/page-cluster
-echo 10 > /proc/sys/vm/swappiness
+echo 0 > /proc/sys/vm/swappiness
 echo 60 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
 echo 10 > /proc/sys/vm/dirty_background_ratio
