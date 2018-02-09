@@ -183,20 +183,20 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 80 883200:83 1324800:90 1555200:95 > $LGP/interactive/target_loads
+			echo 78 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
 			echo 40000 > $LGP/interactive/timer_rate
-			echo 825600 > $LGP/interactive/hispeed_freq
-			echo 15000 883200:40000 1401600:80000 > $LGP/interactive/above_hispeed_delay
+			echo 883200 > $LGP/interactive/hispeed_freq
+			echo 10000 883200:40000 1478400:80000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 5000 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 			chmod 444 $LGP/interactive/hispeed_freq
 			echo 0 > $LGP/interactive/max_freq_hysteresis
 			echo 1 > $LGP/interactive/fast_ramp_down
-			echo 0 > $LGP/interactive/use_sched_load
+			echo 1 > $LGP/interactive/use_sched_load
 			echo 0 > $LGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 444 $LGP/interactive/*
@@ -260,18 +260,18 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 83 1132800:86 1881600:91 2265600:95 > $BGP/interactive/target_loads
+			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
 			echo 1056000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
-			echo 15000 902400:40000 1132800:75000 2208000:80000 > $BGP/interactive/above_hispeed_delay
+			echo 10000 1132800:40000 1574400:80000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 5000 > $BGP/interactive/min_sample_time
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/fast_ramp_down
-			echo 0 > $BGP/interactive/use_sched_load
+			echo 1 > $BGP/interactive/use_sched_load
 			echo 0 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
@@ -321,7 +321,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:825600 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:883200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 100 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
@@ -549,9 +549,9 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1747200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1804800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1728000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
@@ -578,9 +578,9 @@ else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1747200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1804800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1728000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online

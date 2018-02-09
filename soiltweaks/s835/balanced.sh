@@ -268,13 +268,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 78 902400:83 1132800:86 1881600:91 2265600:95 > $BGP/interactive/target_loads
+			echo 78 902400:83 1132800:86 1881600:91 2323200:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
 			echo 1574400 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 20000 > $BGP/interactive/timer_rate
-			echo 0 902400:20000 1132800:40000 2208000:60000 > $BGP/interactive/above_hispeed_delay
+			echo 0 902400:20000 1132800:40000 2265600:60000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 10000 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time

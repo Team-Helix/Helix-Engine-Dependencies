@@ -186,7 +186,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 85 1324800:95 1555200:99 > $LGP/interactive/target_loads
+			echo 85 1401600:95 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 120000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
@@ -263,7 +263,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 86 1881600:91 2265600:99 > $BGP/interactive/target_loads
+			echo 85 1132800:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
 			echo 806400 > $BGP/interactive/hispeed_freq
@@ -572,9 +572,9 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1248000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1401600 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1651200 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1267200 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
@@ -601,7 +601,7 @@ else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1670400 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 1420800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
