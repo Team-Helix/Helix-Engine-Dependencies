@@ -101,7 +101,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			echo 2000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 6000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 7 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
@@ -128,8 +128,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 5 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 1 > /dev/stune/top-app/schedtune.boost
+			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 0 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -149,6 +149,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
 			echo 85 > /proc/sys/kernel/sched_downmigrate
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
+			echo 600000 > /proc/sys/kernel/sched_freq_inc_notify
+			echo 200000 > /proc/sys/kernel/sched_freq_dec_notify
 			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 5 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
@@ -188,7 +190,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
 			echo 40000 > $LGP/interactive/timer_rate
-			echo 883200 > $LGP/interactive/hispeed_freq
+			echo 300000 > $LGP/interactive/hispeed_freq
 			echo 10000 883200:40000 1478400:80000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 5000 > $LGP/interactive/min_sample_time
@@ -263,7 +265,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
-			echo 1056000 > $BGP/interactive/hispeed_freq
+			echo 300000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
 			echo 10000 1132800:40000 1574400:80000 > $BGP/interactive/above_hispeed_delay
@@ -497,7 +499,7 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
 if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
-	echo "18432,23040,27648,51256,150296,200640" > /sys/module/lowmemorykiller/parameters/minfree
+	echo "18432,23040,27648,32256,73728,120960" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level

@@ -108,7 +108,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 5000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 2000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 0 > $LGP/pwrutilx/iowait_boost_enable
-			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 2 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -133,7 +133,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 0 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -191,7 +191,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 120000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
 			echo 60000 > $LGP/interactive/timer_rate
-			echo 441600 > $LGP/interactive/hispeed_freq
+			echo 300000 > $LGP/interactive/hispeed_freq
 			echo 45000 883200:80000 1401600:100000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 0 > $LGP/interactive/min_sample_time
@@ -266,7 +266,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 85 1132800:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
-			echo 806400 > $BGP/interactive/hispeed_freq
+			echo 300000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 80000 > $BGP/interactive/timer_rate
 			echo 45000 1132800:100000 > $BGP/interactive/above_hispeed_delay
@@ -520,7 +520,7 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
 if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
-	echo "18432,23040,27648,51256,150296,200640" > /sys/module/lowmemorykiller/parameters/minfree 
+	echo "18432,23040,27648,32256,82944,161280" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level

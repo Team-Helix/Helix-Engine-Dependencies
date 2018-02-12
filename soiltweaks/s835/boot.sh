@@ -160,6 +160,7 @@ echo "	*Finished tuning TCP" >> $DLL
 	# echo N > /sys/module/wakeup/parameters/enable_wcnss_filter_lock_ws
 # fi
 
+##LMK
 if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
@@ -170,6 +171,10 @@ fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
+
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+	echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
+fi
 
 # Low Power Modes ## EXPERIMENTAL
 echo N > /sys/module/lpm_levels/parameters/sleep_disabled

@@ -102,8 +102,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
-			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 3 > /dev/stune/top-app/schedtune.boost
+			echo 18 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 2 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -128,8 +128,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 3 > /dev/stune/top-app/schedtune.boost
+			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -483,6 +483,7 @@ fi
 # echo "	+File system tweaks" >> $DLL
 # echo 45 > /proc/sys/fs/lease-break-time
 
+##LMK
 if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
@@ -490,7 +491,7 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
 if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
-	echo "14746,18432,22118,41005,120237,160512" > /sys/module/lowmemorykiller/parameters/minfree
+	echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
