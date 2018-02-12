@@ -24,7 +24,7 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 ##Configuring stune & cpuset
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 3 > /dev/stune/top-app/schedtune.boost
+	echo 1 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
@@ -96,7 +96,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
-			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 18 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -121,7 +121,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -186,7 +186,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 1228800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
 				echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-				echo 0 652800:20000 1111300:60000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+				echo 0 652800:20000 1111300:40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
 				echo 20000 > $LGP/interactive/min_sample_time	
 				echo 50000 > $LGP/interactive/max_freq_hysteresis
@@ -273,7 +273,7 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo 1248000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 20000 > $BGP/interactive/timer_rate
-			echo 0 652800:20000 1248000:60000 > $BGP/interactive/above_hispeed_delay
+			echo 0 652800:20000 1248000:40000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 20000 > $BGP/interactive/min_sample_time			
 			echo 50000 > $BGP/interactive/max_freq_hysteresis
@@ -543,6 +543,9 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+fi
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+	echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 
 # Enable bus-dcvs

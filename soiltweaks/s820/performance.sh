@@ -25,7 +25,7 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 ##Configuring stune
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 10 > /dev/stune/top-app/schedtune.boost
+	echo 3 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
@@ -95,7 +95,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			sleep 1
 			echo 500 > $LGP/schedutil/up_rate_limit_us
 			echo 20000 > $LGP/schedutil/down_rate_limit_us
-			echo 25 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
@@ -510,6 +510,9 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+fi
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+	echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 
 # Enable bus-dcvs
