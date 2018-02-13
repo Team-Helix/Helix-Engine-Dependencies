@@ -42,9 +42,6 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 0 > /dev/stune/top-app/schedtune.prefer_idle
-	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
-		echo 1 > /proc/sys/kernel/sched_autogroup_enabled
-	fi
 	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
 		echo 1 > /proc/sys/kernel/sched_is_big_little
 	fi
@@ -59,6 +56,10 @@ if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
 	echo 0 > /dev/cpuset/background/cpus
 	echo 0 > /dev/cpuset/system-background/cpus
+fi
+
+if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
+	echo 1 > /proc/sys/kernel/sched_autogroup_enabled
 fi
 
 sleep 1
@@ -572,12 +573,12 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1401600 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1267200 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1420800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
-	echo "0-7" > /sys/devices/system/cpu/online
+	echo "0-5" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
 	chmod 644 /sys/devices/system/cpu/offline
 	echo "" > /sys/devices/system/cpu/offline
@@ -586,7 +587,7 @@ if grep 'schedutil' $AGL; then
 	echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	echo "4 5 6 7" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
+	echo "4 5" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo 1 > /sys/devices/system/cpu/cpu0/online
 	echo 1 > /sys/devices/system/cpu/cpu1/online
@@ -594,16 +595,16 @@ if grep 'schedutil' $AGL; then
 	echo 1 > /sys/devices/system/cpu/cpu3/online
 	echo 1 > /sys/devices/system/cpu/cpu4/online
 	echo 1 > /sys/devices/system/cpu/cpu5/online
-	echo 1 > /sys/devices/system/cpu/cpu6/online
-	echo 1 > /sys/devices/system/cpu/cpu7/online
+	echo 0 > /sys/devices/system/cpu/cpu6/online
+	echo 0 > /sys/devices/system/cpu/cpu7/online
 else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1401600 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1420800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1267200 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-1,4-5" > /sys/devices/system/cpu/online
