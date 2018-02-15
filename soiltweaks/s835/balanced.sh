@@ -37,7 +37,7 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
-	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
+	echo 1 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
@@ -100,11 +100,11 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
 			sleep 1
-			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
-			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
+			echo 500 > $LGP/pwrutilx/up_rate_limit_us
+			echo 20000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 18 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 2 > /dev/stune/top-app/schedtune.boost
+			echo 3 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -124,8 +124,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
-			echo 1000 > $LGP/schedutil/up_rate_limit_us
-			echo 8000 > $LGP/schedutil/down_rate_limit_us
+			echo 500 > $LGP/schedutil/up_rate_limit_us
+			echo 10000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
@@ -352,7 +352,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo 500 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
@@ -524,13 +524,13 @@ chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
 echo 200 > /proc/sys/vm/dirty_expire_centisecs
-echo 500 > /proc/sys/vm/dirty_writeback_centisecs
+echo 300 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 3 > /proc/sys/vm/page-cluster
 echo 0 > /proc/sys/vm/swappiness
 echo 60 > /proc/sys/vm/vfs_cache_pressure
-echo 20 > /proc/sys/vm/dirty_ratio
-echo 10 > /proc/sys/vm/dirty_background_ratio
+echo 40 > /proc/sys/vm/dirty_ratio
+echo 20 > /proc/sys/vm/dirty_background_ratio
 echo 1 > /proc/sys/vm/overcommit_memory
 echo 0 > /proc/sys/vm/overcommit_ratio
 echo 41943 > /proc/sys/vm/min_free_kbytes

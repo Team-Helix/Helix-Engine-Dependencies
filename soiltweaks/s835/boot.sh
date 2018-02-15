@@ -180,16 +180,16 @@ fi
 echo N > /sys/module/lpm_levels/parameters/sleep_disabled
 # On debuggable builds, enable console_suspend if uart is enabled to save power
 # Otherwise, disable console_suspend to get better logging for kernel crashes
-if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHS0 ]]
-then
-    echo Y > /sys/module/printk/parameters/console_suspend
-fi
+# if [[ $(getprop ro.debuggable) == "1" && ! -e /sys/class/tty/ttyHS0 ]]
+# then
+    # echo Y > /sys/module/printk/parameters/console_suspend
+# fi
 
 # Disable Gentle Fair Sleepers ##EXPERIMENTAL
 if [ -e "/sys/kernel/debug/sched_features" ]; then
-	echo "NO_GENTLE_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-	echo NO_NEW_FAIR_SLEEPERS > /sys/kernel/debug/sched_features
-	echo NO_NORMALIZED_SLEEPER> /sys/kernel/debug/sched_features
+	echo NO_GENTLE_FAIR_SLEEPERS > /sys/kernel/debug/sched_features
+	echo NO_NEW_FAIR_SLEEPERS >> /sys/kernel/debug/sched_features
+	echo NO_NORMALIZED_SLEEPER >> /sys/kernel/debug/sched_features
 fi
 
 #loop tweaks

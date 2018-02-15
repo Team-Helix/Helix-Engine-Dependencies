@@ -109,7 +109,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 5000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 2000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 0 > $LGP/pwrutilx/iowait_boost_enable
-			echo 2 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -129,12 +129,12 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
-			echo 6000 > $LGP/schedutil/up_rate_limit_us
-			echo 1000 > $LGP/schedutil/down_rate_limit_us
+			echo 4000 > $LGP/schedutil/up_rate_limit_us
+			echo 2000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 1 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 0 > /proc/sys/kernel/sched_use_walt_task_util
@@ -578,21 +578,21 @@ if grep 'schedutil' $AGL; then
 	echo 1420800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
-	echo "0-5" > /sys/devices/system/cpu/online
+	echo "0-1,4-5" > /sys/devices/system/cpu/online
 	chmod 444 /sys/devices/system/cpu/online
 	chmod 644 /sys/devices/system/cpu/offline
-	echo "" > /sys/devices/system/cpu/offline
+	echo "2-3,6-7" > /sys/devices/system/cpu/offline
 	chmod 444 /sys/devices/system/cpu/offline
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	echo "0 1 2 3" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
+	echo "0 1" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo "4 5" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo 1 > /sys/devices/system/cpu/cpu0/online
 	echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
+	echo 0 > /sys/devices/system/cpu/cpu2/online
+	echo 0 > /sys/devices/system/cpu/cpu3/online
 	echo 1 > /sys/devices/system/cpu/cpu4/online
 	echo 1 > /sys/devices/system/cpu/cpu5/online
 	echo 0 > /sys/devices/system/cpu/cpu6/online
@@ -615,14 +615,9 @@ else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	echo "0 1" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	echo "0 1" > /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
-	chmod 464 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy0/affected_cpus
 	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	chmod 644 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo "4 5" > /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
-	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	chmod 444 /sys/devices/system/cpu/cpufreq/policy4/affected_cpus
 	echo 1 > /sys/devices/system/cpu/cpu0/online
 	echo 1 > /sys/devices/system/cpu/cpu1/online

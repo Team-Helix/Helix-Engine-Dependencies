@@ -110,8 +110,8 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			echo 500 > $LGP/schedutil/up_rate_limit_us
 			echo 20000 > $LGP/schedutil/down_rate_limit_us
-			echo 25 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 10 > /dev/stune/top-app/schedtune.boost
+			echo 20 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 3 > /dev/stune/top-app/schedtune.boost
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 1 > $LGP/schedutil/iowait_boost_enable
 			fi
@@ -542,8 +542,8 @@ echo 50 > /proc/sys/vm/vfs_cache_pressure
 echo 40 > /proc/sys/vm/dirty_ratio
 echo 20 > /proc/sys/vm/dirty_background_ratio
 echo 1 > /proc/sys/vm/overcommit_memory
+echo 41943 > /proc/sys/vm/min_free_kbytes
 echo 0 > /proc/sys/vm/overcommit_ratio
-echo 503316 > /proc/sys/vm/min_free_kbytes
 echo 128 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 

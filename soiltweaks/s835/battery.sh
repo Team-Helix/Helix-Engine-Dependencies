@@ -100,9 +100,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
 			sleep 1
-			echo 2000 > $LGP/pwrutilx/up_rate_limit_us
-			echo 6000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
+			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
+			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
@@ -125,11 +125,11 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
 			echo 2000 > $LGP/schedutil/up_rate_limit_us
-			echo 5000 > $LGP/schedutil/down_rate_limit_us
+			echo 7000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 0 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
@@ -326,7 +326,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 0:883200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 100 > /sys/module/cpu_boost/parameters/input_boost_ms
+	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
@@ -531,14 +531,14 @@ chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
 
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
-echo 800 > /proc/sys/vm/dirty_expire_centisecs
-echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
+echo 400 > /proc/sys/vm/dirty_expire_centisecs
+echo 1000 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 2 > /proc/sys/vm/page-cluster
 echo 20 > /proc/sys/vm/swappiness
 echo 100 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
-echo 5 > /proc/sys/vm/dirty_background_ratio
+echo 10 > /proc/sys/vm/dirty_background_ratio
 echo 1 > /proc/sys/vm/overcommit_memory
 echo 25 > /proc/sys/vm/overcommit_ratio
 echo 11093 > /proc/sys/vm/min_free_kbytes
