@@ -146,10 +146,10 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
 			echo 0 > /dev/stune/top-app/schedtune.boost
-			echo 95 > /proc/sys/kernel/sched_upmigrate
+			echo 90 > /proc/sys/kernel/sched_upmigrate
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
-			echo 85 > /proc/sys/kernel/sched_downmigrate
-			echo 95 > /proc/sys/kernel/sched_group_downmigrate
+			echo 75 > /proc/sys/kernel/sched_downmigrate
+			echo 85 > /proc/sys/kernel/sched_group_downmigrate
 			echo 600000 > /proc/sys/kernel/sched_freq_inc_notify
 			echo 200000 > /proc/sys/kernel/sched_freq_dec_notify
 			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
@@ -158,14 +158,14 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 35 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 30 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 3 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
 				echo 0 > /proc/sys/kernel/sched_upmigrate_min_nice
 			fi
 			echo 5 > /proc/sys/kernel/sched_spill_nr_run
-			echo 99 > /proc/sys/kernel/sched_spill_load
+			echo 100 > /proc/sys/kernel/sched_spill_load
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
 			echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
 			if [ -e /proc/sys/kernel/sched_wakeup_load_threshold ]; then
@@ -186,13 +186,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 78 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
+			echo 80 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
 			echo 40000 > $LGP/interactive/timer_rate
 			echo 300000 > $LGP/interactive/hispeed_freq
-			echo 10000 883200:40000 1478400:80000 > $LGP/interactive/above_hispeed_delay
+			echo 20000 883200:40000 1478400:60000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 5000 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
@@ -324,7 +324,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:883200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then

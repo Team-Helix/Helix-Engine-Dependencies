@@ -149,11 +149,11 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
-			echo 99 > /proc/sys/kernel/sched_upmigrate
+			echo 100 > /proc/sys/kernel/sched_upmigrate
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
-			echo 90 > /proc/sys/kernel/sched_downmigrate
+			echo 85 > /proc/sys/kernel/sched_downmigrate
 			echo 95 > /proc/sys/kernel/sched_group_downmigrate
-			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 20 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 0 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
@@ -187,13 +187,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 85 1401600:95 > $LGP/interactive/target_loads
+			echo 87 1401600:95 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 120000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
 			echo 60000 > $LGP/interactive/timer_rate
 			echo 300000 > $LGP/interactive/hispeed_freq
-			echo 45000 883200:80000 1401600:100000 > $LGP/interactive/above_hispeed_delay
+			echo 50000 883200:75000 1401600:100000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
 			echo 0 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
@@ -264,13 +264,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 85 1132800:95 > $BGP/interactive/target_loads
+			echo 87 1132800:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
 			echo 300000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 80000 > $BGP/interactive/timer_rate
-			echo 45000 1132800:100000 > $BGP/interactive/above_hispeed_delay
+			echo 50000 1132800:75000 1574400:100000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 0 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
@@ -324,7 +324,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	echo "*Tweaking CPU Boost" >> $DLL
 	if [ -e "/sys/module/cpu_boost/parameters/input_boost_enabled" ]; then
 		chmod 644 /sys/module/cpu_boost/parameters/input_boost_enabled
-		echo 0 > /sys/module/cpu_boost/parameters/input_boost_enabled
+		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
@@ -562,7 +562,7 @@ echo 15 > /proc/sys/vm/dirty_ratio
 echo 5 > /proc/sys/vm/dirty_background_ratio
 echo 11093 > /proc/sys/vm/min_free_kbytes
 echo 1 > /proc/sys/vm/overcommit_memory
-echo 25 > /proc/sys/vm/overcommit_ratio
+echo 50 > /proc/sys/vm/overcommit_ratio
 echo 16 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 32 > /proc/sys/kernel/random/write_wakeup_threshold
 
@@ -602,7 +602,7 @@ else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1401600 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 1267200 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq

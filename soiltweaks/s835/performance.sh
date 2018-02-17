@@ -132,25 +132,25 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
-			echo 5 > /dev/stune/top-app/schedtune.boost
-			echo 75 > /proc/sys/kernel/sched_upmigrate
-			echo 90 > /proc/sys/kernel/sched_group_upmigrate
-			echo 60 > /proc/sys/kernel/sched_downmigrate
-			echo 80 > /proc/sys/kernel/sched_group_downmigrate
-			echo 10 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 3 > /dev/stune/top-app/schedtune.boost
+			echo 70 > /proc/sys/kernel/sched_upmigrate
+			echo 80 > /proc/sys/kernel/sched_group_upmigrate
+			echo 50 > /proc/sys/kernel/sched_downmigrate
+			echo 60 > /proc/sys/kernel/sched_group_downmigrate
+			echo 5 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 15 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 25 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 20 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 2 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
 				echo 9 > /proc/sys/kernel/sched_upmigrate_min_nice
 			fi
 			echo 5 > /proc/sys/kernel/sched_spill_nr_run
-			echo 90 > /proc/sys/kernel/sched_spill_load
+			echo 85 > /proc/sys/kernel/sched_spill_load
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
 			echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
 			if [ -e /proc/sys/kernel/sched_wakeup_load_threshold ]; then
@@ -173,15 +173,15 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					sleep 1
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/blu_active/*
 					chmod 644 $LGP/blu_active/*
-					echo 74 595200:80 883200:83 1324800:85 1555200:89 > $LGP/blu_active/target_loads
+					echo 72 595200:78 883200:83 1324800:85 1555200:89 > $LGP/blu_active/target_loads
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/blu_active/target_loads
 					echo 90000 > $LGP/blu_active/timer_slack
 					chmod 644 $LGP/blu_active/timer_rate
-					echo 20000 > $LGP/blu_active/timer_rate
-					echo 1401600 > $LGP/blu_active/hispeed_freq
+					echo 15000 > $LGP/blu_active/timer_rate
+					echo 1555200 > $LGP/blu_active/hispeed_freq
 					echo 0 > $LGP/blu_active/above_hispeed_delay
 					echo 400 > $LGP/blu_active/go_hispeed_load
-					echo 15000 > $LGP/blu_active/min_sample_time
+					echo 20000 > $LGP/blu_active/min_sample_time
 					echo 1 > $LGP/blu_active/fastlane
 					echo 40 > $LGP/blu_active/fastlane_threshold
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/blu_active/*
@@ -195,15 +195,15 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					sleep 1
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 					chmod 644 $LGP/interactive/*
-					echo 74 595200:80 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
+					echo 72 595200:78 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 					echo 90000 > $LGP/interactive/timer_slack
 					chmod 644 $LGP/interactive/timer_rate
-					echo 20000 > $LGP/interactive/timer_rate
-					echo 1401600 > $LGP/interactive/hispeed_freq
+					echo 15000 > $LGP/interactive/timer_rate
+					echo 1555200 > $LGP/interactive/hispeed_freq
 					echo 0 > $LGP/interactive/above_hispeed_delay
 					echo 400 > $LGP/interactive/go_hispeed_load
-					echo 15000 > $LGP/interactive/min_sample_time
+					echo 20000 > $LGP/interactive/min_sample_time
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 					chmod 444 $LGP/interactive/hispeed_freq
 					echo 79000 > $LGP/interactive/max_freq_hysteresis
@@ -263,15 +263,15 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/blu_active/*
 			chmod 644 $BGP/blu_active/*
-			echo 76 652800:81 1132800:85 1651200:86 2035200:91 2323200:95 > $BGP/blu_active/target_loads
+			echo 74 652800:79 1651200:86 2035200:91 2323200:95 > $BGP/blu_active/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/blu_active/target_loads
 			echo 90000 > $BGP/blu_active/timer_slack
 			echo 2361600 > $BGP/blu_active/hispeed_freq
 			chmod 644 $BGP/blu_active/timer_rate
-			echo 20000 > $BGP/blu_active/timer_rate
+			echo 15000 > $BGP/blu_active/timer_rate
 			echo 0 > $BGP/blu_active/above_hispeed_delay
-			echo 350 > $BGP/blu_active/go_hispeed_load
-			echo 15000 > $BGP/blu_active/min_sample_time
+			echo 400 > $BGP/blu_active/go_hispeed_load
+			echo 20000 > $BGP/blu_active/min_sample_time
 			echo 1 > $BGP/blu_active/fastlane
 			echo 40 > $BGP/blu_active/fastlane_threshold
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/blu_active/*
@@ -286,15 +286,15 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 76 652800:81 1132800:85 1651200:86 2035200:91 2323200:95 > $BGP/interactive/target_loads
+			echo 74 652800:79 1651200:86 2035200:91 2323200:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
 			echo 2361600 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
-			echo 20000 > $BGP/interactive/timer_rate
+			echo 15000 > $BGP/interactive/timer_rate
 			echo 0 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
-			echo 15000 > $BGP/interactive/min_sample_time
+			echo 20000 > $BGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/min_sample_time
 			chmod 444 $BGP/interactive/hispeed_freq
 			echo 79000 > $BGP/interactive/max_freq_hysteresis
@@ -351,7 +351,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:1555200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 1000 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
