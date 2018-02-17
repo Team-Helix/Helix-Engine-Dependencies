@@ -11,27 +11,20 @@ codename=Soilwork
 stype=battery_extreme
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_suspend_log.txt
 
 #Initializing log
-echo "$cdate" > $DLL
-echo "$codename $stype" >> $DLL
-echo "*Searching CPU frequencies" >> $DLL
 
 #Disable BCL
 if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
-	echo "*Disabling BCL" >> $DLL
 	chmod 644 /sys/devices/soc/soc:qcom,bcl/mode
 	echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
 fi
 
 #Turn off core_control
-echo "	+Disabling core_control temporarily" >> $DLL
 echo 0 > /sys/module/msm_thermal/core_control/enabled
 
 ##Configuring stune & cpuset
 if [ -d "/dev/stune" ]; then
-	echo "Configuring stune" >> $DLL
 	echo 1 > /dev/stune/schedtune.sched_boost_enabled
 	echo 0 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/audio-app/schedtune.boost
@@ -53,7 +46,6 @@ echo 24 > /proc/sys/kernel/sched_nr_migrate
 echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
-	echo "Configuring cpuset" >> $DLL
 	echo 0 > /dev/cpuset/background/cpus
 	echo 0 > /dev/cpuset/system-background/cpus
 fi
@@ -75,7 +67,6 @@ little_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq)
 big_min_value=$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_min_freq);
 
 #Turn on all cores
-echo "*Turning on cores" >> $DLL
 chmod 644 /sys/devices/system/cpu/online
 echo 0-7 > /sys/devices/system/cpu/online
 chmod 444 /sys/devices/system/cpu/online
@@ -89,8 +80,6 @@ echo 1 > /sys/devices/system/cpu/cpu6/online
 echo 1 > /sys/devices/system/cpu/cpu7/online
 
 #Apply settings to LITTLE cluster
-echo "*Applying LITTLE settings" >> $DLL
-echo "	+Searching available governors" >> $DLL
 
 if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	if [ -e /sys/devices/system/cpu/cpufreq/policy0 ]; then
@@ -101,7 +90,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 
 	if grep 'pwrutilx' $AGL; then
 		if [ -e $AGL ]; then
-			echo "	+Applying & tuning pwrutilx" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
@@ -120,11 +108,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 444 $LGP/pwrutilx/*
 		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
 		
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
-			echo "	+Applying & tuning schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
@@ -145,7 +131,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 444 $LGP/schedutil/*
 		fi
-		echo "	+Tuning finished for schedutil" >> $DLL
 		
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
@@ -182,7 +167,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
-			echo "	+Applying & tuning interactive" >> $DLL
 			echo interactive > $LGP/scaling_governor
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
@@ -204,19 +188,13 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo 0 > $LGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 444 $LGP/interactive/*
-			echo "	+Tuning finished for interactive" >> $DLL
 		fi
 	else
-		echo "	-The governor's path is wrong or mod is incompatible" >> $DLL
-		echo "	-Error Code #01" >> $DLL
 	fi
 fi
 
-echo "	*LITTLE settings finished" >> $DLL
 
 #Apply settings to big cluster
-echo "*Applying big settings" >> $DLL
-echo "	+Searching available governors" >> $DLL
 
 if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 	if [ -e /sys/devices/system/cpu/cpufreq/policy4 ]; then
@@ -227,7 +205,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 
 	if grep 'pwrutilx' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	+Applying pwrutilx" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 644 $BGP/pwrutilx/*
 			echo pwrutilx > $BGP/scaling_governor
@@ -238,11 +215,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 444 $BGP/pwrutilx/*
 		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
 		
 	elif grep 'schedutil' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	+Applying schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
@@ -255,11 +230,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 444 $BGP/schedutil/*
 		fi
-		echo "	+Tuning finished for schedutil" >> $DLL
 		
 	elif grep 'interactive' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	Applying & tuning interactive" >> $DLL
 			echo interactive > $BGP/scaling_governor
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
@@ -281,21 +254,16 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo 0 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
-			echo "	+Tuning finished for interactive" >> $DLL
 		fi
 	else
-		echo "	-The governor's path is wrong or mod is incompatible" >> $DLL
-		echo "	-Error Code #02" >> $DLL
 	fi
 fi
 
-echo "	*big settings finished" >> $DLL
 
 sleep 1
 
 # #Tweak VoxPopuli -- Only on EAS kernels
 # if [ -d /dev/voxpopuli/ ]; then
-	# echo "*Tweaking Vox Populi PowerHal" >> $DLL
 	# VOX_P=/dev/voxpopuli/
 	# echo 1 > $VOX_P/enable_interaction_boost	#Main switch
 	# echo 0 > $VOX_P/fling_min_boost_duration
@@ -311,7 +279,6 @@ sleep 1
 
 # #Tweak input boost -- Only Sultanized ROMs
 # if [ -e "/sys/kernel/cpu_input_boost" ]; then
-	# echo "*Tweaking input boost" >> $dll
 	# chmod 644 /sys/kernel/cpu_input_boost/*
 	# echo 1 > /sys/kernel/cpu_input_boost/enable
 	# echo 66 > /sys/kernel/cpu_input_boost/ib_duration_ms
@@ -321,7 +288,6 @@ sleep 1
 
 # #Tweak cpu boost
 if [ -e "/sys/module/cpu_boost" ]; then
-	echo "*Tweaking CPU Boost" >> $DLL
 	if [ -e "/sys/module/cpu_boost/parameters/input_boost_enabled" ]; then
 		chmod 644 /sys/module/cpu_boost/parameters/input_boost_enabled
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
@@ -337,7 +303,6 @@ fi
 
 #Disable TouchBoost	-- HMP only
 if [ -e "/sys/module/msm_performance/parameters/touchboost" ]; then
-	echo "*Disabling TouchBoost" >> $DLL
 	chmod 644 /sys/module/msm_performance/parameters/touchboost
 	echo 0 > /sys/module/msm_performance/parameters/touchboost
 fi
@@ -346,7 +311,6 @@ sleep 1
 
 #I/0 Tweaks
 if [ -d "/sys/block/sda/queue" ]; then
-	echo "*Applying I/O tweaks" >> $DLL
 	Q_PATH=/sys/block/sda/queue/
 	if grep 'noop' $Q_PATH/scheduler; then
 		echo "noop" > $Q_PATH/scheduler
@@ -388,9 +352,7 @@ if [ -d "/sys/block/sda/queue" ]; then
 		# echo 2 > $Q_PATH/iosched/slice_async_rq
 		# echo 100 > $Q_PATH/iosched/slice_sync
 		# echo 300 > $Q_PATH/iosched/target_latency
-		echo "	+Using cfq with tuned values" >> $DLL
 	else
-		echo "	-Something went wrong while changing I/O Scheduler." >> $DLL
 		echo "	-Error Code #03"
 	fi
 	echo 512 > $Q_PATH/read_ahead_kb
@@ -402,23 +364,17 @@ if [ -d "/sys/block/sda/queue" ]; then
 	echo 1 > $Q_PATH/rq_affinity
 fi
 
-echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
-echo "*Tuning TCP" >> $DLL
 if grep 'westwood' /proc/sys/net/ipv4/tcp_available_congestion_control; then
-	echo "	+Applying westwood" >> $DLL
 	echo westwood > /proc/sys/net/ipv4/tcp_congestion_control
 else 
-	echo "	+Applying cubic" >> $DLL
 	echo cubic > /proc/sys/net/ipv4/tcp_congestion_control
 fi
 echo 1 > /proc/sys/net/ipv4/tcp_low_latency
 
-echo "	*Finished tuning TCP" >> $DLL
 
 # #Wakelocks
-# echo "*Blocking wakelocks" >> $DLL
 # if [ -e "/sys/module/bcmdhd/parameters/wlrx_divide" ]; then
 	# echo 10 > /sys/module/bcmdhd/parameters/wlrx_divide
 # fi
@@ -473,13 +429,11 @@ echo "powersave" > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,k
 GPU_FREQ=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 av_freq=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/available_frequencies
 if [ -e $GPU_FREQ ]; then
-	echo "*Applying GPU tweaks" >> $DLL
 	if grep '710000000' $av_freq; then
 		chmod 644 /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 		echo 596000000 > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 		chmod 444 /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 	else
-		echo "Patoka! - Banana?" >> $DLL
 	fi
 	if grep '180000000' $av_freq; then
 		chmod 644 /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/target_freq
@@ -496,12 +450,9 @@ if [ -e $GPU_FREQ ]; then
 		chmod 644 /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost
 		echo 0 > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/adrenoboost
 	fi
-	echo "	+GPU tuned" >> $DLL
 fi
 
-echo "	*GPU tweaks finished" >> $DLL
 
-echo "*Applying minor tweaks" >> $DLL
 
 ## Vibration
 if [ -d "/sys/class/timed_output/vibrator/vtg_level" ]; then
@@ -510,7 +461,6 @@ if [ -d "/sys/class/timed_output/vibrator/vtg_level" ]; then
 fi
 
 # # #File system
-# echo "	+File system tweaks" >> $DLL
 # echo 10 > /proc/sys/fs/lease-break-time
 
 #LMK
@@ -551,7 +501,6 @@ chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
 # echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 #Virtual Memory
-echo "	+Virtual memory tweaks" >> $DLL
 echo 2000 > /proc/sys/vm/dirty_expire_centisecs
 echo 5000 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
@@ -567,7 +516,6 @@ echo 16 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 32 > /proc/sys/kernel/random/write_wakeup_threshold
 
 #Turn off some cores while screen off
-echo "*Turning off cores while screen off" >> $DLL
 if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
@@ -630,7 +578,6 @@ else
 fi
 
 #Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
-echo "	+Re-enable core_control and disable msm_thermal" >> $DLL
 if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 # re-enable thermal hotplug
 	# re-enable thermal and BCL hotplug
@@ -645,9 +592,6 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
 fi
 
-echo "	*Minor tweaks applied" >> $DLL
 
-echo "#####   COMPLETED    #####" >> $DLL
 
 cdate=$(date)
-echo "$cdate" >> $DLL

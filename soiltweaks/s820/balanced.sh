@@ -11,19 +11,13 @@ codename=Soilwork
 stype=balanced
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_initiallog.txt
 #Initializing log
-echo "$cdate" > $DLL
-echo "$codename $stype" >> $DLL
-echo "*Searching CPU frequencies" >> $DLL
 
 #Turn off core_control
-echo "	+Disabling core_control temporarily" >> $DLL
 echo 0 > /sys/module/msm_thermal/core_control/enabled
 
 ##Configuring stune & cpuset
 if [ -d "/dev/stune" ]; then
-	echo "Configuring stune" >> $DLL
 	echo 1 > /dev/stune/top-app/schedtune.boost
 	echo 0 > /dev/stune/background/schedtune.boost
 	echo 0 > /dev/stune/foreground/schedtune.boost
@@ -43,7 +37,6 @@ echo 48 > /proc/sys/kernel/sched_nr_migrate
 echo 0 > /proc/sys/kernel/sched_initial_task_util
 
 if [ -d "/dev/cpuset" ]; then
-	echo "Configuring cpuset" >> $DLL
 	echo 0-1 > /dev/cpuset/background/cpus
 	echo 0-1 > /dev/cpuset/system-background/cpus
 fi
@@ -62,7 +55,6 @@ little_min_value=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq);
 big_min_value=$(cat /sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_min_freq);
 
 #Turn on all cores
-echo "*Turning on cores" >> $DLL
 chmod 644 /sys/devices/system/cpu/online
 echo 0-3 > /sys/devices/system/cpu/online
 chmod 444 /sys/devices/system/cpu/online
@@ -73,8 +65,6 @@ echo 1 > /sys/devices/system/cpu/cpu3/online
 
 
 #Apply settings to LITTLE cluster
-echo "*Applying LITTLE settings" >> $DLL
-echo "	+Searching available governors" >> $DLL
 
 if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 	if [ -e /sys/devices/system/cpu/cpu0/cpufreq ]; then
@@ -88,7 +78,6 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 		
 	if grep 'pwrutilx' $AGL; then
 		if [ -e $AGL ]; then
-			echo "	+Applying & tuning pwrutilx" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
@@ -107,11 +96,9 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/pwrutilx/*
 			chmod 444 $LGP/pwrutilx/*
 		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
 	
 	elif grep 'schedutil' $AGL; then
 		if [ -e $AGL ]; then
-			echo "	+Applying & tuning schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
@@ -132,7 +119,6 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/schedutil/*
 			chmod 444 $LGP/schedutil/*
 		fi
-		echo "	+Tuning finished for schedutil" >> $DLL
 	
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
@@ -170,7 +156,6 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
 			if [ -e $AGL ]; then
-				echo "	+Applying & tuning interactive" >> $DLL
 				echo interactive > $LGP/scaling_governor
 				sleep 1
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
@@ -201,20 +186,14 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				echo 0 > $LGP/interactive/enable_prediction
 				chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
 				chmod 444 $LGP/interactive/*
-				echo "	+Tuning finished for interactive" >> $DLL
 			fi
 		fi
 	else
-		echo "	-The governor's path is wrong or mod is incompatible" >> $DLL
-		echo "	-Error Code #01" >> $DLL
 	fi
 fi
 
-echo "	*LITTLE settings finished" >> $DLL
 
 #Apply settings to big cluster
-echo "*Applying big settings" >> $DLL
-echo "	+Searching available governors" >> $DLL
 
 if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 	if [ -e /sys/devices/system/cpu/cpu2/cpufreq ]; then
@@ -225,7 +204,6 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 
 	if grep 'pwrutilx' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	+Applying pwrutilx" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
 			chmod 644 $BGP/pwrutilx/*
 			echo pwrutilx > $BGP/scaling_governor
@@ -236,11 +214,9 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/pwrutilx/*
 			chmod 444 $BGP/pwrutilx/*
 		fi
-		echo "	+Tuning finished for pwrutilx" >> $DLL
 
 	elif grep 'schedutil' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	+Applying schedutil" >> $DLL
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
@@ -253,11 +229,9 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/schedutil/*
 			chmod 444 $BGP/schedutil/*
 		fi
-		echo "	+Tuning finished for schedutil" >> $DLL
 		
 	elif grep 'interactive' $AGB; then
 		if [ -e $AGB ]; then
-			echo "	Applying & tuning interactive" >> $DLL
 			echo interactive > $BGP/scaling_governor
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
@@ -288,19 +262,14 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			echo 0 > $BGP/interactive/enable_prediction
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
 			chmod 444 $BGP/interactive/*
-			echo "	+Tuning finished for interactive" >> $DLL
 		fi
 	else
-		echo "	-The governor's path is wrong or mod is incompatible" >> $DLL
-		echo "	-Error Code #02" >> $DLL
 	fi
 fi
 
-echo "	*big settings finished" >> $DLL
 
 # #Tweak VoxPopuli -- Only on EAS kernels
 # if [ -d /dev/voxpopuli/ ]; then
-	# echo "*Tweaking Vox Populi PowerHal" >> $DLL
 	# VOX_P=/dev/voxpopuli/
 	# echo 1 > $VOX_P/enable_interaction_boost	#Main switch
 	# echo 0 > $VOX_P/fling_min_boost_duration
@@ -316,7 +285,6 @@ echo "	*big settings finished" >> $DLL
 
 # #Tweak input boost -- Only Sultanized ROMs
 # if [ -e "/sys/kernel/cpu_input_boost" ]; then
-	# echo "*Tweaking input boost" >> $dll
 	# chmod 644 /sys/kernel/cpu_input_boost/*
 	# echo 1 > /sys/kernel/cpu_input_boost/enable
 	# echo 66 > /sys/kernel/cpu_input_boost/ib_duration_ms
@@ -326,7 +294,6 @@ echo "	*big settings finished" >> $DLL
 
 # #Tweak cpu boost
 if [ -e "/sys/module/cpu_boost" ]; then
-	echo "*Tweaking CPU Boost" >> $DLL
 	if [ -e "/sys/module/cpu_boost/parameters/input_boost_enabled" ]; then
 		chmod 644 /sys/module/cpu_boost/parameters/input_boost_enabled
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
@@ -475,12 +442,9 @@ else
     fi
 fi
 echo 128 > /sys/block/mmcblk0/queue/nr_requests
-echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
-echo "*Tuning TCP" >> $DLL
 echo 0 > /proc/sys/net/ipv4/tcp_low_latency
-echo "	*Finished tuning TCP" >> $DLL
 
 ## zRam
 if [ -e /sys/block/zram0 ]; then
@@ -572,7 +536,6 @@ fi
 # echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 #Virtual Memory
-echo "	+Virtual memory tweaks" >> $DLL
 echo 200 > /proc/sys/vm/dirty_expire_centisecs
 echo 500 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
@@ -587,7 +550,6 @@ echo 64 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 
 #Turn on cores
-echo "*Turning on all cores" >> $DLL
 chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 664 /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
@@ -608,7 +570,6 @@ echo 1 > /sys/devices/system/cpu/cpu2/online
 echo 1 > /sys/devices/system/cpu/cpu3/online
 
 #Enable Core Control and Disable MSM Thermal Throttling allowing for longer sustained performance
-echo "	+Re-enable core_control and disable msm_thermal" >> $DLL
 if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 # re-enable thermal hotplug
 	# re-enable thermal and BCL hotplug
@@ -623,9 +584,6 @@ if [ -e "/sys/module/msm_thermal/core_control/enabled" ]; then
 	echo 1 > /sys/module/msm_thermal/core_control/enabled
 fi
 
-echo "	*Minor tweaks applied" >> $DLL
 
-echo "#####   COMPLETED    #####" >> $DLL
 
 cdate=$(date)
-echo "$cdate" >> $DLL
