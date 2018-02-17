@@ -10,7 +10,7 @@ codename=Soilwork
 stype=battery
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_battery_log.txt
+DLL=/storage/emulated/0/soilwork_batterylog.txt
 
 #Initializing log
 echo "$cdate" > $DLL
@@ -39,12 +39,6 @@ if [ -d "/dev/stune" ]; then
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
-	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
-		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
-	fi
-	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
-		echo 1 > /proc/sys/kernel/sched_is_big_little
-	fi
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
 	fi
@@ -55,7 +49,11 @@ echo 0 > /proc/sys/kernel/sched_initial_task_util
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
 	echo 0 > /dev/cpuset/background/cpus
-	echo 1 > /dev/cpuset/system-background/cpus
+	echo 0-1 > /dev/cpuset/system-background/cpus
+fi
+
+if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
+	echo 1 > /proc/sys/kernel/sched_autogroup_enabled
 fi
 
 sleep 1
@@ -102,9 +100,9 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
 			sleep 1
-			echo 2000 > $LGP/pwrutilx/up_rate_limit_us
-			echo 6000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 7 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
+			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
+			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /dev/stune/top-app/schedtune.boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
@@ -127,12 +125,12 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo schedutil > $LGP/scaling_governor
 			sleep 1
 			echo 2000 > $LGP/schedutil/up_rate_limit_us
-			echo 5000 > $LGP/schedutil/down_rate_limit_us
+			echo 7000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 5 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
-			echo 1 > /dev/stune/top-app/schedtune.boost
+			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 0 > /dev/stune/top-app/schedtune.boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -148,24 +146,26 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 	elif grep 'interactive' $AGL; then
 		if [ -e $AGL ]; then
 			echo 0 > /dev/stune/top-app/schedtune.boost
-			echo 95 > /proc/sys/kernel/sched_upmigrate
+			echo 90 > /proc/sys/kernel/sched_upmigrate
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
-			echo 85 > /proc/sys/kernel/sched_downmigrate
-			echo 95 > /proc/sys/kernel/sched_group_downmigrate
-			echo 5 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 75 > /proc/sys/kernel/sched_downmigrate
+			echo 85 > /proc/sys/kernel/sched_group_downmigrate
+			echo 600000 > /proc/sys/kernel/sched_freq_inc_notify
+			echo 200000 > /proc/sys/kernel/sched_freq_dec_notify
+			echo 15 > /proc/sys/kernel/sched_small_wakee_task_load
 			echo 5 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 35 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 30 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 3 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
 				echo 0 > /proc/sys/kernel/sched_upmigrate_min_nice
 			fi
 			echo 5 > /proc/sys/kernel/sched_spill_nr_run
-			echo 99 > /proc/sys/kernel/sched_spill_load
+			echo 100 > /proc/sys/kernel/sched_spill_load
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
 			echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
 			if [ -e /proc/sys/kernel/sched_wakeup_load_threshold ]; then
@@ -178,9 +178,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
 			fi
-			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/screen_off_maxfreq" ]; then
-				echo 518400 > $LGP/interactive/screen_off_maxfreq
-			fi
 			if [ -e "/sys/devices/system/cpu/cpufreq/policy0/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
@@ -189,20 +186,20 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 80 883200:83 1324800:90 1555200:95 > $LGP/interactive/target_loads
+			echo 80 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
-			echo 60000 > $LGP/interactive/timer_rate
-			echo 825600 > $LGP/interactive/hispeed_freq
-			echo 15000 883200:50000 1401600:100000 > $LGP/interactive/above_hispeed_delay
+			echo 40000 > $LGP/interactive/timer_rate
+			echo 300000 > $LGP/interactive/hispeed_freq
+			echo 20000 883200:40000 1478400:60000 > $LGP/interactive/above_hispeed_delay
 			echo 400 > $LGP/interactive/go_hispeed_load
-			echo 0 > $LGP/interactive/min_sample_time
+			echo 5000 > $LGP/interactive/min_sample_time
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 			chmod 444 $LGP/interactive/hispeed_freq
 			echo 0 > $LGP/interactive/max_freq_hysteresis
 			echo 1 > $LGP/interactive/fast_ramp_down
-			echo 0 > $LGP/interactive/use_sched_load
+			echo 1 > $LGP/interactive/use_sched_load
 			echo 0 > $LGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 444 $LGP/interactive/*
@@ -266,18 +263,18 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 83 1132800:86 1881600:91 2265600:95 > $BGP/interactive/target_loads
+			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
-			echo 1056000 > $BGP/interactive/hispeed_freq
+			echo 300000 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
-			echo 25000 902400:50000 1132800:75000 2208000:100000 > $BGP/interactive/above_hispeed_delay
+			echo 10000 1132800:40000 1574400:80000 > $BGP/interactive/above_hispeed_delay
 			echo 400 > $BGP/interactive/go_hispeed_load
-			echo 0 > $BGP/interactive/min_sample_time
+			echo 5000 > $BGP/interactive/min_sample_time
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/fast_ramp_down
-			echo 0 > $BGP/interactive/use_sched_load
+			echo 1 > $BGP/interactive/use_sched_load
 			echo 0 > $BGP/interactive/boostpulse_duration
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
@@ -327,7 +324,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
@@ -347,10 +344,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo 16 > $Q_PATH/iosched/fifo_batch
 		echo 4 > $Q_PATH/iosched/writes_starved
 		echo 10 > $Q_PATH/iosched/sleep_latency_multiple
-		#echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
-		#echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
-		#echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
-		#echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
+		echo 200 > $Q_PATH/iosched/async_read_expire   ##default values
+		echo 500 > $Q_PATH/iosched/async_write_expire   ##default values
+		echo 100 > $Q_PATH/iosched/sync_read_expire   ##default values
+		echo 350 > $Q_PATH/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > $Q_PATH/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > $Q_PATH/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > $Q_PATH/iosched/sync_read_expire  ##if CONFIG_HZ=1000
@@ -359,10 +356,10 @@ if [ -d "/sys/block/sda/queue" ]; then
 		#echo 450 > $Q_PATH/iosched/async_write_expire  ##previously used values
 		#echo 350 > $Q_PATH/iosched/sync_read_expire  ##previously used values
 		#echo 550 > $Q_PATH/iosched/sync_write_expire  ##previously used values
-		echo 1500 > $Q_PATH/iosched/async_read_expire
-		echo 1500 > $Q_PATH/iosched/async_write_expire
-		echo 150 > $Q_PATH/iosched/sync_read_expire
-		echo 150 > $Q_PATH/iosched/sync_write_expire
+		# echo 1500 > $Q_PATH/iosched/async_read_expire  ##previously used values, 2nd test
+		# echo 1500 > $Q_PATH/iosched/async_write_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_read_expire  ##previously used values, 2nd test
+		# echo 150 > $Q_PATH/iosched/sync_write_expire  ##previously used values, 2nd test
 	elif grep 'cfq' $Q_PATH/scheduler; then
 		echo "cfq" > $Q_PATH/scheduler
 		sleep 1
@@ -384,7 +381,7 @@ if [ -d "/sys/block/sda/queue" ]; then
 		echo "	-Error Code #03"
 	fi
 	echo 512 > $Q_PATH/read_ahead_kb
-	echo 96 > $Q_PATH/nr_requests
+	echo 112 > $Q_PATH/nr_requests
 	echo 0 > $Q_PATH/add_random
 	echo 0 > $Q_PATH/iostats
 	echo 1 > $Q_PATH/nomerges
@@ -451,7 +448,7 @@ echo "	*Finished tuning TCP" >> $DLL
 # fi
 
 # #GPU
-echo "simple_ondemand" > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/governor
+echo "msm-adreno-tz" > /sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/governor
 GPU_FREQ=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/max_freq
 av_freq=/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0/available_frequencies
 if [ -e $GPU_FREQ ]; then
@@ -503,45 +500,45 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
 if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
-	echo "18432,23040,27648,51256,150296,200640" > /sys/module/lowmemorykiller/parameters/minfree
+	echo "18432,23040,27648,32256,73728,120960" > /sys/module/lowmemorykiller/parameters/minfree
 fi
 chmod 644 /sys/module/lowmemorykiller/parameters/debug_level
 echo 0 > /sys/module/lowmemorykiller/parameters/debug_level
 chmod 444 /sys/module/lowmemorykiller/parameters/debug_level
 
-# Enable bus-dcvs
-for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
-    echo "bw_hwmon" > $cpubw/governor
-    echo 50 > $cpubw/polling_interval
-    echo 1525 > $cpubw/min_freq
-	echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
-    echo 4 > $cpubw/bw_hwmon/sample_ms
-    echo 34 > $cpubw/bw_hwmon/io_percent
-    echo 20 > $cpubw/bw_hwmon/hist_memory
-    echo 10 > $cpubw/bw_hwmon/hyst_length
-    echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-    echo 34 > $cpubw/bw_hwmon/low_power_io_percent
-    echo 20 > $cpubw/bw_hwmon/low_power_delay
-    echo 0 > $cpubw/bw_hwmon/guard_band_mbps
-    echo 250 > $cpubw/bw_hwmon/up_scale
-    echo 1600 > $cpubw/bw_hwmon/idle_mbps
-done
-for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
-    echo "mem_latency" > $memlat/governor
-    echo 20 > $memlat/polling_interval
-done
-echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+# # Enable bus-dcvs
+# for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
+    # echo "bw_hwmon" > $cpubw/governor
+    # echo 50 > $cpubw/polling_interval
+    # echo 1525 > $cpubw/min_freq
+	# echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
+    # echo 4 > $cpubw/bw_hwmon/sample_ms
+    # echo 34 > $cpubw/bw_hwmon/io_percent
+    # echo 20 > $cpubw/bw_hwmon/hist_memory
+    # echo 10 > $cpubw/bw_hwmon/hyst_length
+    # echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
+    # echo 34 > $cpubw/bw_hwmon/low_power_io_percent
+    # echo 20 > $cpubw/bw_hwmon/low_power_delay
+    # echo 0 > $cpubw/bw_hwmon/guard_band_mbps
+    # echo 250 > $cpubw/bw_hwmon/up_scale
+    # echo 1600 > $cpubw/bw_hwmon/idle_mbps
+# done
+# for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
+    # echo "mem_latency" > $memlat/governor
+    # echo 20 > $memlat/polling_interval
+# done
+# echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
-echo 800 > /proc/sys/vm/dirty_expire_centisecs
-echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
+echo 400 > /proc/sys/vm/dirty_expire_centisecs
+echo 1000 > /proc/sys/vm/dirty_writeback_centisecs
 echo 0 > /proc/sys/vm/oom_kill_allocating_task
 echo 2 > /proc/sys/vm/page-cluster
 echo 20 > /proc/sys/vm/swappiness
 echo 100 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
-echo 5 > /proc/sys/vm/dirty_background_ratio
+echo 10 > /proc/sys/vm/dirty_background_ratio
 echo 1 > /proc/sys/vm/overcommit_memory
 echo 25 > /proc/sys/vm/overcommit_ratio
 echo 11093 > /proc/sys/vm/min_free_kbytes
@@ -555,9 +552,9 @@ if grep 'schedutil' $AGL; then
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1747200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1804800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1728000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online
@@ -584,9 +581,9 @@ else
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	chmod 664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
-	echo 1555200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo 1747200 > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo $little_min_value > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-	echo 1804800 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo 1728000 > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 	echo $big_min_value > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	chmod 644 /sys/devices/system/cpu/online
 	echo "0-7" > /sys/devices/system/cpu/online

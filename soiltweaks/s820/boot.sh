@@ -216,6 +216,17 @@ if [ -e "/sys/kernel/debug/sched_features" ]; then
 	echo NO_NORMALIZED_SLEEPER> /sys/kernel/debug/sched_features
 fi
 
+##LMK
+if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then 
+	chmod 664 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+	chown root /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+fi
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+	echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
+fi
+
 #loop tweaks
 echo "	+loop tweaks" >> $DLL
 for i in /sys/block/loop*; do

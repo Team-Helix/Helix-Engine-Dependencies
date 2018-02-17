@@ -25,20 +25,16 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 ##Configuring stune & cpuset
 if [ -d "/dev/stune" ]; then
 	echo "Configuring stune" >> $DLL
-	echo 1 > /dev/stune/top-app/schedtune.boost
-	echo -50 > /dev/stune/background/schedtune.boost
-	echo -50 > /dev/stune/foreground/schedtune.boost
+	echo 0 > /dev/stune/top-app/schedtune.boost
+	echo 0 > /dev/stune/background/schedtune.boost
+	echo 0 > /dev/stune/foreground/schedtune.boost
 	echo 0 > /dev/stune/schedtune.prefer_idle
 	echo 0 > /proc/sys/kernel/sched_child_runs_first
-	echo -50 > /proc/sys/kernel/sched_cfs_boost
 	echo 0 > /dev/stune/background/schedtune.prefer_idle
 	echo 0 > /dev/stune/foreground/schedtune.prefer_idle
 	echo 1 > /dev/stune/top-app/schedtune.prefer_idle
 	if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 		echo 0 > /proc/sys/kernel/sched_autogroup_enabled
-	fi
-	if [ -e "/proc/sys/kernel/sched_is_big_little" ]; then
-		echo 1 > /proc/sys/kernel/sched_is_big_little
 	fi
 	if [ -e "/proc/sys/kernel/sched_boost" ]; then
 		echo 0 > /proc/sys/kernel/sched_boost
@@ -50,7 +46,7 @@ echo 0 > /proc/sys/kernel/sched_initial_task_util
 if [ -d "/dev/cpuset" ]; then
 	echo "Configuring cpuset" >> $DLL
 	echo 0 > /dev/cpuset/background/cpus
-	echo 1 > /dev/cpuset/system-background/cpus
+	echo 0-1 > /dev/cpuset/system-background/cpus
 fi
 
 #Do not decrease sleep time
@@ -99,7 +95,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			sleep 1
 			echo 2000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 6000 > $LGP/pwrutilx/down_rate_limit_us
-			echo 7 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 12 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
@@ -125,7 +121,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
 				echo 0 > $LGP/schedutil/iowait_boost_enable
 			fi
-			echo 5 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo 10 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			echo 1 > /proc/sys/kernel/sched_cstate_aware
 			if [ -e "/proc/sys/kernel/sched_use_walt_task_util" ]; then
 				echo 1 > /proc/sys/kernel/sched_use_walt_task_util
@@ -143,14 +139,16 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			echo 95 > /proc/sys/kernel/sched_upmigrate
 			echo 100 > /proc/sys/kernel/sched_group_upmigrate
 			echo 85 > /proc/sys/kernel/sched_downmigrate
-			echo 95 > /proc/sys/kernel/sched_group_downmigrate
-			echo 5 > /proc/sys/kernel/sched_small_wakee_task_load
+			echo 90 > /proc/sys/kernel/sched_group_downmigrate
+			echo 10 > /proc/sys/kernel/sched_small_wakee_task
+			echo 600000 > /proc/sys/kernel/sched_freq_inc_notify
+			echo 200000 > /proc/sys/kernel/sched_freq_dec_notify
 			echo 5 > /proc/sys/kernel/sched_init_task_load
 			if [ -e /proc/sys/kernel/sched_enable_power_aware ]; then
 				echo 1 > /proc/sys/kernel/sched_enable_power_aware
 			fi
 			echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-			echo 35 > /proc/sys/kernel/sched_big_waker_task_load
+			echo 30 > /proc/sys/kernel/sched_big_waker_task_load
 			echo 3 > /proc/sys/kernel/sched_window_stats_policy
 			echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 			if [ -e /proc/sys/kernel/sched_upmigrate_min_nice ]; then
@@ -169,9 +167,6 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 			fi
 			if [ -e "/proc/sys/kernel/sched_migration_fixup" ]; then
 				echo 1 > /proc/sys/kernel/sched_migration_fixup
-			fi
-			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq" ]; then
-				echo 422400 > $LGP/interactive/screen_off_maxfreq
 			fi
 			if [ -e "/sys/devices/system/cpu/cpu0/cpufreq/interactive/powersave_bias" ]; then
 				echo 1 > $LGP/interactive/powersave_bias
@@ -192,14 +187,14 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
 				echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
 				echo 90000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_slack
-				echo 652800 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-				echo 0 422400:120000 844800:150000 1111300:175000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+				echo 307200 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+				echo 0 422400:40000 1111300:60000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 				echo 400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-				echo 0 > $LGP/interactive/min_sample_time	
+				echo 10000 > $LGP/interactive/min_sample_time	
 				echo 0 > $LGP/interactive/max_freq_hysteresis
 				echo 1 > $LGP/interactive/ignore_hispeed_on_notif
 				echo 0 > $LGP/interactive/boost
-				echo 0 > $LGP/interactive/fast_ramp_down
+				echo 1 > $LGP/interactive/fast_ramp_down
 				echo 0 > $LGP/interactive/align_windows
 				echo 1 > $LGP/interactive/use_migration_notif
 				echo 1 > $LGP/interactive/use_sched_load
@@ -277,16 +272,16 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			fi
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
-			echo 1248000 > $BGP/interactive/hispeed_freq
+			echo 307200 > $BGP/interactive/hispeed_freq
 			chmod 644 $BGP/interactive/timer_rate
 			echo 60000 > $BGP/interactive/timer_rate
-			echo 0 556800:100000 1248000:18000 > $BGP/interactive/above_hispeed_delay
-			echo 350 > $BGP/interactive/go_hispeed_load
+			echo 0 1248000:60000 > $BGP/interactive/above_hispeed_delay
+			echo 400 > $BGP/interactive/go_hispeed_load
 			echo 10000 > $BGP/interactive/min_sample_time		
 			echo 0 > $BGP/interactive/max_freq_hysteresis
 			echo 1 > $BGP/interactive/ignore_hispeed_on_notif
 			echo 0 > $BGP/interactive/boost
-			echo 0 > $BGP/interactive/fast_ramp_down
+			echo 1 > $BGP/interactive/fast_ramp_down
 			echo 0 > $BGP/interactive/align_windows
 			echo 1 > $BGP/interactive/use_migration_notif
 			echo 1 > $BGP/interactive/use_sched_load
@@ -339,7 +334,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:422400 1:0 2:0 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:652800 1:0 2:0 3:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
 	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
@@ -362,28 +357,27 @@ fi
 if [ "$maple" == "true" ]; then
 	if [ -e $string3 ]; then
 		echo "setting maple"
-		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
+		echo 1024 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo "maple" > /sys/block/mmcblk0/queue/scheduler
 		echo 16 > /sys/block/mmcblk0/queue/iosched/fifo_batch
 		echo 4 > /sys/block/mmcblk0/queue/iosched/writes_starved
 		echo 10 > /sys/block/mmcblk0/queue/iosched/sleep_latency_multiple
-		#echo 200 > /sys/block/mmcblk0/queue/iosched/async_read_expire   ##default values
-		#echo 500 > /sys/block/mmcblk0/queue/iosched/async_write_expire   ##default values
-		#echo 100 > /sys/block/mmcblk0/queue/iosched/sync_read_expire   ##default values
-		#echo 350 > /sys/block/mmcblk0/queue/iosched/sync_write_expire   ##default values
+		echo 200 > /sys/block/mmcblk0/queue/iosched/async_read_expire   ##default values
+		echo 500 > /sys/block/mmcblk0/queue/iosched/async_write_expire   ##default values
+		echo 100 > /sys/block/mmcblk0/queue/iosched/sync_read_expire   ##default values
+		echo 350 > /sys/block/mmcblk0/queue/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > /sys/block/mmcblk0/queue/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > /sys/block/mmcblk0/queue/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > /sys/block/mmcblk0/queue/iosched/sync_read_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > /sys/block/mmcblk0/queue/iosched/sync_write_expire  ##if CONFIG_HZ=1000
-		#echo 250 > /sys/block/mmcblk0/queue/iosched/async_read_expire  ##previously used values
-		#echo 450 > /sys/block/mmcblk0/queue/iosched/async_write_expire  ##previously used values
-		#echo 350 > /sys/block/mmcblk0/queue/iosched/sync_read_expire  ##previously used values
-		#echo 550 > /sys/block/mmcblk0/queue/iosched/sync_write_expire  ##previously used values
-		echo 1500 > /sys/block/mmcblk0/queue/iosched/async_read_expire
-		echo 1500 > /sys/block/mmcblk0/queue/iosched/async_write_expire
-		echo 150 > /sys/block/mmcblk0/queue/iosched/sync_read_expire
-		echo 150 > /sys/block/mmcblk0/queue/iosched/sync_write_expire
-		echo 128 > /sys/block/mmcblk0/queue/nr_requests
+		#echo 250 > /sys/block/mmcblk0/queue/iosched/async_read_expire  ##previously tested values
+		#echo 450 > /sys/block/mmcblk0/queue/iosched/async_write_expire  ##previously tested values
+		#echo 350 > /sys/block/mmcblk0/queue/iosched/sync_read_expire  ##previously tested values
+		#echo 550 > /sys/block/mmcblk0/queue/iosched/sync_write_expire  ##previously tested values
+		# echo 1500 > /sys/block/mmcblk0/queue/iosched/async_read_expire  ##previously tested values, 2nd test
+		# echo 1500 > /sys/block/mmcblk0/queue/iosched/async_write_expire  ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk0/queue/iosched/sync_read_expire  ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk0/queue/iosched/sync_write_expire  ##previously tested values, 2nd test
 		echo 0 > /sys/block/mmcblk0/queue/add_random
 		echo 0 > /sys/block/mmcblk0/queue/iostats
 		echo 1 > /sys/block/mmcblk0/queue/nomerges
@@ -394,10 +388,10 @@ if [ "$maple" == "true" ]; then
 		echo 16 > /sys/block/mmcblk1/queue/iosched/fifo_batch
 		echo 4 > /sys/block/mmcblk1/queue/iosched/writes_starved
 		echo 10 > /sys/block/mmcblk1/queue/iosched/sleep_latency_multiple
-		#echo 200 > /sys/block/mmcblk1/queue/iosched/async_read_expire   ##default values
-		#echo 500 > /sys/block/mmcblk1/queue/iosched/async_write_expire   ##default values
-		#echo 100 > /sys/block/mmcblk1/queue/iosched/sync_read_expire   ##default values
-		#echo 350 > /sys/block/mmcblk1/queue/iosched/sync_write_expire   ##default values
+		echo 200 > /sys/block/mmcblk1/queue/iosched/async_read_expire   ##default values
+		echo 500 > /sys/block/mmcblk1/queue/iosched/async_write_expire   ##default values
+		echo 100 > /sys/block/mmcblk1/queue/iosched/sync_read_expire   ##default values
+		echo 350 > /sys/block/mmcblk1/queue/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > /sys/block/mmcblk1/queue/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > /sys/block/mmcblk1/queue/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > /sys/block/mmcblk1/queue/iosched/sync_read_expire  ##if CONFIG_HZ=1000
@@ -406,11 +400,11 @@ if [ "$maple" == "true" ]; then
 		#echo 450 > /sys/block/mmcblk1/queue/iosched/async_write_expire  ##previously used values
 		#echo 350 > /sys/block/mmcblk1/queue/iosched/sync_read_expire  ##previously used values
 		#echo 550 > /sys/block/mmcblk1/queue/iosched/sync_write_expire  ##previously used values
-		echo 1500 > /sys/block/mmcblk1/queue/iosched/async_read_expire
-		echo 1500 > /sys/block/mmcblk1/queue/iosched/async_write_expire
-		echo 150 > /sys/block/mmcblk1/queue/iosched/sync_read_expire
-		echo 150 > /sys/block/mmcblk1/queue/iosched/sync_write_expire
-		echo 128 > /sys/block/mmcblk1/queue/nr_requests
+		# echo 1500 > /sys/block/mmcblk1/queue/iosched/async_read_expire  ##previously tested values, 2nd test
+		# echo 1500 > /sys/block/mmcblk1/queue/iosched/async_write_expiren ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk1/queue/iosched/sync_read_expire  ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk1/queue/iosched/sync_write_expire  ##previously tested values, 2nd test
+		echo 112 > /sys/block/mmcblk1/queue/nr_requests
 		echo 0 > /sys/block/mmcblk1/queue/add_random
 		echo 0 > /sys/block/mmcblk1/queue/iostats
 		echo 1 > /sys/block/mmcblk1/queue/nomerges
@@ -421,10 +415,10 @@ if [ "$maple" == "true" ]; then
 		echo 1 > /sys/block/mmcblk0rpmb/queue/iosched/fifo_batch
 		echo 4 > /sys/block/mmcblk0rpmb/queue/iosched/writes_starved
 		echo 10 > /sys/block/mmcblk0rpmb/queue/iosched/sleep_latency_multiple
-		#echo 200 > /sys/block/mmcblk0rpmb/queue/iosched/async_read_expire   ##default values
-		#echo 500 > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire   ##default values
-		#echo 100 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire   ##default values
-		#echo 350 > /sys/block/mmcblk0rpmb/queue/iosched/sync_write_expire   ##default values
+		echo 200 > /sys/block/mmcblk0rpmb/queue/iosched/async_read_expire   ##default values
+		echo 500 > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire   ##default values
+		echo 100 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire   ##default values
+		echo 350 > /sys/block/mmcblk0rpmb/queue/iosched/sync_write_expire   ##default values
 		#echo 5 * HZ > /sys/block/mmcblk0rpmb/queue/iosched/async_read_expire  ##if CONFIG_HZ=1000
 		#echo 5 * HZ > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire  ##if CONFIG_HZ=1000
 		#echo HZ / 2 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire  ##if CONFIG_HZ=1000
@@ -433,10 +427,10 @@ if [ "$maple" == "true" ]; then
 		#echo 450 > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire  ##previously used values
 		#echo 350 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire  ##previously used values
 		#echo 550 > /sys/block/mmcblk0rpmb/queue/iosched/sync_write_expire  ##previously used values
-		echo 1500 > /sys/block/mmcblk0rpmb/queue/iosched/async_read_expire
-		echo 1500 > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire
-		echo 150 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire
-		echo 150 > /sys/block/mmcblk0rpmb/queue/iosched/sync_write_expire
+		# echo 1500 > /sys/block/mmcblk0rpmb/queue/iosched/async_read_expire  ##previously tested values, 2nd test
+		# echo 1500 > /sys/block/mmcblk0rpmb/queue/iosched/async_write_expire  ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk0rpmb/queue/iosched/sync_read_expire  ##previously tested values, 2nd test
+		# echo 150 > /sys/block/mmcblk0rpmb/queue/iosched/sync_write_expire  ##previously tested values, 2nd test
 		echo 0 > /sys/block/mmcblk0rpmb/queue/add_random
 		echo 0 > /sys/block/mmcblk0rpmb/queue/iostats
 		echo 1 > /sys/block/mmcblk0rpmb/queue/nomerges
@@ -471,7 +465,7 @@ elif [ "$noop" == "true" ]; then
 else
 	if [ -e $string3 ]; then
 		echo "I/0 governor won't be changed"
-		echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
+		echo 1024 > /sys/block/mmcblk0/bdi/read_ahead_kb
 		echo 0 > /sys/block/mmcblk0/queue/add_random
 		echo 0 > /sys/block/mmcblk0/queue/iostats
 		echo 1 > /sys/block/mmcblk0/queue/nomerges
@@ -491,7 +485,7 @@ else
 		echo 1 > /sys/block/mmcblk0rpmb/queue/rq_affinity	
   	fi
 fi
-echo 96 > /sys/block/mmcblk0/queue/nr_requests
+echo 112 > /sys/block/mmcblk0/queue/nr_requests
 echo "	*Finished tuning I/O scheduler" >> $DLL
 
 #TCP tweaks
@@ -501,10 +495,10 @@ echo "	*Finished tuning TCP" >> $DLL
 
 ## zRam
 if [ -e /sys/block/zram0 ]; then
-	echo 48 > /sys/block/zram0/queue/nr_requests
+	echo 56 > /sys/block/zram0/queue/nr_requests
 fi
 ## GPU
-echo "simple_ondemand" > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor
+echo "msm-adreno-tz" > /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/governor
 if [ -d /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/gpu_available_frequencies ]; then
 	GPU_FREQ=/sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/gpu_available_frequencies
 	GPU_OC=false;
@@ -537,21 +531,21 @@ if [ -d /sys/devices/soc/b00000.qcom,kgsl-3d0/devfreq/b00000.qcom,kgsl-3d0/gpu_a
 		fi
 	fi
 fi
-##Pnp, if available
-if [ -e /sys/power/pnpmgr ]; then
-	echo 0 > /sys/power/pnpmgr/touch_boost
-	echo 844800 > /sys/power/pnpmgr/cluster/little/cpu0/thermal_freq
-	echo 307200 > /sys/power/pnpmgr/cluster/little/cpu0/scaling_min_freq
-	echo 1248000 > /sys/power/pnpmgr/cluster/big/cpu0/thermal_freq
-	echo 307200 > /sys/power/pnpmgr/cluster/big/cpu0/scaling_min_freq
-fi	
+# ##Pnp, if available
+# if [ -e /sys/power/pnpmgr ]; then
+	# echo 0 > /sys/power/pnpmgr/touch_boost
+	# echo 844800 > /sys/power/pnpmgr/cluster/little/cpu0/thermal_freq
+	# echo 307200 > /sys/power/pnpmgr/cluster/little/cpu0/scaling_min_freq
+	# echo 1248000 > /sys/power/pnpmgr/cluster/big/cpu0/thermal_freq
+	# echo 307200 > /sys/power/pnpmgr/cluster/big/cpu0/scaling_min_freq
+# fi	
 ## Vibration
 chmod 644 /sys/class/timed_output/vibrator/voltage_level
 echo 710 > /sys/class/timed_output/vibrator/voltage_level
 ## FS
 echo 10 > /proc/sys/fs/lease-break-time
 echo 32768 > /proc/sys/fs/inotify/max_queued_events
-echo 192 > /proc/sys/fs/inotify/max_user_instances
+echo 256 > /proc/sys/fs/inotify/max_user_instances
 echo 16384 > /proc/sys/fs/inotify/max_user_watches
 
 ##LMK
@@ -561,29 +555,32 @@ if [ -e "/sys/module/lowmemorykiller/parameters/enable_adaptive_lmk" ]; then
 	echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	chmod 444 /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 fi
+if [ -e "/sys/module/lowmemorykiller/parameters/minfree" ]; then
+	echo "18432,23040,27648,32256,73728,120960" > /sys/module/lowmemorykiller/parameters/minfree
+fi
 	
-# Enable bus-dcvs
-for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
-    echo "bw_hwmon" > $cpubw/governor
-    echo 50 > $cpubw/polling_interval
-    echo 1525 > $cpubw/min_freq
-	echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
-    echo 4 > $cpubw/bw_hwmon/sample_ms
-    echo 34 > $cpubw/bw_hwmon/io_percent
-    echo 20 > $cpubw/bw_hwmon/hist_memory
-    echo 10 > $cpubw/bw_hwmon/hyst_length
-    echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-    echo 34 > $cpubw/bw_hwmon/low_power_io_percent
-    echo 20 > $cpubw/bw_hwmon/low_power_delay
-    echo 0 > $cpubw/bw_hwmon/guard_band_mbps
-    echo 250 > $cpubw/bw_hwmon/up_scale
-    echo 1600 > $cpubw/bw_hwmon/idle_mbps
-done
-for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
-    echo "mem_latency" > $memlat/governor
-    echo 20 > $memlat/polling_interval
-done
-echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+# # Enable bus-dcvs
+# for cpubw in /sys/class/devfreq/*qcom,cpubw* ; do
+    # echo "bw_hwmon" > $cpubw/governor
+    # echo 50 > $cpubw/polling_interval
+    # echo 5195 > $cpubw/min_freq
+	# echo "1525 5195 11863 13763" > $cpubw/bw_hwmon/mbps_zones
+    # echo 4 > $cpubw/bw_hwmon/sample_ms
+    # echo 34 > $cpubw/bw_hwmon/io_percent
+    # echo 20 > $cpubw/bw_hwmon/hist_memory
+    # echo 10 > $cpubw/bw_hwmon/hyst_length
+    # echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
+    # echo 34 > $cpubw/bw_hwmon/low_power_io_percent
+    # echo 20 > $cpubw/bw_hwmon/low_power_delay
+    # echo 0 > $cpubw/bw_hwmon/guard_band_mbps
+    # echo 250 > $cpubw/bw_hwmon/up_scale
+    # echo 1600 > $cpubw/bw_hwmon/idle_mbps
+# done
+# for memlat in /sys/class/devfreq/*qcom,memlat-cpu* ; do
+    # echo "mem_latency" > $memlat/governor
+    # echo 10 > $memlat/polling_interval
+# done
+# echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 #Virtual Memory
 echo "	+Virtual memory tweaks" >> $DLL
@@ -594,9 +591,9 @@ echo 2 > /proc/sys/vm/page-cluster
 echo 20 > /proc/sys/vm/swappiness
 echo 100 > /proc/sys/vm/vfs_cache_pressure
 echo 20 > /proc/sys/vm/dirty_ratio
-echo 5 > /proc/sys/vm/dirty_background_ratio
+echo 10 > /proc/sys/vm/dirty_background_ratio
 echo 1 > /proc/sys/vm/overcommit_memory
-echo 25 > /proc/sys/vm/overcommit_ratio
+echo 50 > /proc/sys/vm/overcommit_ratio
 echo 32 > /proc/sys/kernel/random/read_wakeup_threshold
 echo 896 > /proc/sys/kernel/random/write_wakeup_threshold
 
