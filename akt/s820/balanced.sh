@@ -161,7 +161,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				sleep 1
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
 				chmod 644 $LGP/interactive/*
-				if [ "pnp_available" == "false" ]; then
+				if [ $pnp_available == "false" ]; then
 					echo "interactive will be set on LITTLE cluster"
 					echo 70 480000:65 556800:75 768000:82 960000:86 1036800:2 1228800:96 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				else
