@@ -13,7 +13,6 @@ version=V3.0
 cdate=$(date)
 #Initializing log
 
-sleep 1
 
 #Disable BCL
 if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
@@ -30,7 +29,6 @@ fi
 #Turn off core_control
 echo 0 > /sys/module/msm_thermal/core_control/enabled
 
-sleep 1
 
 big_max_value=0
 little_max_value=0

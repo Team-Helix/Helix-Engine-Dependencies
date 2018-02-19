@@ -17,7 +17,6 @@ echo "$cdate" > $DLL
 echo "$codename $stype" >> $DLL
 echo "*Searching CPU frequencies" >> $DLL
 
-sleep 1
 
 #Disable BCL
 if [ -e "/sys/devices/soc/soc:qcom,bcl/mode" ]; then
@@ -37,7 +36,6 @@ fi
 echo "	+Disabling core_control temporarily" >> $DLL
 echo 0 > /sys/module/msm_thermal/core_control/enabled
 
-sleep 1
 
 big_max_value=0
 little_max_value=0

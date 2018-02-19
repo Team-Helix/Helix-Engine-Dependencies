@@ -56,7 +56,6 @@ if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 	echo 0 > /proc/sys/kernel/sched_autogroup_enabled
 fi
 
-sleep 1
 
 big_max_value=0
 little_max_value=0
@@ -99,7 +98,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
-			sleep 1
 			echo 500 > $LGP/pwrutilx/up_rate_limit_us
 			echo 20000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 1 > $LGP/pwrutilx/iowait_boost_enable
@@ -123,7 +121,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
-			sleep 1
 			echo 500 > $LGP/schedutil/up_rate_limit_us
 			echo 10000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
@@ -183,7 +180,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				if [ -e $AGL ]; then
 					echo "	+Applying & tuning blu_active" >> $DLL
 					echo blu_active > $LGP/scaling_governor
-					sleep 1
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/blu_active/*
 					chmod 644 $LGP/blu_active/*
 					echo 75 595200:79 883200:83 1324800:85 1555200:89 > $LGP/blu_active/target_loads
@@ -206,7 +202,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				if [ -e $AGL ]; then
 					echo "	+Applying & tuning interactive" >> $DLL
 					echo interactive > $LGP/scaling_governor
-					sleep 1
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 					chmod 644 $LGP/interactive/*
 					echo 75 595200:79 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
@@ -261,7 +256,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 644 $BGP/pwrutilx/*
 			echo pwrutilx > $BGP/scaling_governor
-			sleep 1
 			echo 1000 > $BGP/pwrutilx/up_rate_limit_us
 			echo 10000 > $BGP/pwrutilx/down_rate_limit_us
 			echo 1 > $BGP/pwrutilx/iowait_boost_enable
@@ -276,7 +270,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
-			sleep 1
 			echo 1000 > $BGP/schedutil/up_rate_limit_us
 			echo 8000 > $BGP/schedutil/down_rate_limit_us
 			if [ -e "$BGP/schedutil/iowait_boost_enable" ]; then
@@ -291,7 +284,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 		if [ -e $AGB ]; then
 			echo "	Applying & tuning blu_active" >> $DLL
 			echo blu_active > $BGP/scaling_governor
-			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/blu_active/*
 			chmod 644 $BGP/blu_active/*
 			echo 75 902400:81 1132800:86 1881600:91 2323200:95 > $BGP/blu_active/target_loads
@@ -314,7 +306,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 		if [ -e $AGB ]; then
 			echo "	Applying & tuning interactive" >> $DLL
 			echo interactive > $BGP/scaling_governor
-			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
 			echo 75 902400:81 1132800:86 1881600:91 2323200:95 > $BGP/interactive/target_loads
@@ -350,7 +341,6 @@ fi
 
 echo "	*big settings finished" >> $DLL
 
-sleep 1
 
 # # Turn on core_ctl module and tune parameters if kernel has core_ctl module
 # if [ -e "/sys/devices/system/cpu/cpu4/core_ctl" ]; then
@@ -406,7 +396,6 @@ if [ -e "/sys/module/cpu_boost" ]; then
 	fi
 fi
 
-sleep 1
 
 #I/0 Tweaks
 if [ -d "/sys/block/sda/queue" ]; then
@@ -414,7 +403,6 @@ if [ -d "/sys/block/sda/queue" ]; then
 	Q_PATH=/sys/block/sda/queue/
 	if grep 'cfq' $Q_PATH/scheduler; then
 		echo "cfq" > $Q_PATH/scheduler
-		sleep 1
 		echo "	+Using cfq with tuned values" >> $DLL
 	else
 		echo "	-Something went wrong while changing I/O Scheduler." >> $DLL

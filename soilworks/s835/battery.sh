@@ -48,7 +48,6 @@ if [ -e "/proc/sys/kernel/sched_autogroup_enabled" ]; then
 	echo 1 > /proc/sys/kernel/sched_autogroup_enabled
 fi
 
-sleep 1
 
 big_max_value=0
 little_max_value=0
@@ -87,7 +86,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/pwrutilx/*
 			chmod 644 $LGP/pwrutilx/*
 			echo pwrutilx > $LGP/scaling_governor
-			sleep 1
 			echo 1000 > $LGP/pwrutilx/up_rate_limit_us
 			echo 10000 > $LGP/pwrutilx/down_rate_limit_us
 			echo 15 > /sys/module/cpu_boost/parameters/dynamic_stune_boost
@@ -109,7 +107,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/schedutil/*
 			chmod 644 $LGP/schedutil/*
 			echo schedutil > $LGP/scaling_governor
-			sleep 1
 			echo 2000 > $LGP/schedutil/up_rate_limit_us
 			echo 7000 > $LGP/schedutil/down_rate_limit_us
 			if [ -e "$LGP/schedutil/iowait_boost_enable" ]; then
@@ -167,7 +164,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				echo 1 > $LGP/interactive/powersave_bias
 			fi
 			echo interactive > $LGP/scaling_governor
-			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
 			echo 80 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
@@ -206,7 +202,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/pwrutilx/*
 			chmod 644 $BGP/pwrutilx/*
 			echo pwrutilx > $BGP/scaling_governor
-			sleep 1
 			echo 2000 > $BGP/pwrutilx/up_rate_limit_us
 			echo 6000 > $BGP/pwrutilx/down_rate_limit_us
 			echo 0 > $BGP/pwrutilx/iowait_boost_enable
@@ -219,7 +214,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/schedutil/*
 			chmod 644 $BGP/schedutil/*
 			echo schedutil > $BGP/scaling_governor
-			sleep 1
 			echo 2000 > $BGP/schedutil/up_rate_limit_us
 			echo 5000 > $BGP/schedutil/down_rate_limit_us
 			if [ -e "$BGP/schedutil/iowait_boost_enable" ]; then
@@ -232,7 +226,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 	elif grep 'interactive' $AGB; then
 		if [ -e $AGB ]; then
 			echo interactive > $BGP/scaling_governor
-			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
 			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
@@ -255,7 +248,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 fi
 
 
-sleep 1
 
 # #Tweak VoxPopuli -- Only on EAS kernels
 # if [ -d /dev/voxpopuli/ ]; then
@@ -288,22 +280,24 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
 	fi
 	chmod 644 /sys/module/cpu_boost/parameters/input_boost_freq
-	echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
-	chmod 644 /sys/module/cpu_boost/parameters/input_boost_ms
-	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
+	if grep 'schedutil' $AGL; then
+		echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+		echo 0 > /sys/module/cpu_boost/parameters/input_boost_ms
+	else
+		echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+		echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
+	fi
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
 		echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 	fi
 fi
 
-sleep 1
 
 #I/0 Tweaks
 if [ -d "/sys/block/sda/queue" ]; then
 	Q_PATH=/sys/block/sda/queue/
 	if grep 'maple' $Q_PATH/scheduler; then
 		echo "maple" > $Q_PATH/scheduler
-		sleep 1
 		echo 16 > $Q_PATH/iosched/fifo_batch
 		echo 4 > $Q_PATH/iosched/writes_starved
 		echo 10 > $Q_PATH/iosched/sleep_latency_multiple
@@ -325,7 +319,6 @@ if [ -d "/sys/block/sda/queue" ]; then
 		# echo 150 > $Q_PATH/iosched/sync_write_expire  ##previously used values, 2nd test
 	elif grep 'cfq' $Q_PATH/scheduler; then
 		echo "cfq" > $Q_PATH/scheduler
-		sleep 1
 		# echo 1 > $Q_PATH/iosched/back_seek_penalty
 		# echo 16384 > $Q_PATH/iosched/back_seek_max
 		# echo 120 > $Q_PATH/iosched/fifo_expire_sync
