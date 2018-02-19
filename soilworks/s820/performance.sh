@@ -145,7 +145,7 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				sleep 1
 				chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/interactive/*
 				chmod 644 $LGP/interactive/*
-				if [ "pnp_available" == "false" ]; then
+				if [ $pnp_available == "false" ]; then
 					echo "interactive will be set on LITTLE cluster"
 					echo 67 422400:49 480000:56 556800:68 652800:76 729600:81 844800:84 960000:89 1036800:87 1111300:84 1190400:7 1228800:86 1324800:92 1478400:99 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 				else
@@ -206,7 +206,7 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			sleep 1
 			chmod 644 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
 			chmod 644 $BGP/interactive/*
-			if [ "pnp_available" == "false" ]; then
+			if [ $pnp_available == "false" ]; then
 				echo 58 556800:58 652800:78 729600:80 806400:84 883200:77 940800:82 1036800:86 1113600:84 1190400:87 1248000:88 1324800:90 1785600:96 > /sys/devices/system/cpu/cpu2/cpufreq/interactive/target_loads
 			else
 				echo "PnP detected! Tweaks will be set accordingly"
