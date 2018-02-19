@@ -189,7 +189,6 @@ if [ -d /sys/devices/system/cpu/cpu0/cpufreq ]; then
 				chmod 444 $LGP/interactive/*
 			fi
 		fi
-	else
 	fi
 fi
 
@@ -264,7 +263,6 @@ if [ -d /sys/devices/system/cpu/cpu2/cpufreq ]; then
 			chmod 444 /sys/devices/system/cpu/cpu2/cpufreq/interactive/*
 			chmod 444 $BGP/interactive/*
 		fi
-	else
 	fi
 fi
 
