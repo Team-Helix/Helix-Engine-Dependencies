@@ -203,7 +203,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 				fi
 			fi
 		fi
-	else
 	fi
 fi
 
@@ -281,7 +280,6 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 444 $BGP/interactive/*
 		fi
-	else
 	fi
 fi
 
