@@ -8,10 +8,10 @@
 #Last Updated: 23/01/2018
 #Credits: @Alcolawl @soniCron @Asiier @Freak07 @Mostafa Wael @Senthil360 @TotallyAnxious @RenderBroken @ZeroInfinity @Kyuubi10 @ivicask @RogerF81 @joshuous @boyd95 @ZeroKool76 @adanteon
 codename=Soilwork
-stype=battery_extreme
+stype=powersave
 version=V3.0
 cdate=$(date)
-DLL=/storage/emulated/0/soilwork_suspend_log.txt
+DLL=/storage/emulated/0/soilwork_powersave_log.txt
 
 #Initializing log
 echo "$cdate" > $DLL
