@@ -182,7 +182,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo interactive > $LGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 81 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
+			echo 80 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
@@ -256,7 +256,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo interactive > $BGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 83 1132800:86 1574400:95 > $BGP/interactive/target_loads
+			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
 			echo 300000 > $BGP/interactive/hispeed_freq

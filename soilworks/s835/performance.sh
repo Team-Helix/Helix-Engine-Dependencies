@@ -156,7 +156,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					echo blu_active > $LGP/scaling_governor
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/blu_active/*
 					chmod 644 $LGP/blu_active/*
-					echo 77 883200:83 1324800:85 1555200:89 > $LGP/blu_active/target_loads
+					echo 72 595200:78 883200:83 1324800:85 1555200:89 > $LGP/blu_active/target_loads
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/blu_active/target_loads
 					echo 90000 > $LGP/blu_active/timer_slack
 					chmod 644 $LGP/blu_active/timer_rate
@@ -175,7 +175,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					echo interactive > $LGP/scaling_governor
 					chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 					chmod 644 $LGP/interactive/*
-					echo 77 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
+					echo 72 595200:78 883200:83 1324800:85 1555200:89 > $LGP/interactive/target_loads
 					chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 					echo 90000 > $LGP/interactive/timer_slack
 					chmod 644 $LGP/interactive/timer_rate
@@ -231,7 +231,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo blu_active > $BGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/blu_active/*
 			chmod 644 $BGP/blu_active/*
-			echo 79 1651200:86 2035200:91 2323200:95 > $BGP/blu_active/target_loads
+			echo 74 652800:79 1651200:86 2035200:91 2323200:95 > $BGP/blu_active/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/blu_active/target_loads
 			echo 90000 > $BGP/blu_active/timer_slack
 			echo 2361600 > $BGP/blu_active/hispeed_freq
@@ -251,7 +251,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo interactive > $BGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 79 1651200:86 2035200:91 2323200:95 > $BGP/interactive/target_loads
+			echo 74 652800:79 1651200:86 2035200:91 2323200:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 90000 > $BGP/interactive/timer_slack
 			echo 2361600 > $BGP/interactive/hispeed_freq
