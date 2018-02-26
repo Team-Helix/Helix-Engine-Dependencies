@@ -182,7 +182,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 			echo interactive > $LGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy0/interactive/*
 			chmod 644 $LGP/interactive/*
-			echo 80 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
+			echo 81 883200:84 1324800:89 1555200:93 > $LGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 			echo 90000 > $LGP/interactive/timer_slack
 			chmod 644 $LGP/interactive/timer_rate
@@ -256,7 +256,7 @@ if [ -d /sys/devices/system/cpu/cpufreq/policy4 ]; then
 			echo interactive > $BGP/scaling_governor
 			chmod 644 /sys/devices/system/cpu/cpufreq/policy4/interactive/*
 			chmod 644 $BGP/interactive/*
-			echo 80 1132800:86 1574400:95 > $BGP/interactive/target_loads
+			echo 83 1132800:86 1574400:95 > $BGP/interactive/target_loads
 			chmod 444 /sys/devices/system/cpu/cpufreq/policy4/interactive/target_loads
 			echo 120000 > $BGP/interactive/timer_slack
 			echo 300000 > $BGP/interactive/hispeed_freq
@@ -319,7 +319,7 @@ if [ -e "/sys/module/cpu_boost" ]; then
 		echo 0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 		echo 0 > /sys/module/cpu_boost/parameters/input_boost_ms
 	else
-		echo 0:1036800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+		echo 0:883200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 		echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	fi
 	if [ -e "/sys/module/msm_performance/parameters/touchboost/sched_boost_on_input " ]; then
