@@ -1,13 +1,7 @@
 #!/system/bin/sh
 # AUTHOR: TEAM HELIX @ XDA-DEVELOPERS
-# Template by @ZeroInfinity, adapted from @RogerF81
+# Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
 # Helix-Engine profile script: Powersave
-
-EAS='0'
-HMP='0'
-SCHED_PATH='/proc/sys/kernel'
-CPU='/sys/devices/system/cpu'
-
 LITTLE_CLUSTER='/sys/devices/system/cpu/cpufreq/policy0'
 LITTLE_MAX_VALUE="$(cat ${LITTLE_CLUSTER}/cpuinfo_max_freq)"
 LITTLE_MIN_VALUE="$(cat ${LITTLE_CLUSTER}/cpuinfo_min_freq)"
@@ -17,6 +11,197 @@ BIG_CLUSTER='/sys/devices/system/cpu/cpufreq/policy4'
 BIG_MAX_VALUE="$(cat ${BIG_CLUSTER}/cpuinfo_max_freq)"
 BIG_MIN_VALUE="$(cat ${BIG_CLUSTER}/cpuinfo_min_freq)"
 BIG_AVAIL_GOVS="${BIG_CLUSTER}/scaling_available_governors"
+
+##################################
+# Energy-Aware Scheduling Tweaks #
+##################################
+
+#Schedtune tunables
+TA_BOOST='0'
+TA_PREF_IDLE='0'
+FG_BOOST='-25'
+FG_PREF_IDLE='0'
+BG_BOOST='-50'
+BG_PREF_IDLE='0'
+GEN_BOOST='0'
+GEN_PREF_IDLE='0'
+
+#EAS tunables
+SCHED_NR_MIGRATE='18'
+
+#pwrutilx gov tweaks
+PWRUTIL_UP_RATE_LITTLE='10000'
+PWRUTIL_DOWN_RATE_LITTLE='1000'
+PWRUTIL_IOWAIT_BOOST_LITTLE='0'
+PWRUTIL_UP_RATE_BIG='10000'
+PWRUTIL_DOWN_RATE_BIG='1000'
+PWRUTIL_IOWAIT_BOOST_BIG='0'
+PWRUTIL_DYN_STUNE='5'
+
+#schedutil gov tweaks
+SCHEDUTIL_UP_RATE_LITTLE='10000'
+SCHEDUTIL_DOWN_RATE_LITTLE='500'
+SCHEDUTIL_IOWAIT_BOOST_LITTLE='0'
+SCHEDUTIL_UP_RATE_BIG='20000'
+SCHEDUTIL_DOWN_RATE_BIG='500'
+SCHEDUTIL_IOWAIT_BOOST_BIG='0'
+SCHEDUTIL_DYN_STUNE='3'
+
+#Generic CPU settings
+EAS_BIG_MAX_FREQ='1267200'
+EAS_BIG_MIN_FREQ='${BIG_MIN_VALUE}'
+EAS_LITTLE_MAX_FREQ='1248000'
+EAS_LITTLE_MIN_FREQ='${LITTLE_MIN_VALUE}'
+EAS_CPU0_ONLINE='1'
+EAS_CPU1_ONLINE='1'
+EAS_CPU2_ONLINE='0'
+EAS_CPU3_ONLINE='0'
+EAS_CPU4_ONLINE='1'
+EAS_CPU5_ONLINE='1'
+EAS_CPU6_ONLINE='0'
+EAS_CPU7_ONLINE='0'
+##################################
+# Energy-Aware Scheduling Tweaks #
+##################################
+
+#########################################
+# Heterogeneous Multi-Processing Tweaks #
+#########################################
+
+#HMP tunables
+SCHED_UPMIGRATE='100'
+SCHED_GROUP_UPMIGRATE='100'
+SCHED_DOWNMIGRATE='90'
+SCHED_GROUP_DOWNMIGRATE='95'
+SCHED_SMALL_TASK_WAKEE_TASK_LOAD='20'
+SCHED_INIT_TASK_LOAD='0'
+SCHED_ENABLE_POWER_AWARE='1'
+SCHED_ENABLE_THREAD_GROUPING='1'
+SCHED_BIG_WAKER_TASK_LOAD='1'
+SCHED_WINDOW_STATS_POLICY='3'
+SCHED_RAVG_HIST_SIZE='5'
+SCHED_UPMIGRATE_MIN_NICE='0'
+SCHED_SPILL_NR_RUN='5'
+SCHED_SPILL_LOAD='100'
+SCHED_RESTRICT_CLUSTER_SPILL='1'
+SCHED_WAKEUP_LOAD_THRESHOLD='110'
+SCHED_RR_TIMESLICE_MS='10'
+SCHED_MIGRATION_FIXUP='1'
+
+#Interactive gov tweaks
+TARGET_LOADS_LITTLE='90 1401600:95'
+TIMER_SLACK_LITTLE='120000'
+TIMER_RATE_LITTLE='60000'
+HISPEED_FREQ_LITTLE='300000'
+ABOVE_HISPEED_DELAY_LITTLE='50000 883200:75000 1401600:100000'
+GO_HISPEED_LOAD_LITTLE='400'
+MIN_SAMPLE_TIME_LITTLE='0'
+MAX_FREQ_HYSTERESIS_LITTLE='0'
+FAST_RAMP_DOWN_LITTLE='1'
+USE_SCHED_LOAD_LITTLE='0'
+BOOSTPULSE_DURATION_LITTLE='0'
+
+TARGET_LOADS_BIG='90 1132800:95'
+TIMER_SLACK_BIG='120000'
+TIMER_RATE_BIG='100000'
+HISPEED_FREQ_BIG='300000'
+ABOVE_HISPEED_DELAY_BIG='60000 1132800:100000'
+GO_HISPEED_LOAD_BIG='400'
+MIN_SAMPLE_TIME_BIG='0'
+MAX_FREQ_HYSTERESIS_BIG='0'
+FAST_RAMP_DOWN_BIG='1'
+USE_SCHED_LOAD_BIG='0'
+BOOSTPULSE_DURATION_BIG='0'
+
+#Generic CPU settings
+TOUCHBOOST='0'
+HMP_BIG_MAX_FREQ='1267200'
+HMP_BIG_MIN_FREQ='${BIG_MIN_VALUE}'
+HMP_LITTLE_MAX_FREQ='1248000'
+HMP_LITTLE_MIN_FREQ='${LITTLE_MIN_VALUE}'
+HMP_CPU0_ONLINE='1'
+HMP_CPU1_ONLINE='1'
+HMP_CPU2_ONLINE='0'
+HMP_CPU3_ONLINE='0'
+HMP_CPU4_ONLINE='1'
+HMP_CPU5_ONLINE='1'
+HMP_CPU6_ONLINE='0'
+HMP_CPU7_ONLINE='0'
+
+#########################################
+# Heterogeneous Multi-Processing Tweaks #
+#########################################
+
+###############
+# Misc Tweaks #
+###############
+
+CPUSET_BG='0'
+CPUSET_SYSBG='0'
+
+INPUT_BOOST_ENABLED='1'
+INPUT_BOOST_FREQ='0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0'
+INPUT_BOOST_MS='0'
+SCHED_BOOST_ON_INPUT='N'
+
+TCP_CONTROL='westwood'
+TCP_LOW_LATENCY='1'
+
+###############
+# Misc Tweaks #
+###############
+
+#############
+# IO Tweaks #
+#############
+
+#TODO: Re-do IO tweaks so they aren't restricted by conditions
+
+#############
+# IO Tweaks #
+#############
+
+##############
+# GPU Tweaks #
+##############
+
+#TODO: Same as IO Tweaks but for GPU Tweaks
+
+##############
+# GPU Tweaks #
+##############
+
+#################
+# Memory Tweaks #
+#################
+
+ENABLE_ADAPTIVE_LMK='1'
+MINFREE='18432,23040,27648,32256,82944,161280'
+DEBUG_LEVEL='0'
+
+DIRTY_EXPIRE_CENTISECS='2000'
+DITRY_WRITEBACK_CENTISECS='5000'
+OOM_KILL_ALLOCATING_TASK='0'
+PAGE_CLUSTER='0'
+SWAPPINESS='60'
+VFS_CACHE_PRESSURE='150'
+DIRTY_RATIO='15'
+DIRTY_BACKGROUND_RATIO='5'
+MIN_FREE_KBYTES='11093'
+OVERCOMMIT_MEMORY='1'
+OVERCOMMIT_RATIO='50'
+
+READ_WAKUP_THRESHOLD='16'
+WRITE_WAKEUP_THRESHOLD='32'
+
+#################
+# Memory Tweaks #
+#################
+
+EAS='0'
+HMP='0'
+SCHED_PATH='/proc/sys/kernel'
+CPU='/sys/devices/system/cpu'
 
 kernel_detection() {
 	if grep 'schedutil' ${LITTLE_AVAIL_GOVS}; then
@@ -30,19 +215,19 @@ EAS_tweaks() {
 	local STUNE='/dev/stune'
 	
 	#General EAS tweaks
-	echo "0" > ${STUNE}/top-app/schedtune.boost
-	echo "0" > ${STUNE}/top-app/schedtune.prefer_idle
+	echo "${TA_BOOST}" > ${STUNE}/top-app/schedtune.boost
+	echo "${TA_PREF_IDLE}" > ${STUNE}/top-app/schedtune.prefer_idle
 	
-	echo "-25" > ${STUNE}/foreground/schedtune.boost
-	echo "0" > ${STUNE}/foreground/schedtune.prefer_idle
+	echo "${FG_BOOST}" > ${STUNE}/foreground/schedtune.boost
+	echo "${FG_PREF_IDLE}" > ${STUNE}/foreground/schedtune.prefer_idle
 	
-	echo "-50" > ${STUNE}/background/schedtune.boost
-	echo "0" > ${STUNE}/background/schedtune.prefer_idle
+	echo "${BG_BOOST}" > ${STUNE}/background/schedtune.boost
+	echo "${BG_PREF_IDLE}" > ${STUNE}/background/schedtune.prefer_idle
 	
-	echo "0" > ${STUNE}/schedtune.boost
-	echo "0" > ${STUNE}/schedtune.prefer_idle
+	echo "${GEN_BOOST}" > ${STUNE}/schedtune.boost
+	echo "${GEN_PREF_IDLE}" > ${STUNE}/schedtune.prefer_idle
 	
-	echo "18" > ${SCHED_PATH}/sched_nr_migrate
+	echo "${SCHED_NR_MIGRATE}" > ${SCHED_PATH}/sched_nr_migrate
 	
 	#Little cluster governor tweaks
 	if grep 'pwrutilx' ${LITTLE_AVAIL_GOVS}; then
@@ -50,10 +235,10 @@ EAS_tweaks() {
 			chmod 644 ${LITTLE_CLUSTER}/pwrutilx/*
 			
 			echo "pwrutilx" > ${LITTLE_CLUSTER}/scaling_governor
-			echo "10000" > ${LITTLE_CLUSTER}/pwrutilx/up_rate_limit_us
-			echo "1000" > ${LITTLE_CLUSTER}/pwrutilx/down_rate_limit_us
-			echo "0" > ${LITTLE_CLUSTER}/pwrutilx/iowait_boost_enable
-			echo "5" > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo "${PWRUTIL_UP_RATE_LITTLE}" > ${LITTLE_CLUSTER}/pwrutilx/up_rate_limit_us
+			echo "${PWRUTIL_DOWN_RATE_LITTLE}" > ${LITTLE_CLUSTER}/pwrutilx/down_rate_limit_us
+			echo "${PWRUTIL_IOWAIT_BOOST_LITTLE}" > ${LITTLE_CLUSTER}/pwrutilx/iowait_boost_enable
+			echo "${PWRUTIL_DYN_STUNE}" > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			
 			chmod 444 ${LITTLE_CLUSTER}/pwrutilx/*
 		fi
@@ -62,14 +247,14 @@ EAS_tweaks() {
 			chmod 644 ${LITTLE_CLUSTER}/schedutil/*
 			
 			echo "schedutil" > ${LITTLE_CLUSTER}/scaling_governor
-			echo "10000" > ${LITTLE_CLUSTER}/schedutil/up_rate_limit_us
-			echo "500" > ${LITTLE_CLUSTER}/schedutil/down_rate_limit_us
+			echo "${SCHEDUTIL_UP_RATE_LITTLE}" > ${LITTLE_CLUSTER}/schedutil/up_rate_limit_us
+			echo "${SCHEDUTIL_DOWN_RATE_LITTLE}" > ${LITTLE_CLUSTER}/schedutil/down_rate_limit_us
 			
 			if [[ -e ${LITTLE_CLUSTER}/schedutil/iowait_boost_enable ]]; then
-				echo "0" > ${LITTLE_CLUSTER}/schedutil/iowait_boost_enable
+				echo "${SCHEDUTIL_IOWAIT_BOOST_LITTLE}" > ${LITTLE_CLUSTER}/schedutil/iowait_boost_enable
 			fi
 			
-			echo "3" > /sys/module/cpu_boost/parameters/dynamic_stune_boost
+			echo "${SCHEDUTIL_DYN_STUNE}" > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 			
 			chmod 444 ${LITTLE_CLUSTER}/schedutil/*
 		fi
@@ -81,9 +266,9 @@ EAS_tweaks() {
 			chmod 644 ${BIG_CLUSTER}/pwrutilx/*
 			
 			echo "pwrutilx" > ${BIG_CLUSTER}/scaling_governor
-			echo "10000" > ${BIG_CLUSTER}/pwrutilx/up_rate_limit_us
-			echo "1000" > ${BIG_CLUSTER}/pwrutilx/down_rate_limit_us
-			echo "0" > ${BIG_CLUSTER}/pwrutilx/iowait_boost_enable
+			echo "${PWRUTIL_UP_RATE_BIG}" > ${BIG_CLUSTER}/pwrutilx/up_rate_limit_us
+			echo "${PWRUTIL_DOWN_RATE_BIG}" > ${BIG_CLUSTER}/pwrutilx/down_rate_limit_us
+			echo "${PWRUTIL_IOWAIT_BOOST_BIG}" > ${BIG_CLUSTER}/pwrutilx/iowait_boost_enable
 			
 			chmod 444 ${BIG_CLUSTER}/pwrutilx/*
 		fi
@@ -93,11 +278,11 @@ EAS_tweaks() {
 			chmod 644 ${BIG_CLUSTER}/schedutil/*
 			
 			echo "schedutil" > ${BIG_CLUSTER}/scaling_governor
-			echo "20000" > ${BIG_CLUSTER}/schedutil/up_rate_limit_us
-			echo "500" > ${BIG_CLUSTER}/schedutil/down_rate_limit_us
+			echo "${SCHEDUTIL_UP_RATE_BIG}" > ${BIG_CLUSTER}/schedutil/up_rate_limit_us
+			echo "${SCHEDUTIL_DOWN_RATE_BIG}" > ${BIG_CLUSTER}/schedutil/down_rate_limit_us
 			
 			if [[ -e "${BIG_CLUSTER}/schedutil/iowait_boost_enable" ]]; then
-				echo "0" > ${BIG_CLUSTER}/schedutil/iowait_boost_enable
+				echo "${SCHEDUTIL_IOWAIT_BOOST_BIG}" > ${BIG_CLUSTER}/schedutil/iowait_boost_enable
 			fi
 			
 			chmod 444 ${BIG_CLUSTER}/schedutil/*
@@ -106,80 +291,58 @@ EAS_tweaks() {
 	
 	chmod 664 ${LITTLE_CLUSTER}/scaling_max_freq
 	chmod 664 ${LITTLE_CLUSTER}/scaling_min_freq
-	echo "1248000" > ${LITTLE_CLUSTER}/scaling_max_freq
-	echo "${LITTLE_MIN_VALUE}" > ${LITTLE_CLUSTER}/scaling_min_freq
+	echo "${EAS_LITTLE_MAX_FREQ}" > ${LITTLE_CLUSTER}/scaling_max_freq
+	echo "${EAS_LITTLE_MIN_FREQ}" > ${LITTLE_CLUSTER}/scaling_min_freq
 	
 	chmod 664 ${BIG_CLUSTER}/scaling_max_freq
 	chmod 664 ${BIG_CLUSTER}/scaling_min_freq
-	echo "1267200" > ${BIG_CLUSTER}/scaling_max_freq
-	echo "${BIG_MIN_VALUE}" > ${BIG_CLUSTER}/scaling_min_freq
-	
-	chmod 644 ${CPU}/online
-	echo "0-3" > ${CPU}/online
-	chmod 444 ${CPU}/online
-	
-	chmod 644 ${CPU}/offline
-	echo "4-7" > ${CPU}/offline
-	chmod 444 ${CPU}/offline
-	
-	chmod 644 ${LITTLE_CLUSTER}/affected_cpus
-	echo "0 1 2 3" > ${LITTLE_CLUSTER}/affected_cpus
-	chmod 444 ${LITTLE_CLUSTER}/affected_cpus
-	
-	chmod 644 ${BIG_CLUSTER}/affected_cpus
-	echo "" > ${BIG_CLUSTER}/affected_cpus
-	chmod 444 ${BIG_CLUSTER}/affected_cpus
+	echo "${EAS_BIG_MAX_FREQ}" > ${BIG_CLUSTER}/scaling_max_freq
+	echo "${EAS_BIG_MIN_FREQ}" > ${BIG_CLUSTER}/scaling_min_freq
 
-	echo "1" > ${CPU}/cpu0/online
-	echo "1" > ${CPU}/cpu1/online
-	echo "1" > ${CPU}/cpu2/online
-	echo "1" > ${CPU}/online
-	
-	echo "0" > ${CPU}/online
-	echo "0" > ${CPU}/online
-	echo "0" > ${CPU}/online
-	echo "0" > ${CPU}/online
+	echo "${EAS_CPU0_ONLINE}" > ${CPU}/cpu0/online
+	echo "${EAS_CPU1_ONLINE}" > ${CPU}/cpu1/online
+	echo "${EAS_CPU2_ONLINE}" > ${CPU}/cpu2/online
+	echo "${EAS_CPU3_ONLINE}" > ${CPU}/cpu3/online
+	echo "${EAS_CPU4_ONLINE}" > ${CPU}/cpu4/online
+	echo "${EAS_CPU5_ONLINE}" > ${CPU}/cpu5/online
+	echo "${EAS_CPU6_ONLINE}" > ${CPU}/cpu6/online
+	echo "${EAS_CPU7_ONLINE}" > ${CPU}/cpu7/online
 }
 
 HMP_tweaks() {
 	#General HMP tweaks
-	echo "100" > ${SCHED_PATH}/sched_upmigrate
-	echo "100" > ${SCHED_PATH}/sched_group_upmigrate
-	echo "90" > ${SCHED_PATH}/sched_downmigrate
-	echo "95" > ${SCHED_PATH}/sched_group_downmigrate
-	echo "20" > ${SCHED_PATH}/sched_small_wakee_task_load
-	echo "0" > ${SCHED_PATH}/sched_init_task_load
+	echo "${SCHED_UPMIGRATE}" > ${SCHED_PATH}/sched_upmigrate
+	echo "${SCHED_GROUP_UPMIGRATE}" > ${SCHED_PATH}/sched_group_upmigrate
+	echo "${SCHED_DOWNMIGRATE}" > ${SCHED_PATH}/sched_downmigrate
+	echo "${SCHED_GROUP_DOWNMIGRATE}" > ${SCHED_PATH}/sched_group_downmigrate
+	echo "${SCHED_SMALL_TASK_WAKEE_TASK_LOAD}" > ${SCHED_PATH}/sched_small_wakee_task_load
+	echo "${SCHED_INIT_TASK_LOAD}" > ${SCHED_PATH}/sched_init_task_load
 	
 	if [[ -e ${SCHED_PATH}/sched_enable_power_aware ]]; then
-		echo "1" > ${SCHED_PATH}/sched_enable_power_aware
+		echo "${SCHED_ENABLE_POWER_AWARE}" > ${SCHED_PATH}/sched_enable_power_aware
 	fi
 	
-	echo "1" > ${SCHED_PATH}/sched_enable_thread_grouping
-	echo "40" > ${SCHED_PATH}/sched_big_waker_task_load
-	echo "3" > ${SCHED_PATH}/sched_window_stats_policy
-	echo "5" > ${SCHED_PATH}/sched_ravg_hist_size
+	echo "${SCHED_ENABLE_THREAD_GROUPING}" > ${SCHED_PATH}/sched_enable_thread_grouping
+	echo "${SCHED_BIG_WAKER_TASK_LOAD}" > ${SCHED_PATH}/sched_big_waker_task_load
+	echo "${SCHED_WINDOW_STATS_POLICY}" > ${SCHED_PATH}/sched_window_stats_policy
+	echo "${SCHED_RAVG_HIST_SIZE}" > ${SCHED_PATH}/sched_ravg_hist_size
 	
 	if [[ -e ${SCHED_PATH}/sched_upmigrate_min_nice ]]; then
-		echo "0" > ${SCHED_PATH}/sched_upmigrate_min_nice
+		echo "${SCHED_UPMIGRATE_MIN_NICE}" > ${SCHED_PATH}/sched_upmigrate_min_nice
 	fi
 	
-	echo "5" > ${SCHED_PATH}/sched_spill_nr_run
-	echo "100" > ${SCHED_PATH}/sched_spill_load
-	echo "1" > ${SCHED_PATH}/sched_enable_thread_grouping
-	echo "1" > ${SCHED_PATH}/sched_restrict_cluster_spill
+	echo "${SCHED_SPILL_NR_RUN}" > ${SCHED_PATH}/sched_spill_nr_run
+	echo "${SCHED_SPILL_LOAD}" > ${SCHED_PATH}/sched_spill_load
+	echo "${SCHED_RESTRICT_CLUSTER_SPILL}" > ${SCHED_PATH}/sched_restrict_cluster_spill
 	
 	if [[ -e ${SCHED_PATH}/sched_wakeup_load_threshold ]]; then
-		echo "110" > ${SCHED_PATH}/sched_wakeup_load_threshold
+		echo "${SCHED_WAKEUP_LOAD_THRESHOLD}" > ${SCHED_PATH}/sched_wakeup_load_threshold
 	fi
 	
-	echo "10" > ${SCHED_PATH}/sched_rr_timeslice_ms
-	
-	if [[ -e "$SCHED_PATH/sched_enable_power_aware" ]]; then
-		echo "1" > ${SCHED_PATH}/sched_enable_power_aware
-	fi
+	echo "${SCHED_RR_TIMESLICE_MS}" > ${SCHED_PATH}/sched_rr_timeslice_ms
 	
 	if [[ -e "$SCHED_PATH/sched_migration_fixup" ]]; then
-		echo "1" > ${SCHED_PATH}/sched_migration_fixup
+		echo "${SCHED_MIGRATION_FIXUP}" > ${SCHED_PATH}/sched_migration_fixup
 	fi
 	
 	#Little cluster governor tweaks
@@ -193,17 +356,17 @@ HMP_tweaks() {
 				echo "1" > ${LITTLE_CLUSTER}/interactive/powersave_bias
 			fi
 			
-			echo "90 1401600:95" > ${LITTLE_CLUSTER}/interactive/target_loads
-			echo "120000" > ${LITTLE_CLUSTER}/interactive/timer_slack
-			echo "60000" > ${LITTLE_CLUSTER}/interactive/timer_rate
-			echo "300000" > ${LITTLE_CLUSTER}/interactive/hispeed_freq
-			echo "50000 883200:75000 1401600:100000" > ${LITTLE_CLUSTER}/interactive/above_hispeed_delay
-			echo "400" > ${LITTLE_CLUSTER}/interactive/go_hispeed_load
-			echo "0" > ${LITTLE_CLUSTER}/interactive/min_sample_time
-			echo "0" > ${LITTLE_CLUSTER}/interactive/max_freq_hysteresis
-			echo "1" > ${LITTLE_CLUSTER}/interactive/fast_ramp_down
-			echo "0" > ${LITTLE_CLUSTER}/interactive/use_sched_load
-			echo "0" > ${LITTLE_CLUSTER}/interactive/boostpulse_duration
+			echo "${TARGET_LOADS_LITTLE}" > ${LITTLE_CLUSTER}/interactive/target_loads
+			echo "${TIMER_SLACK_LITTLE}" > ${LITTLE_CLUSTER}/interactive/timer_slack
+			echo "${TIMER_RATE_LITTLE}" > ${LITTLE_CLUSTER}/interactive/timer_rate
+			echo "${HISPEED_FREQ_LITTLE}" > ${LITTLE_CLUSTER}/interactive/hispeed_freq
+			echo "${ABOVE_HISPEED_DELAY_LITTLE}" > ${LITTLE_CLUSTER}/interactive/above_hispeed_delay
+			echo "${GO_HISPEED_LOAD_LITTLE}" > ${LITTLE_CLUSTER}/interactive/go_hispeed_load
+			echo "${MIN_SAMPLE_TIME_LITTLE}" > ${LITTLE_CLUSTER}/interactive/min_sample_time
+			echo "${MAX_FREQ_HYSTERESIS_LITTLE}" > ${LITTLE_CLUSTER}/interactive/max_freq_hysteresis
+			echo "${FAST_RAMP_DOWN_LITTLE}" > ${LITTLE_CLUSTER}/interactive/fast_ramp_down
+			echo "${USE_SCHED_LOAD_LITTLE}" > ${LITTLE_CLUSTER}/interactive/use_sched_load
+			echo "${BOOSTPULSE_DURATION_LITTLE}" > ${LITTLE_CLUSTER}/interactive/boostpulse_duration
 			
 			chmod 444 ${LITTLE_CLUSTER}/interactive/*
 		fi
@@ -215,17 +378,17 @@ HMP_tweaks() {
 			chmod 644 ${BIG_CLUSTER}/interactive/*
 
 			echo "interactive" > ${BIG_CLUSTER}/scaling_governor
-			echo "90 1132800:95" > ${BIG_CLUSTER}/interactive/target_loads
-			echo "120000" > ${BIG_CLUSTER}/interactive/timer_slack
-			echo "300000" > ${BIG_CLUSTER}/interactive/hispeed_freq
-			echo "100000" > ${BIG_CLUSTER}/interactive/timer_rate
-			echo "60000 1132800:100000" > ${BIG_CLUSTER}/interactive/above_hispeed_delay
-			echo "400" > ${BIG_CLUSTER}/interactive/go_hispeed_load
-			echo "0" > ${BIG_CLUSTER}/interactive/min_sample_time
-			echo "0" > ${BIG_CLUSTER}/interactive/max_freq_hysteresis
-			echo "1" > ${BIG_CLUSTER}/interactive/fast_ramp_down
-			echo "0" > ${BIG_CLUSTER}/interactive/use_sched_load
-			echo "0" > ${BIG_CLUSTER}/interactive/boostpulse_duration
+			echo "${TARGET_LOADS_BIG}" > ${BIG_CLUSTER}/interactive/target_loads
+			echo "${TIMER_SLACK_BIG}" > ${BIG_CLUSTER}/interactive/timer_slack
+			echo "${TIMER_RATE_BIG}" > ${BIG_CLUSTER}/interactive/timer_rate
+			echo "${HISPEED_FREQ_BIG}" > ${BIG_CLUSTER}/interactive/hispeed_freq
+			echo "${ABOVE_HISPEED_DELAY_BIG}" > ${BIG_CLUSTER}/interactive/above_hispeed_delay
+			echo "${GO_HISPEED_LOAD_BIG}" > ${BIG_CLUSTER}/interactive/go_hispeed_load
+			echo "${MIN_SAMPLE_TIME_BIG}" > ${BIG_CLUSTER}/interactive/min_sample_time
+			echo "${MAX_FREQ_HYSTERESIS_BIG}" > ${BIG_CLUSTER}/interactive/max_freq_hysteresis
+			echo "${FAST_RAMP_DOWN_BIG}" > ${BIG_CLUSTER}/interactive/fast_ramp_down
+			echo "${USE_SCHED_LOAD_BIG}" > ${BIG_CLUSTER}/interactive/use_sched_load
+			echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration
 			
 			chmod 444 ${BIG_CLUSTER}/interactive/*
 		fi
@@ -234,79 +397,57 @@ HMP_tweaks() {
 	#Disable TouchBoost
 	if [[ -e /sys/module/msm_performance/parameters/touchboost ]]; then
 		chmod 644 /sys/module/msm_performance/parameters/touchboost
-		echo "0" > /sys/module/msm_performance/parameters/touchboost
+		echo "${TOUCHBOOST}" > /sys/module/msm_performance/parameters/touchboost
 	fi
 	
 	chmod 664 ${LITTLE_CLUSTER}/scaling_max_freq
 	chmod 664 ${LITTLE_CLUSTER}/scaling_min_freq
-	echo "1248000" > ${LITTLE_CLUSTER}/scaling_max_freq
-	echo "${LITTLE_MIN_VALUE}" > ${LITTLE_CLUSTER}/scaling_min_freq
+	echo "{$HMP_LITTLE_MAX_FREQ}" > ${LITTLE_CLUSTER}/scaling_max_freq
+	echo "${HMP_LITTLE_MIN_FREQ}" > ${LITTLE_CLUSTER}/scaling_min_freq
 	
 	chmod 664 ${BIG_CLUSTER}/scaling_max_freq
 	chmod 664 ${BIG_CLUSTER}/scaling_min_freq
-	echo "1267200" > ${BIG_CLUSTER}/scaling_max_freq
-	echo "${BIG_MIN_VALUE}" > ${BIG_CLUSTER}/scaling_min_freq
+	echo "${HMP_BIG_MAX_FREQ}" > ${BIG_CLUSTER}/scaling_max_freq
+	echo "${HMP_BIG_MIN_FREQ}" > ${BIG_CLUSTER}/scaling_min_freq
 	
-	chmod 644 ${CPU}/online
-	echo "0-3" > ${CPU}/online
-	chmod 444 ${CPU}/online
-	
-	chmod 644 ${CPU}/offline
-	echo "4-7" > ${CPU}/offline
-	chmod 444 ${CPU}/offline
-	
-	chmod 644 ${LITTLE_CLUSTER}/affected_cpus
-	echo "0 1 2 3" > ${LITTLE_CLUSTER}/affected_cpus
-	chmod 444 ${LITTLE_CLUSTER}/affected_cpus
-	
-	chmod 644 ${BIG_CLUSTER}/affected_cpus
-	echo "" > ${BIG_CLUSTER}/affected_cpus
-	chmod 444 ${BIG_CLUSTER}/affected_cpus
-
-	echo "1" > ${CPU}/cpu0/online
-	echo "1" > ${CPU}/cpu1/online
-	echo "1" > ${CPU}/cpu2/online
-	echo "1" > ${CPU}/cpu3/online
-	
-	echo "0" > ${CPU}/cpu4/online
-	echo "0" > ${CPU}/cpu5/online
-	echo "0" > ${CPU}/cpu6/online
-	echo "0" > ${CPU}/cpu7/online
+	echo "${HMP_CPU0_ONLINE}" > ${CPU}/cpu0/online
+	echo "${HMP_CPU1_ONLINE}" > ${CPU}/cpu1/online
+	echo "${HMP_CPU2_ONLINE}" > ${CPU}/cpu2/online
+	echo "${HMP_CPU3_ONLINE}" > ${CPU}/cpu3/online
+	echo "${HMP_CPU4_ONLINE}" > ${CPU}/cpu4/online
+	echo "${HMP_CPU5_ONLINE}" > ${CPU}/cpu5/online
+	echo "${HMP_CPU6_ONLINE}" > ${CPU}/cpu6/online
+	echo "${HMP_CPU7_ONLINE}" > ${CPU}/cpu7/online
 }
 
 extras() {
 	local CPU_BOOST='/sys/module/cpu_boost/parameters'
 	local NET='/proc/sys/net/ipv4'
 	
-	echo "0" > /dev/cpuset/background/cpus
-	echo "0" > /dev/cpuset/system-background/cpus
+	echo "${CPUSET_BG}" > /dev/cpuset/background/cpus
+	echo "${CPUSET_SYSBG}" > /dev/cpuset/system-background/cpus
 	
 	#Tweak cpu boost
 	if [[ -e /sys/module/cpu_boost ]]; then
 		if [[ -e ${CPU_BOOST}/input_boost_enabled ]]; then
 			chmod 644 ${CPU_BOOST}/input_boost_enabled
-			echo "1" > ${CPU_BOOST}/input_boost_enabled
+			echo "${INPUT_BOOST_ENABLED}" > ${CPU_BOOST}/input_boost_enabled
 		fi
 		
 		chmod 644 ${CPU_BOOST}/input_boost_freq
-		echo "0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0" > ${CPU_BOOST}/input_boost_freq
+		echo "${INPUT_BOOST_FREQ}" > ${CPU_BOOST}/input_boost_freq
 		
 		chmod 644 ${CPU_BOOST}/input_boost_ms
-		echo "0" > ${CPU_BOOST}/input_boost_ms
+		echo "${INPUT_BOOST_MS}" > ${CPU_BOOST}/input_boost_ms
 		
 		if [[ -e /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input ]]; then
-			echo "N" > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
+			echo "${SCHED_BOOST_ON_INPUT}" > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 		fi
 	fi
 	
 	#TCP tweaks
-	if grep 'westwood' ${NET}/tcp_available_congestion_control; then
-		echo "westwood" > ${NET}/tcp_congestion_control
-	else 
-		echo "cubic" > ${NET}/tcp_congestion_control
-	fi
-	
-	echo "1" > ${NET}/tcp_low_latency
+	echo "${TCP_CONTROL}" > ${NET}/tcp_congestion_control
+	echo "${TCP_LOW_LATENCY}" > ${NET}/tcp_low_latency
 }
 
 IO_tweaks() {
@@ -383,31 +524,31 @@ memory_tweaks() {
 
 	chmod 664 ${LMK_PATH}/enable_adaptive_lmk
 	chown root ${LMK_PATH}/enable_adaptive_lmk
-	echo "1" > ${LMK_PATH}/enable_adaptive_lmk
+	echo "${ENABLE_ADAPTIVE_LMK}" > ${LMK_PATH}/enable_adaptive_lmk
 	chmod 444 ${LMK_PATH}/enable_adaptive_lmk
 	
-	echo "18432,23040,27648,32256,82944,161280" > ${LMK_PATH}/minfree
+	echo "${MINFREE}" > ${LMK_PATH}/minfree
 	
 	chmod 644 ${LMK_PATH}/debug_level
-	echo "0" > ${LMK_PATH}/debug_level
+	echo "${DEBUG_LEVEL}" > ${LMK_PATH}/debug_level
 	chmod 444 ${LMK_PATH}/debug_level
 
 	#Virtual Memory
-	echo "2000" > ${VM_PATH}/dirty_expire_centisecs
-	echo "5000" > ${VM_PATH}/dirty_writeback_centisecs
-	echo "0" > ${VM_PATH}/oom_kill_allocating_task
-	echo "0" > ${VM_PATH}/page-cluster
-	echo "60" > ${VM_PATH}/swappiness
-	echo "150" > ${VM_PATH}/vfs_cache_pressure
-	echo "15" > ${VM_PATH}/dirty_ratio
-	echo "5" > ${VM_PATH}/dirty_background_ratio
-	echo "11093" > ${VM_PATH}/min_free_kbytes
-	echo "1" > ${VM_PATH}/overcommit_memory
-	echo "50" > ${VM_PATH}/overcommit_ratio
+	echo "${DIRTY_EXPIRE_CENTISECS}" > ${VM_PATH}/dirty_expire_centisecs
+	echo "${DITRY_WRITEBACK_CENTISECS}" > ${VM_PATH}/dirty_writeback_centisecs
+	echo "${OOM_KILL_ALLOCATING_TASK}" > ${VM_PATH}/oom_kill_allocating_task
+	echo "${PAGE_CLUSTER}" > ${VM_PATH}/page-cluster
+	echo "${SWAPPINESS}" > ${VM_PATH}/swappiness
+	echo "${VFS_CACHE_PRESSURE}" > ${VM_PATH}/vfs_cache_pressure
+	echo "${DIRTY_RATIO}" > ${VM_PATH}/dirty_ratio
+	echo "${DIRTY_BACKGROUND_RATIO}" > ${VM_PATH}/dirty_background_ratio
+	echo "${MIN_FREE_KBYTES}" > ${VM_PATH}/min_free_kbytes
+	echo "${OVERCOMMIT_MEMORY}" > ${VM_PATH}/overcommit_memory
+	echo "${OVERCOMMIT_RATIO}" > ${VM_PATH}/overcommit_ratio
 	
 	#Entropy
-	echo "16" > ${SCHED_PATH}/random/read_wakeup_threshold
-	echo "32" > ${SCHED_PATH}/random/write_wakeup_threshold
+	echo "${READ_WAKUP_THRESHOLD}" > ${SCHED_PATH}/random/read_wakeup_threshold
+	echo "${WRITE_WAKEUP_THRESHOLD}" > ${SCHED_PATH}/random/write_wakeup_threshold
 }
 
 main() {
