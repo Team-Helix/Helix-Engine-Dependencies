@@ -165,7 +165,9 @@ TCP_LOW_LATENCY='1'
 # GPU Tweaks #
 ##############
 
-#TODO: Same as IO Tweaks but for GPU Tweaks
+GPU_MAX_FREQ='596000000'
+GPU_GOV='msm-adreno-tz'
+ADRENOBOOST='1'
 
 ##############
 # GPU Tweaks #
@@ -483,38 +485,17 @@ IO_tweaks() {
 
 GPU_tweaks() {
 	local GPU_PATH='/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0'
-	local MAX_FREQ="$GPU_PATH/max_freq"
-	local MIN_FREQ="$GPU_PATH/min_freq"
-	local TARGET_FREQ="$GPU_PATH/target_freq"
-	local AVAIL_FREQS="$GPU_PATH/available_frequencies"
+	local MAX_FREQ="${GPU_PATH}/max_freq"
 	
-	echo "msm-adreno-tz" > ${GPU_PATH}/governor
+	echo "${GPU_GOV}" > ${GPU_PATH}/governor
 	
-	if [[ -e ${GPU_FREQ} ]]; then
-		if grep '710000000' ${AVAIL_FREQS}; then
-			chmod 644 ${GPU_FREQ}
-			echo 670000000 > ${GPU_FREQ}
-			chmod 444 ${GPU_FREQ}
-		fi
-		
-		if grep '180000000' ${AVAIL_FREQS}; then
-			chmod 644 ${TARGET_FREQ}
-			echo 257000000 > ${TARGET_FREQ}
-			chmod 444 ${TARGET_FREQ}
-			
-			echo 180000000 > ${MIN_FREQ}
-		else
-			chmod 644 ${TARGET_FREQ}
-			echo 257000000 > ${TARGET_FREQ}
-			chmod 444 ${TARGET_FREQ}
-			
-			echo 257000000 > ${MIN_FREQ}
-		fi
-		
-		if [[ -e "${GPU_PATH}/adrenoboost" ]]; then
-			chmod 644 ${GPU_PATH}/adrenoboost
-			echo "0" > ${GPU_PATH}/adrenoboost
-		fi
+	chmod 644 ${MAX_FREQ}
+	echo "${GPU_MAX_FREQ}" > ${MAX_FREQ}
+	chmod 444 ${MAX_FREQ}
+	
+	if [[ -e ${GPU_PATH}/adrenoboost ]]; then
+		chmod 644 ${GPU_PATH}/adrenoboost
+		echo "${ADRENOBOOST}" > ${GPU_PATH}/adrenoboost
 	fi
 }
 
