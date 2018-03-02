@@ -1,7 +1,7 @@
 #!/system/bin/sh
 # AUTHOR: TEAM HELIX @ XDA-DEVELOPERS
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
-# Helix-Engine profile script: Balanced
+# Helix-Engine profile script: Battery
 LITTLE_CLUSTER='/sys/devices/system/cpu/cpufreq/policy0'
 LITTLE_MAX_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq)"
 LITTLE_MIN_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq)"
@@ -115,14 +115,14 @@ BOOSTPULSE_DURATION_BIG='0'
 
 #Generic CPU settings
 TOUCHBOOST='0'
-HMP_BIG_MAX_FREQ='1267200'
+HMP_BIG_MAX_FREQ='1958400'
 HMP_BIG_MIN_FREQ="${BIG_MIN_VALUE}"
-HMP_LITTLE_MAX_FREQ='1248000'
+HMP_LITTLE_MAX_FREQ='${LITTLE_MAX_VALUE}'
 HMP_LITTLE_MIN_FREQ="${LITTLE_MIN_VALUE}"
 HMP_CPU0_ONLINE='1'
 HMP_CPU1_ONLINE='1'
-HMP_CPU2_ONLINE='1'
-HMP_CPU3_ONLINE='1'
+HMP_CPU2_ONLINE='0'
+HMP_CPU3_ONLINE='0'
 HMP_CPU4_ONLINE='1'
 HMP_CPU5_ONLINE='1'
 HMP_CPU6_ONLINE='0'
