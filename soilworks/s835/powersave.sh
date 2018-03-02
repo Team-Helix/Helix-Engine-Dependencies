@@ -3,13 +3,13 @@
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
 # Helix-Engine profile script: Powersave
 LITTLE_CLUSTER='/sys/devices/system/cpu/cpufreq/policy0'
-LITTLE_MAX_VALUE="$(cat ${LITTLE_CLUSTER}/cpuinfo_max_freq)"
-LITTLE_MIN_VALUE="$(cat ${LITTLE_CLUSTER}/cpuinfo_min_freq)"
+LITTLE_MAX_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq)"
+LITTLE_MIN_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq)"
 LITTLE_AVAIL_GOVS="${LITTLE_CLUSTER}/scaling_available_governors"
 
 BIG_CLUSTER='/sys/devices/system/cpu/cpufreq/policy4'
-BIG_MAX_VALUE="$(cat ${BIG_CLUSTER}/cpuinfo_max_freq)"
-BIG_MIN_VALUE="$(cat ${BIG_CLUSTER}/cpuinfo_min_freq)"
+BIG_MAX_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_max_freq)"
+BIG_MIN_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy4/cpuinfo_min_freq)"
 BIG_AVAIL_GOVS="${BIG_CLUSTER}/scaling_available_governors"
 
 ##################################
