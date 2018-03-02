@@ -87,6 +87,7 @@ SCHED_RESTRICT_CLUSTER_SPILL='1'
 SCHED_WAKEUP_LOAD_THRESHOLD='110'
 SCHED_RR_TIMESLICE_MS='10'
 SCHED_MIGRATION_FIXUP='1'
+SCHED_AUTOGROUP_ENABLED='1'
 
 #Interactive gov tweaks
 TARGET_LOADS_LITTLE='90 1401600:95'
@@ -283,6 +284,7 @@ HMP_tweaks() {
 	echo "${SCHED_GROUP_DOWNMIGRATE}" > ${SCHED_PATH}/sched_group_downmigrate
 	echo "${SCHED_SMALL_TASK_WAKEE_TASK_LOAD}" > ${SCHED_PATH}/sched_small_wakee_task_load
 	echo "${SCHED_INIT_TASK_LOAD}" > ${SCHED_PATH}/sched_init_task_load
+	echo "${SCHED_AUTOGROUP_ENABLED}" > ${SCHED_PATH}/sched_autogroup_enabled 
 	
 	if [[ -e ${SCHED_PATH}/sched_enable_power_aware ]]; then
 		echo "${SCHED_ENABLE_POWER_AWARE}" > ${SCHED_PATH}/sched_enable_power_aware
