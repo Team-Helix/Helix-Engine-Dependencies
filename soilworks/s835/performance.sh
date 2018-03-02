@@ -398,25 +398,14 @@ IO_tweaks() {
 	local Q_PATH='/sys/block/sda/queue/'
 	
 	if [[ -d ${Q_PATH} ]]; then
-		if grep 'noop' ${Q_PATH}/scheduler; then
-			echo "noop" > ${Q_PATH}/scheduler
-		elif grep 'maple' ${Q_PATH}/scheduler; then
-			echo "maple" > ${Q_PATH}/scheduler
-			echo "16" > ${Q_PATH}/iosched/fifo_batch
-			echo "4" > ${Q_PATH}/iosched/writes_starved
-			echo "10" > ${Q_PATH}/iosched/sleep_latency_multiple
-			echo "200" > ${Q_PATH}/iosched/async_read_expire   ##default values
-			echo "500" > ${Q_PATH}/iosched/async_write_expire   ##default values
-			echo "100" > ${Q_PATH}/iosched/sync_read_expire   ##default values
-			echo "350" > ${Q_PATH}/iosched/sync_write_expire   ##default values
-		elif grep 'cfq' ${Q_PATH}/scheduler; then
+		if grep 'cfq' ${Q_PATH}/scheduler; then
 			echo "cfq" > ${Q_PATH}/scheduler
 		else
 			echo "	-Error Code #03"
 		fi
 		
-		echo "512" > ${Q_PATH}/read_ahead_kb
-		echo "96" > ${Q_PATH}/nr_requests
+		echo "1024" > ${Q_PATH}/read_ahead_kb
+		echo "160" > ${Q_PATH}/nr_requests
 		echo "0" > ${Q_PATH}/add_random
 		echo "0" > ${Q_PATH}/iostats
 		echo "1" > ${Q_PATH}/nomerges

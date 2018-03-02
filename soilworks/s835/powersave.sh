@@ -425,7 +425,7 @@ IO_tweaks() {
 		fi
 		
 		echo "512" > ${Q_PATH}/read_ahead_kb
-		echo "96" > ${Q_PATH}/nr_requests
+		echo "112" > ${Q_PATH}/nr_requests
 		echo "0" > ${Q_PATH}/add_random
 		echo "0" > ${Q_PATH}/iostats
 		echo "1" > ${Q_PATH}/nomerges
