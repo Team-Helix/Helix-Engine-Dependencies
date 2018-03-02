@@ -1,7 +1,7 @@
 #!/system/bin/sh
 # AUTHOR: TEAM HELIX @ XDA-DEVELOPERS
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
-# Helix-Engine profile script: Powersave
+# Helix-Engine profile script: Balanced
 LITTLE_CLUSTER='/sys/devices/system/cpu/cpufreq/policy0'
 LITTLE_MAX_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq)"
 LITTLE_MIN_VALUE="$(cat /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq)"
