@@ -169,15 +169,15 @@ ADRENOBOOST='0'
 # Memory Tweaks #
 #################
 
-ENABLE_ADAPTIVE_LMK='1'
-MINFREE='18432,23040,27648,32256,73728,120960'
+ENABLE_ADAPTIVE_LMK='0'
+MINFREE='18432,23040,27648,32256,55296,80640'
 DEBUG_LEVEL='0'
 
-DIRTY_EXPIRE_CENTISECS='400'
-DITRY_WRITEBACK_CENTISECS='1000'
+DIRTY_EXPIRE_CENTISECS='200'
+DITRY_WRITEBACK_CENTISECS='500'
 OOM_KILL_ALLOCATING_TASK='0'
 PAGE_CLUSTER='2'
-SWAPPINESS='20'
+SWAPPINESS='60'
 VFS_CACHE_PRESSURE='100'
 DIRTY_RATIO='20'
 DIRTY_BACKGROUND_RATIO='10'
@@ -407,10 +407,10 @@ IO_tweaks() {
 			echo "500" > ${Q_PATH}/iosched/async_write_expire   ##default values
 			echo "100" > ${Q_PATH}/iosched/sync_read_expire   ##default values
 			echo "350" > ${Q_PATH}/iosched/sync_write_expire   ##default values
-		elif grep 'noop' ${Q_PATH}/scheduler; then
-			echo "noop" > ${Q_PATH}/scheduler
 		elif grep 'cfq' ${Q_PATH}/scheduler; then
 			echo "cfq" > ${Q_PATH}/scheduler
+		elif grep 'noop' ${Q_PATH}/scheduler; then
+			echo "noop" > ${Q_PATH}/scheduler
 		else
 			echo "	-Error Code #03"
 		fi
