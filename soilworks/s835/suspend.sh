@@ -26,9 +26,6 @@ BG_PREF_IDLE='0'
 GEN_BOOST='-50'
 GEN_PREF_IDLE='0'
 
-#EAS tunables
-SCHED_NR_MIGRATE='18'
-
 #schedutil gov tweaks
 SCHEDUTIL_UP_RATE_LITTLE='10000'
 SCHEDUTIL_DOWN_RATE_LITTLE='500'
@@ -58,27 +55,6 @@ EAS_CPU7_ONLINE='0'
 #########################################
 # Heterogeneous Multi-Processing Tweaks #
 #########################################
-
-#HMP tunables
-SCHED_UPMIGRATE='100'
-SCHED_GROUP_UPMIGRATE='100'
-SCHED_DOWNMIGRATE='90'
-SCHED_GROUP_DOWNMIGRATE='95'
-SCHED_SMALL_TASK_WAKEE_TASK_LOAD='25'
-SCHED_INIT_TASK_LOAD='0'
-SCHED_ENABLE_POWER_AWARE='1'
-SCHED_ENABLE_THREAD_GROUPING='1'
-SCHED_BIG_WAKER_TASK_LOAD='50'
-SCHED_WINDOW_STATS_POLICY='3'
-SCHED_RAVG_HIST_SIZE='5'
-SCHED_UPMIGRATE_MIN_NICE='0'
-SCHED_SPILL_NR_RUN='5'
-SCHED_SPILL_LOAD='100'
-SCHED_RESTRICT_CLUSTER_SPILL='1'
-SCHED_WAKEUP_LOAD_THRESHOLD='110'
-SCHED_RR_TIMESLICE_MS='10'
-SCHED_MIGRATION_FIXUP='1'
-SCHED_AUTOGROUP_ENABLED='1'
 
 #Interactive gov tweaks
 TARGET_LOADS_LITTLE='90 1401600:95'
@@ -143,16 +119,6 @@ TCP_LOW_LATENCY='1'
 # Misc Tweaks #
 ###############
 
-#############
-# IO Tweaks #
-#############
-
-#TODO: Re-do IO tweaks so they aren't restricted by conditions
-
-#############
-# IO Tweaks #
-#############
-
 ##############
 # GPU Tweaks #
 ##############
@@ -164,33 +130,6 @@ ADRENOBOOST='0'
 ##############
 # GPU Tweaks #
 ##############
-
-#################
-# Memory Tweaks #
-#################
-
-ENABLE_ADAPTIVE_LMK='1'
-MINFREE='18432,23040,27648,32256,73728,120960'
-DEBUG_LEVEL='0'
-
-DIRTY_EXPIRE_CENTISECS='2000'
-DITRY_WRITEBACK_CENTISECS='5000'
-OOM_KILL_ALLOCATING_TASK='0'
-PAGE_CLUSTER='1'
-SWAPPINESS='60'
-VFS_CACHE_PRESSURE='150'
-DIRTY_RATIO='20'
-DIRTY_BACKGROUND_RATIO='5'
-MIN_FREE_KBYTES='11093'
-OVERCOMMIT_MEMORY='1'
-OVERCOMMIT_RATIO='50'
-
-READ_WAKUP_THRESHOLD='16'
-WRITE_WAKEUP_THRESHOLD='32'
-
-#################
-# Memory Tweaks #
-#################
 
 EAS='0'
 HMP='0'
@@ -220,8 +159,6 @@ EAS_tweaks() {
 	
 	echo "${GEN_BOOST}" > ${STUNE}/schedtune.boost
 	echo "${GEN_PREF_IDLE}" > ${STUNE}/schedtune.prefer_idle
-	
-	echo "${SCHED_NR_MIGRATE}" > ${SCHED_PATH}/sched_nr_migrate
 	
 	#Little cluster governor tweaks
 	chmod 644 ${LITTLE_CLUSTER}/schedutil/*
@@ -268,42 +205,6 @@ EAS_tweaks() {
 }
 
 HMP_tweaks() {
-	#General HMP tweaks
-	echo "${SCHED_UPMIGRATE}" > ${SCHED_PATH}/sched_upmigrate
-	echo "${SCHED_GROUP_UPMIGRATE}" > ${SCHED_PATH}/sched_group_upmigrate
-	echo "${SCHED_DOWNMIGRATE}" > ${SCHED_PATH}/sched_downmigrate
-	echo "${SCHED_GROUP_DOWNMIGRATE}" > ${SCHED_PATH}/sched_group_downmigrate
-	echo "${SCHED_SMALL_TASK_WAKEE_TASK_LOAD}" > ${SCHED_PATH}/sched_small_wakee_task_load
-	echo "${SCHED_INIT_TASK_LOAD}" > ${SCHED_PATH}/sched_init_task_load
-	echo "${SCHED_AUTOGROUP_ENABLED}" > ${SCHED_PATH}/sched_autogroup_enabled 
-	
-	if [[ -e ${SCHED_PATH}/sched_enable_power_aware ]]; then
-		echo "${SCHED_ENABLE_POWER_AWARE}" > ${SCHED_PATH}/sched_enable_power_aware
-	fi
-	
-	echo "${SCHED_ENABLE_THREAD_GROUPING}" > ${SCHED_PATH}/sched_enable_thread_grouping
-	echo "${SCHED_BIG_WAKER_TASK_LOAD}" > ${SCHED_PATH}/sched_big_waker_task_load
-	echo "${SCHED_WINDOW_STATS_POLICY}" > ${SCHED_PATH}/sched_window_stats_policy
-	echo "${SCHED_RAVG_HIST_SIZE}" > ${SCHED_PATH}/sched_ravg_hist_size
-	
-	if [[ -e ${SCHED_PATH}/sched_upmigrate_min_nice ]]; then
-		echo "${SCHED_UPMIGRATE_MIN_NICE}" > ${SCHED_PATH}/sched_upmigrate_min_nice
-	fi
-	
-	echo "${SCHED_SPILL_NR_RUN}" > ${SCHED_PATH}/sched_spill_nr_run
-	echo "${SCHED_SPILL_LOAD}" > ${SCHED_PATH}/sched_spill_load
-	echo "${SCHED_RESTRICT_CLUSTER_SPILL}" > ${SCHED_PATH}/sched_restrict_cluster_spill
-	
-	if [[ -e ${SCHED_PATH}/sched_wakeup_load_threshold ]]; then
-		echo "${SCHED_WAKEUP_LOAD_THRESHOLD}" > ${SCHED_PATH}/sched_wakeup_load_threshold
-	fi
-	
-	echo "${SCHED_RR_TIMESLICE_MS}" > ${SCHED_PATH}/sched_rr_timeslice_ms
-	
-	if [[ -e "$SCHED_PATH/sched_migration_fixup" ]]; then
-		echo "${SCHED_MIGRATION_FIXUP}" > ${SCHED_PATH}/sched_migration_fixup
-	fi
-	
 	#Little cluster governor tweaks
 	echo "interactive" > ${LITTLE_CLUSTER}/scaling_governor
 
@@ -394,37 +295,6 @@ extras() {
 	echo "${TCP_LOW_LATENCY}" > ${NET}/tcp_low_latency
 }
 
-IO_tweaks() {
-	local Q_PATH='/sys/block/sda/queue/'
-	
-	if [[ -d ${Q_PATH} ]]; then
-		if grep 'noop' ${Q_PATH}/scheduler; then
-			echo "noop" > ${Q_PATH}/scheduler
-		elif grep 'maple' ${Q_PATH}/scheduler; then
-			echo "maple" > ${Q_PATH}/scheduler
-			echo "16" > ${Q_PATH}/iosched/fifo_batch
-			echo "4" > ${Q_PATH}/iosched/writes_starved
-			echo "10" > ${Q_PATH}/iosched/sleep_latency_multiple
-			echo "200" > ${Q_PATH}/iosched/async_read_expire   ##default values
-			echo "500" > ${Q_PATH}/iosched/async_write_expire   ##default values
-			echo "100" > ${Q_PATH}/iosched/sync_read_expire   ##default values
-			echo "350" > ${Q_PATH}/iosched/sync_write_expire   ##default values
-		elif grep 'cfq' ${Q_PATH}/scheduler; then
-			echo "cfq" > ${Q_PATH}/scheduler
-		else
-			echo "	-Error Code #03"
-		fi
-		
-		echo "512" > ${Q_PATH}/read_ahead_kb
-		echo "104" > ${Q_PATH}/nr_requests
-		echo "0" > ${Q_PATH}/add_random
-		echo "0" > ${Q_PATH}/iostats
-		echo "1" > ${Q_PATH}/nomerges
-		echo "0" > ${Q_PATH}/rotational
-		echo "1" > ${Q_PATH}/rq_affinity
-	fi
-}
-
 GPU_tweaks() {
 	local GPU_PATH='/sys/devices/soc/5000000.qcom,kgsl-3d0/devfreq/5000000.qcom,kgsl-3d0'
 	local MAX_FREQ="${GPU_PATH}/max_freq"
@@ -441,39 +311,6 @@ GPU_tweaks() {
 	fi
 }
 
-memory_tweaks() {
-	local VM_PATH='/proc/sys/vm'
-	local LMK_PATH='/sys/module/lowmemorykiller/parameters'
-
-	chmod 664 ${LMK_PATH}/enable_adaptive_lmk
-	chown root ${LMK_PATH}/enable_adaptive_lmk
-	echo "${ENABLE_ADAPTIVE_LMK}" > ${LMK_PATH}/enable_adaptive_lmk
-	chmod 444 ${LMK_PATH}/enable_adaptive_lmk
-	
-	echo "${MINFREE}" > ${LMK_PATH}/minfree
-	
-	chmod 644 ${LMK_PATH}/debug_level
-	echo "${DEBUG_LEVEL}" > ${LMK_PATH}/debug_level
-	chmod 444 ${LMK_PATH}/debug_level
-
-	#Virtual Memory
-	echo "${DIRTY_EXPIRE_CENTISECS}" > ${VM_PATH}/dirty_expire_centisecs
-	echo "${DITRY_WRITEBACK_CENTISECS}" > ${VM_PATH}/dirty_writeback_centisecs
-	echo "${OOM_KILL_ALLOCATING_TASK}" > ${VM_PATH}/oom_kill_allocating_task
-	echo "${PAGE_CLUSTER}" > ${VM_PATH}/page-cluster
-	echo "${SWAPPINESS}" > ${VM_PATH}/swappiness
-	echo "${VFS_CACHE_PRESSURE}" > ${VM_PATH}/vfs_cache_pressure
-	echo "${DIRTY_RATIO}" > ${VM_PATH}/dirty_ratio
-	echo "${DIRTY_BACKGROUND_RATIO}" > ${VM_PATH}/dirty_background_ratio
-	echo "${MIN_FREE_KBYTES}" > ${VM_PATH}/min_free_kbytes
-	echo "${OVERCOMMIT_MEMORY}" > ${VM_PATH}/overcommit_memory
-	echo "${OVERCOMMIT_RATIO}" > ${VM_PATH}/overcommit_ratio
-	
-	#Entropy
-	echo "${READ_WAKUP_THRESHOLD}" > ${SCHED_PATH}/random/read_wakeup_threshold
-	echo "${WRITE_WAKEUP_THRESHOLD}" > ${SCHED_PATH}/random/write_wakeup_threshold
-}
-
 main() {
 	kernel_detection  #Detect whether the kernel is EAS or HMP
 	
@@ -484,7 +321,6 @@ main() {
 	fi
 	
 	GPU_tweaks #Apply GPU tweaks
-	IO_tweaks #Apply IO tweaks
 	extras #Apply extra kernel tweaks
 }
 

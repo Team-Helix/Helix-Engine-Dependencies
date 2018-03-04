@@ -485,6 +485,7 @@ main() {
 	
 	GPU_tweaks #Apply GPU tweaks
 	IO_tweaks #Apply IO tweaks
+	memory_tweaks #Apply memory tweaks
 	extras #Apply extra kernel tweaks
 }
 
