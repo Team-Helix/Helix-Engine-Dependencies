@@ -60,10 +60,10 @@ EAS_CPU7_ONLINE='0'
 #########################################
 
 #HMP tunables
-SCHED_UPMIGRATE='100'
-SCHED_GROUP_UPMIGRATE='100'
 SCHED_DOWNMIGRATE='90'
 SCHED_GROUP_DOWNMIGRATE='95'
+SCHED_UPMIGRATE='100'
+SCHED_GROUP_UPMIGRATE='100'
 SCHED_SMALL_TASK_WAKEE_TASK_LOAD='20'
 SCHED_INIT_TASK_LOAD='0'
 SCHED_ENABLE_POWER_AWARE='1'
@@ -79,6 +79,9 @@ SCHED_WAKEUP_LOAD_THRESHOLD='110'
 SCHED_RR_TIMESLICE_MS='10'
 SCHED_MIGRATION_FIXUP='1'
 SCHED_AUTOGROUP_ENABLED='1'
+SCHED_FREQ_INC_NOTIFY='600000'
+SCHED_FREQ_DEC_NOTIFY='200000'
+SCHED_SELECT_PREV_CPU_US='0'
 
 #Interactive gov tweaks
 TARGET_LOADS_LITTLE='90 1401600:95'
@@ -269,10 +272,10 @@ EAS_tweaks() {
 
 HMP_tweaks() {
 	#General HMP tweaks
-	echo "${SCHED_UPMIGRATE}" > ${SCHED_PATH}/sched_upmigrate
-	echo "${SCHED_GROUP_UPMIGRATE}" > ${SCHED_PATH}/sched_group_upmigrate
 	echo "${SCHED_DOWNMIGRATE}" > ${SCHED_PATH}/sched_downmigrate
 	echo "${SCHED_GROUP_DOWNMIGRATE}" > ${SCHED_PATH}/sched_group_downmigrate
+	echo "${SCHED_UPMIGRATE}" > ${SCHED_PATH}/sched_upmigrate
+	echo "${SCHED_GROUP_UPMIGRATE}" > ${SCHED_PATH}/sched_group_upmigrate
 	echo "${SCHED_SMALL_TASK_WAKEE_TASK_LOAD}" > ${SCHED_PATH}/sched_small_wakee_task_load
 	echo "${SCHED_INIT_TASK_LOAD}" > ${SCHED_PATH}/sched_init_task_load
 	echo "${SCHED_AUTOGROUP_ENABLED}" > ${SCHED_PATH}/sched_autogroup_enabled 
@@ -303,6 +306,9 @@ HMP_tweaks() {
 	if [[ -e "$SCHED_PATH/sched_migration_fixup" ]]; then
 		echo "${SCHED_MIGRATION_FIXUP}" > ${SCHED_PATH}/sched_migration_fixup
 	fi
+	echo "${SCHED_FREQ_INC_NOTIFY}" > ${SCHED_PATH}/sched_freq_inc_notify
+	echo "${SCHED_FREQ_DEC_NOTIFY}" > ${SCHED_PATH}/sched_freq_dec_notify
+	echo "${SCHED_SELECT_PREV_CPU_US}" > ${SCHED_PATH}/sched_select_prev_cpu_us
 	
 	#Little cluster governor tweaks
 	echo "interactive" > ${LITTLE_CLUSTER}/scaling_governor
