@@ -51,6 +51,8 @@ EAS_CPU4_ONLINE='1'
 EAS_CPU5_ONLINE='0'
 EAS_CPU6_ONLINE='0'
 EAS_CPU7_ONLINE='0'
+EAS_LITTLE_AFFECTED_CPUS='1 2 3 4'
+EAS_BIG_AFFECTED_CPUS='4'
 ##################################
 # Energy-Aware Scheduling Tweaks #
 ##################################
@@ -122,6 +124,8 @@ HMP_CPU4_ONLINE='1'
 HMP_CPU5_ONLINE='0'
 HMP_CPU6_ONLINE='0'
 HMP_CPU7_ONLINE='0'
+HMP_LITTLE_AFFECTED_CPUS='1 2 3 4'
+HMP_BIG_AFFECTED_CPUS='4'
 
 #########################################
 # Heterogeneous Multi-Processing Tweaks #
@@ -268,6 +272,8 @@ EAS_tweaks() {
 	echo "${EAS_CPU5_ONLINE}" > ${CPU}/cpu5/online
 	echo "${EAS_CPU6_ONLINE}" > ${CPU}/cpu6/online
 	echo "${EAS_CPU7_ONLINE}" > ${CPU}/cpu7/online
+	echo "${EAS_LITTLE_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy0/affected_cpus
+	echo "${EAS_BIG_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy4/affected_cpus
 }
 
 HMP_tweaks() {
@@ -368,6 +374,8 @@ HMP_tweaks() {
 	echo "${HMP_CPU5_ONLINE}" > ${CPU}/cpu5/online
 	echo "${HMP_CPU6_ONLINE}" > ${CPU}/cpu6/online
 	echo "${HMP_CPU7_ONLINE}" > ${CPU}/cpu7/online
+	echo "${HMP_LITTLE_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy0/affected_cpus
+	echo "${HMP_BIG_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy4/affected_cpus
 }
 
 extras() {
