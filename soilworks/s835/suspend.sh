@@ -272,6 +272,8 @@ EAS_tweaks() {
 	echo "${EAS_CPU5_ONLINE}" > ${CPU}/cpu5/online
 	echo "${EAS_CPU6_ONLINE}" > ${CPU}/cpu6/online
 	echo "${EAS_CPU7_ONLINE}" > ${CPU}/cpu7/online
+	chmod 664 ${CPU}/cpufreq/policy0/affected_cpus
+	chmod 664 ${CPU}/cpufreq/policy4/affected_cpus
 	echo "${EAS_LITTLE_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy0/affected_cpus
 	echo "${EAS_BIG_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy4/affected_cpus
 }
@@ -372,6 +374,8 @@ HMP_tweaks() {
 	echo "${HMP_CPU5_ONLINE}" > ${CPU}/cpu5/online
 	echo "${HMP_CPU6_ONLINE}" > ${CPU}/cpu6/online
 	echo "${HMP_CPU7_ONLINE}" > ${CPU}/cpu7/online
+	chmod 664 ${CPU}/cpufreq/policy0/affected_cpus
+	chmod 664 ${CPU}/cpufreq/policy4/affected_cpus
 	echo "${HMP_LITTLE_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy0/affected_cpus
 	echo "${HMP_BIG_AFFECTED_CPUS}" > ${CPU}/cpufreq/policy4/affected_cpus
 }
