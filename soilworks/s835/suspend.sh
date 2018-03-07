@@ -231,8 +231,8 @@ EAS_tweaks() {
 	echo "${SCHED_NR_MIGRATE}" > ${SCHED_PATH}/sched_nr_migrate
 	
 	#Little cluster governor tweaks
-	chmod 644 ${LITTLE_CLUSTER}/schedutil/*
 	echo "schedutil" > ${LITTLE_CLUSTER}/scaling_governor
+	chmod 644 ${LITTLE_CLUSTER}/schedutil/*
 	echo "${SCHEDUTIL_UP_RATE_LITTLE}" > ${LITTLE_CLUSTER}/schedutil/up_rate_limit_us
 	echo "${SCHEDUTIL_DOWN_RATE_LITTLE}" > ${LITTLE_CLUSTER}/schedutil/down_rate_limit_us
 
@@ -243,8 +243,8 @@ EAS_tweaks() {
 	echo "${SCHEDUTIL_DYN_STUNE}" > /sys/module/cpu_boost/parameters/dynamic_stune_boost
 	chmod 444 ${LITTLE_CLUSTER}/schedutil/*
 	
-	chmod 644 ${BIG_CLUSTER}/schedutil/*
 	echo "schedutil" > ${BIG_CLUSTER}/scaling_governor
+	chmod 644 ${BIG_CLUSTER}/schedutil/*
 	echo "${SCHEDUTIL_UP_RATE_BIG}" > ${BIG_CLUSTER}/schedutil/up_rate_limit_us
 	echo "${SCHEDUTIL_DOWN_RATE_BIG}" > ${BIG_CLUSTER}/schedutil/down_rate_limit_us
 	
@@ -318,7 +318,7 @@ HMP_tweaks() {
 	
 	#Little cluster governor tweaks
 	echo "interactive" > ${LITTLE_CLUSTER}/scaling_governor
-
+	chmod 644 ${LITTLE_CLUSTER}/interactive/*
 	echo "${TARGET_LOADS_LITTLE}" > ${LITTLE_CLUSTER}/interactive/target_loads
 	echo "${TIMER_SLACK_LITTLE}" > ${LITTLE_CLUSTER}/interactive/timer_slack
 	echo "${TIMER_RATE_LITTLE}" > ${LITTLE_CLUSTER}/interactive/timer_rate
@@ -334,7 +334,6 @@ HMP_tweaks() {
 
 	#Big cluster governor tweaks
 	echo "interactive" > ${BIG_CLUSTER}/scaling_governor
-	
 	chmod 644 ${BIG_CLUSTER}/interactive/*
 	echo "${TARGET_LOADS_BIG}" > ${BIG_CLUSTER}/interactive/target_loads
 	echo "${TIMER_SLACK_BIG}" > ${BIG_CLUSTER}/interactive/timer_slack
@@ -347,7 +346,6 @@ HMP_tweaks() {
 	echo "${FAST_RAMP_DOWN_BIG}" > ${BIG_CLUSTER}/interactive/fast_ramp_down
 	echo "${USE_SCHED_LOAD_BIG}" > ${BIG_CLUSTER}/interactive/use_sched_load
 	echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration
-			
 	chmod 444 ${BIG_CLUSTER}/interactive/*
 	
 	#Disable TouchBoost
