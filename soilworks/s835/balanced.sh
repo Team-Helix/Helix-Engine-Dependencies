@@ -27,7 +27,7 @@ GEN_BOOST='0'
 GEN_PREF_IDLE='0'
 
 #EAS tunables
-SCHED_NR_MIGRATE='18'
+SCHED_NR_MIGRATE='48'
 
 #schedutil gov tweaks
 SCHEDUTIL_UP_RATE_LITTLE='500'
@@ -112,7 +112,7 @@ BOOSTPULSE_DURATION_BIG='30000'
 
 #Generic CPU settings
 TOUCHBOOST='0'
-HMP_BIG_MAX_FREQ='1958400'
+HMP_BIG_MAX_FREQ='2361600'
 HMP_BIG_MIN_FREQ="${BIG_MIN_VALUE}"
 HMP_LITTLE_MAX_FREQ="${LITTLE_MAX_VALUE}"
 HMP_LITTLE_MIN_FREQ="${LITTLE_MIN_VALUE}"
@@ -347,8 +347,7 @@ HMP_tweaks() {
 	echo "${MAX_FREQ_HYSTERESIS_BIG}" > ${BIG_CLUSTER}/interactive/max_freq_hysteresis
 	echo "${FAST_RAMP_DOWN_BIG}" > ${BIG_CLUSTER}/interactive/fast_ramp_down
 	echo "${USE_SCHED_LOAD_BIG}" > ${BIG_CLUSTER}/interactive/use_sched_load
-	echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration
-			
+	echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration		
 	chmod 444 ${BIG_CLUSTER}/interactive/*
 	
 	#Disable TouchBoost
