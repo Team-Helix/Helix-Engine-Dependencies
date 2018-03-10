@@ -57,7 +57,7 @@ EAS_CPU7_ONLINE='0'
 #########################################
 
 #Interactive gov tweaks
-TARGET_LOADS_LITTLE='90 1401600:95'
+TARGET_LOADS_LITTLE='83 672000:85 883200:95 1036800:97'
 TIMER_SLACK_LITTLE='120000'
 TIMER_RATE_LITTLE='60000'
 HISPEED_FREQ_LITTLE='300000'
@@ -69,11 +69,11 @@ FAST_RAMP_DOWN_LITTLE='1'
 USE_SCHED_LOAD_LITTLE='0'
 BOOSTPULSE_DURATION_LITTLE='0'
 
-TARGET_LOADS_BIG='95 1132800:99'
+TARGET_LOADS_BIG='85 652800:87 979200:98'
 TIMER_SLACK_BIG='120000'
 TIMER_RATE_BIG='100000'
 HISPEED_FREQ_BIG='300000'
-ABOVE_HISPEED_DELAY_BIG='60000 1132800:100000'
+ABOVE_HISPEED_DELAY_BIG='60000 902400:100000'
 GO_HISPEED_LOAD_BIG='400'
 MIN_SAMPLE_TIME_BIG='0'
 MAX_FREQ_HYSTERESIS_BIG='0'
@@ -184,15 +184,19 @@ EAS_tweaks() {
 	
 	chmod 444 ${BIG_CLUSTER}/schedutil/*
 	
-	chmod 664 ${LITTLE_CLUSTER}/scaling_max_freq
-	chmod 664 ${LITTLE_CLUSTER}/scaling_min_freq
+	chmod 644 ${LITTLE_CLUSTER}/scaling_max_freq
+	chmod 644 ${LITTLE_CLUSTER}/scaling_min_freq
 	echo "${EAS_LITTLE_MAX_FREQ}" > ${LITTLE_CLUSTER}/scaling_max_freq
 	echo "${EAS_LITTLE_MIN_FREQ}" > ${LITTLE_CLUSTER}/scaling_min_freq
+	chmod 444 ${LITTLE_CLUSTER}/scaling_max_freq
+	chmod 444 ${LITTLE_CLUSTER}/scaling_min_freq
 	
-	chmod 664 ${BIG_CLUSTER}/scaling_max_freq
-	chmod 664 ${BIG_CLUSTER}/scaling_min_freq
+	chmod 644 ${BIG_CLUSTER}/scaling_max_freq
+	chmod 644 ${BIG_CLUSTER}/scaling_min_freq
 	echo "${EAS_BIG_MAX_FREQ}" > ${BIG_CLUSTER}/scaling_max_freq
 	echo "${EAS_BIG_MIN_FREQ}" > ${BIG_CLUSTER}/scaling_min_freq
+	chmod 444 ${LITTLE_CLUSTER}/scaling_max_freq
+	chmod 444 ${LITTLE_CLUSTER}/scaling_min_freq
 
 	echo "${EAS_CPU0_ONLINE}" > ${CPU}/cpu0/online
 	echo "${EAS_CPU1_ONLINE}" > ${CPU}/cpu1/online
