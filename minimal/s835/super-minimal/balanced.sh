@@ -104,7 +104,7 @@ else
 	echo 1000 > /proc/sys/kernel/sched_select_prev_cpu_us
 	#Input boost
 	echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
-	echo 0:518400 1:0 2:0 3:0 4:806400 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:883200 1:0 2:0 3:0 4:806400 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 460 > /sys/module/cpu_boost/parameters/input_boost_ms
 	echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 fi

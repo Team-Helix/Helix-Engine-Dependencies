@@ -23,8 +23,8 @@ echo 0-1 > /dev/cpuset/system-background/cpus
 if grep 'schedutil' /sys/devices/system/cpu/cpufreq/policy0/scaling_available_governors; then
 	#LITTLE
 	echo schedutil > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-	echo '1248000' > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
-	echo '300000' > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+	echo '1094400' > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo '518400' > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 2000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us
 	echo 7000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/iowait_boost_enable
@@ -35,21 +35,21 @@ if grep 'schedutil' /sys/devices/system/cpu/cpufreq/policy0/scaling_available_go
 	echo 10000000 > /proc/sys/kernel/sched_walt_cpu_high_irqload
 	#big
 	echo schedutil > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
-	echo '1651200' > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
-	echo '300000' > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
+	echo '1056000' > /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+	echo '806400' > /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
 	echo 2000 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/up_rate_limit_us
 	echo 5000 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/iowait_boost_enable
 else
 	#LITTLE
 	echo interactive > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-	echo '1248000' > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+	echo '1094400' > /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
 	echo '300000' > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 81 672000:85 883200:88 960000:92 1171200:96 > /sys/devices/system/cpu/cpufreq/policy0/interactive/target_loads
 	echo 90000 > /sys/devices/system/cpu/cpufreq/policy0/interactive/timer_slack
 	echo 50000 > /sys/devices/system/cpu/cpufreq/policy0/interactive/timer_rate
 	echo 1171200 > /sys/devices/system/cpu/cpufreq/policy0/interactive/hispeed_freq
-	echo 20000 883200:40000 1171200:60000> /sys/devices/system/cpu/cpufreq/policy0/interactive/above_hispeed_delay
+	echo 20000 883200:40000 1171200:60000 > /sys/devices/system/cpu/cpufreq/policy0/interactive/above_hispeed_delay
 	echo 400 > /sys/devices/system/cpu/cpufreq/policy0/interactive/go_hispeed_load
 	echo 5000 > /sys/devices/system/cpu/cpufreq/policy0/interactive/min_sample_time
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/interactive/max_freq_hysteresis
@@ -104,7 +104,7 @@ else
 	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
 	#Input boost
 	echo 1 > /sys/module/cpu_boost/parameters/input_boost_enabled
-	echo 0:883200 1:0 2:0 3:0 4:0 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 0:518400 1:0 2:0 3:0 4:806400 5:0 6:0 7:0 > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 230 > /sys/module/cpu_boost/parameters/input_boost_ms
 	echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 fi
