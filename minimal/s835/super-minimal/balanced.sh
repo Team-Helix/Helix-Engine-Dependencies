@@ -3,16 +3,6 @@
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
 # Helix-Engine profile script: Balanced
 
-#Cores
-echo 1 > /sys/devices/system/cpu/cpu0/online
-echo 1 > /sys/devices/system/cpu/cpu1/online
-echo 1 > /sys/devices/system/cpu/cpu2/online
-echo 1 > /sys/devices/system/cpu/cpu3/online
-echo 1 > /sys/devices/system/cpu/cpu4/online
-echo 1 > /sys/devices/system/cpu/cpu5/online
-echo 1 > /sys/devices/system/cpu/cpu6/online
-echo 1 > /sys/devices/system/cpu/cpu7/online
-
 #Stune
 echo 1 > /dev/stune/top-app/schedtune.boost
 echo 0 > /dev/stune/background/schedtune.boost
@@ -96,11 +86,11 @@ else
 	echo 10 > /proc/sys/kernel/sched_init_task_load
 	echo 1 > /proc/sys/kernel/sched_enable_power_aware
 	echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
-	echo 20 > /proc/sys/kernel/sched_big_waker_task_load
+	echo 30 > /proc/sys/kernel/sched_big_waker_task_load
 	echo 2 > /proc/sys/kernel/sched_window_stats_policy
 	echo 5 > /proc/sys/kernel/sched_ravg_hist_size
 	echo 9 > /proc/sys/kernel/sched_upmigrate_min_nice
-	echo 8 > /proc/sys/kernel/sched_spill_nr_run
+	echo 7 > /proc/sys/kernel/sched_spill_nr_run
 	echo 80 > /proc/sys/kernel/sched_spill_load
 	echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
 	echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
