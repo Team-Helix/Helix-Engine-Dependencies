@@ -109,6 +109,9 @@ else
 	echo N > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 fi
 
+#Touchboost
+echo 0 > /sys/module/msm_performance/parameters/touchboost
+
 #I/0
 echo "cfq" > /sys/block/sda/queue/scheduler
 echo 1024 > /sys/block/sda/queue/read_ahead_kb
