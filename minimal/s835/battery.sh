@@ -216,7 +216,6 @@ main() {
 		HMP_tweaks #If HMP is detected, apply HMP specific tweaks
 	fi
 	
-	GPU_tweaks #Apply GPU tweaks
 	extras #Apply extra kernel tweaks
 }
 
