@@ -3,10 +3,7 @@
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
 # Helix-Engine profile script: Boot
 MEMTOTAL="$(< /proc/meminfo grep MemTotal | cut -d ":" -f2 | awk '{ print $1 }')"
-NET='/proc/sys/net/ipv4'
 LMK='/sys/module/lowmemorykiller/parameters/minfree'
-
-TCP_CONTROL='westwood'
 
 chmod 664 ${LMK}
 chmod 664 ${NET}/tcp_congestion_control
@@ -22,5 +19,3 @@ elif [ "${MEMTOTAL}" -gt "2097152" ] && [ "${MEMTOTAL}" -lt "3145728" ]; then
 elif [ "${MEMTOTAL}" -gt "1048576" ] && [ "${MEMTOTAL}" -lt "2097152" ]; then
 	echo '14746,18432,22118,25805,40000,55000' > ${LMK}
 fi
-
-echo "${TCP_CONTROL}" > ${NET}/tcp_congestion_control
