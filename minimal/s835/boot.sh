@@ -2,7 +2,7 @@
 # AUTHOR: TEAM HELIX @ XDA-DEVELOPERS
 # Template by @ZeroInfinity, adapted from @RogerF81, improved by @Asiier
 # Helix-Engine profile script: Boot
-MEMTOTAL="$(cat /proc/meminfo | grep MemTotal)"
+MEMTOTAL="$(cat /proc/meminfo | grep MemTotal | cut -d ":" -f2 | awk '{ print $1 }')"
 NET='/proc/sys/net/ipv4'
 
 TCP_CONTROL='westwood'
