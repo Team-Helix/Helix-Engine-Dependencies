@@ -9,11 +9,11 @@ TCP_CONTROL='westwood'
 
 #8GB RAM
 if [ "${MEMTOTAL}" -gt "7361536" ] && [ "${MEMTOTAL}" -lt "8388608" ]; then
-	echo '28800,36000,43200,50400,90595,144812' > /sys/module/lowmemorykiller/parameters/minfree
+	echo '8192,10240,12288,14336,24576,35840' > /sys/module/lowmemorykiller/parameters/minfree
 
 #6GB RAM
 elif [ "${MEMTOTAL}" -gt "5242880" ] && [ "${MEMTOTAL}" -lt "6291456" ]; then
-	echo '23040,28800,34560,40320,70778,117734' > /sys/module/lowmemorykiller/parameters/minfree
+	echo '12288,15360,18432,21504,36864,53760' > /sys/module/lowmemorykiller/parameters/minfree
 
 #4GB RAM
 elif [ "${MEMTOTAL}" -gt "3145728" ] && [ "${MEMTOTAL}" -lt "4378624" ]; then
