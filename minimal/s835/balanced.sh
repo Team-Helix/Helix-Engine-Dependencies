@@ -93,7 +93,6 @@ CPUSET_SYSBG='0-1'
 INPUT_BOOST_ENABLED='0'
 INPUT_BOOST_FREQ='0:0 1:0 2:0 3:0 4:0 5:0 6:0 7:0'
 INPUT_BOOST_MS='0'
-SCHED_BOOST_ON_INPUT='N'
 
 TCP_LOW_LATENCY='0'
 
@@ -200,7 +199,6 @@ extras() {
 	echo "${INPUT_BOOST_ENABLED}" > ${CPU_BOOST}/input_boost_enabled
 	echo "${INPUT_BOOST_FREQ}" > ${CPU_BOOST}/input_boost_freq
 	echo "${INPUT_BOOST_MS}" > ${CPU_BOOST}/input_boost_ms
-	echo "${SCHED_BOOST_ON_INPUT}" > /sys/module/msm_performance/parameters/touchboost/sched_boost_on_input
 
 	#TCP tweaks
 	echo "${TCP_LOW_LATENCY}" > ${NET}/tcp_low_latency
