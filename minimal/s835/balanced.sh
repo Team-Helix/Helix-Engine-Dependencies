@@ -207,6 +207,8 @@ extras() {
 main() {
 	kernel_detection  #Detect whether the kernel is EAS or HMP
 	
+	chmod 664 ${LITTLE_CLUSTER}/scaling_max_freq # set correct perm to access this tunable
+	
 	if [ "${EAS}" -eq "1" ]; then
 		EAS_tweaks #If EAS is detected, apply EAS specific tweaks
 	elif [ "${HMP}" -eq "1" ]; then
