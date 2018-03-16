@@ -180,6 +180,7 @@ HMP_tweaks() {
 	echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration
 	
 	#Disable TouchBoost
+	chmod 664 /sys/module/msm_performance/parameters/touchboost
 	echo "${TOUCHBOOST}" > /sys/module/msm_performance/parameters/touchboost
 	
 	echo "${HMP_LITTLE_MAX_FREQ}" > ${LITTLE_CLUSTER}/scaling_max_freq
@@ -196,6 +197,9 @@ extras() {
 	echo "${CPUSET_SYSBG}" > /dev/cpuset/system-background/cpus
 	
 	#Tweak cpu boost
+	chmod 664 ${CPU_BOOST}/input_boost_enabled
+	chmod 664 ${CPU_BOOST}/input_boost_freq
+	chmod 664 ${CPU_BOOST}/input_boost_ms
 	echo "${INPUT_BOOST_ENABLED}" > ${CPU_BOOST}/input_boost_enabled
 	echo "${INPUT_BOOST_FREQ}" > ${CPU_BOOST}/input_boost_freq
 	echo "${INPUT_BOOST_MS}" > ${CPU_BOOST}/input_boost_ms
