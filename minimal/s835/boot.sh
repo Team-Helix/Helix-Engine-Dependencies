@@ -9,7 +9,7 @@ chmod 664 ${LMK}
 chmod 664 ${NET}/tcp_congestion_control
 
 if [ "${MEMTOTAL}" -gt "7361536" ] && [ "${MEMTOTAL}" -lt "8388608" ]; then
-	echo '8192,10240,12288,14336,24576,35840' > ${LMK}
+	echo '18432,23040,27648,51256,150296,200640' > ${LMK}
 elif [ "${MEMTOTAL}" -gt "5242880" ] && [ "${MEMTOTAL}" -lt "6291456" ]; then
 	echo '12288,15360,18432,21504,36864,53760' > ${LMK}
 elif [ "${MEMTOTAL}" -gt "3145728" ] && [ "${MEMTOTAL}" -lt "4378624" ]; then
