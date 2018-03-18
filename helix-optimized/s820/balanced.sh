@@ -74,7 +74,6 @@ USE_SCHED_LOAD_BIG='1'
 BOOSTPULSE_DURATION_BIG='80000'
 
 #Generic CPU settings
-TOUCHBOOST='0'
 HMP_BIG_MAX_FREQ='1785600'
 HMP_BIG_MIN_FREQ="${BIG_MIN_VALUE}"
 HMP_LITTLE_MAX_FREQ="${LITTLE_MAX_VALUE}"
@@ -90,7 +89,6 @@ HMP_LITTLE_MIN_FREQ="${LITTLE_MIN_VALUE}"
 CPUSET_BG='0'
 CPUSET_SYSBG='0'
 
-INPUT_BOOST_ENABLED='1'
 INPUT_BOOST_FREQ='0:1228800 1:0 2:0 3:0'
 INPUT_BOOST_MS='230'
 
@@ -179,9 +177,6 @@ HMP_tweaks() {
 	echo "${USE_SCHED_LOAD_BIG}" > ${BIG_CLUSTER}/interactive/use_sched_load
 	echo "${BOOSTPULSE_DURATION_BIG}" > ${BIG_CLUSTER}/interactive/boostpulse_duration
 	
-	#Disable TouchBoost
-	echo "${TOUCHBOOST}" > /sys/module/msm_performance/parameters/touchboost
-	
 	echo "${HMP_LITTLE_MAX_FREQ}" > ${LITTLE_CLUSTER}/scaling_max_freq
 	echo "${HMP_LITTLE_MIN_FREQ}" > ${LITTLE_CLUSTER}/scaling_min_freq
 	echo "${HMP_BIG_MAX_FREQ}" > ${BIG_CLUSTER}/scaling_max_freq
@@ -196,7 +191,6 @@ extras() {
 	echo "${CPUSET_SYSBG}" > /dev/cpuset/system-background/cpus
 	
 	#Tweak cpu boost
-	echo "${INPUT_BOOST_ENABLED}" > ${CPU_BOOST}/input_boost_enabled
 	echo "${INPUT_BOOST_FREQ}" > ${CPU_BOOST}/input_boost_freq
 	echo "${INPUT_BOOST_MS}" > ${CPU_BOOST}/input_boost_ms
 
