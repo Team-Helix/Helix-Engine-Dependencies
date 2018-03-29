@@ -1,0 +1,61 @@
+<?xml version='1.0' ?>
+<profile>
+  <device model="msm8998" kernel_type="hmp" kernel_version="4.4.125-Singularity-V-1.4+">
+    <battery>
+      <governor>zzmoove</governor>
+      <input_boost_enable>0</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1036800</max>
+        <min>518400</min>
+      </little>
+      <big>
+        <max>1056000</max>
+        <min>806400</min>
+      </big>
+    </battery>
+    <balanced>
+      <governor>impulse</governor>
+      <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1747200</max>
+        <min>518400</min>
+      </little>
+      <big>
+        <max>1958400</max>
+        <min>806400</min>
+      </big>
+    </balanced>
+    <performance>
+      <governor>tripndroid</governor>
+      <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>2035200</max>
+        <min>518400</min>
+      </little>
+      <big>
+        <max>2592000</max>
+        <min>806400</min>
+      </big>
+    </performance>
+    <suspend>
+      <governor>zzmoove</governor>
+      <input_boost_enable>0</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1036800</max>
+        <min>300000</min>
+      </little>
+      <big>
+        <max>1056000</max>
+        <min>300000</min>
+      </big>
+    </suspend>
+  </device>
+</profile>
