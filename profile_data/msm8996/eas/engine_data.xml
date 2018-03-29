@@ -1,0 +1,61 @@
+<?xml version='1.0' ?>
+<profile>
+  <device model="msm8996" kernel_type="eas" kernel_version="any">
+    <battery>
+      <governor>schedutil</governor>
+	  <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1593600</max>
+        <min>307200</min>
+      </little>
+      <big>
+        <max>1555200</max>
+        <min>307200</min>
+      </big>
+    </battery>
+    <balanced>
+      <governor>schedutil</governor>
+	  <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1593600</max>
+        <min>307200</min>
+      </little>
+      <big>
+        <max>1824000</max>
+        <min>307200</min>
+      </big>
+    </balanced>
+    <performance>
+      <governor>schedutil</governor>
+	  <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1593600</max>
+        <min>307200</min>
+      </little>
+      <big>
+        <max>2150400</max>
+        <min>307200</min>
+      </big>
+    </performance>
+    <suspend>
+      <governor>schedutil</governor>
+	  <input_boost_enable>1</input_boost_enable>
+      <input_boost_freqs>0:1324800 1:0 2:0 3:0 4:0 5:0 6:0 7:0 </input_boost_freqs>
+      <input_boost_duration>40</input_boost_duration>
+      <little>
+        <max>1324800</max>
+        <min>307200</min>
+      </little>
+      <big>
+        <max>1324800</max>
+        <min>307200</min>
+      </big>
+    </suspend>
+  </device>
+</profile>
